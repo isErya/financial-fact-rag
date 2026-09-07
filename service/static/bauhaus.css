@@ -1,0 +1,453 @@
+/* bauhaus/bauhaus.css - components. Requires tokens.css.
+   Class prefix: bh-. Flat color, sharp corners, one accent. */
+
+/* --- base ------------------------------------------------------------- */
+
+.bh {
+  background: var(--bh-paper);
+  color: var(--bh-ink);
+  font: 400 var(--bh-size-body) / var(--bh-leading-body) var(--bh-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.bh :focus-visible {
+  outline: 2px solid var(--bh-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bh *, .bh *::before, .bh *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* --- layout ------------------------------------------------------------ */
+
+.bh-container {
+  max-width: var(--bh-max);
+  margin: 0 auto;
+  padding: 0 var(--bh-gutter);
+}
+
+.bh-band { padding: var(--bh-section) 0; }
+
+/* Full-bleed navy band: cream/navy alternation is the page rhythm. */
+.bh-band--ink {
+  background: var(--bh-ink);
+  color: var(--bh-paper);
+}
+.bh-band--ink .bh-muted { color: var(--bh-muted-on-ink); }
+.bh-band--ink .bh-hairline { border-color: var(--bh-hairline-on-ink); }
+
+/* --- typography --------------------------------------------------------- */
+
+.bh-hero, .bh-h2, .bh-h3 {
+  font-family: var(--bh-display);
+  font-weight: 800;
+  letter-spacing: var(--bh-track-display);
+  text-transform: lowercase;
+  line-height: 0.98;
+  margin: 0;
+}
+.bh-hero { font-size: var(--bh-size-hero); }
+.bh-h2 { font-size: var(--bh-size-h2); }
+.bh-h3 { font-size: var(--bh-size-h3); letter-spacing: -0.02em; }
+
+/* The signature device: a heading ends with a red period. */
+.bh-dot { color: var(--bh-accent); }
+
+.bh-eyebrow {
+  font: 600 var(--bh-size-label) / 1 var(--bh-label);
+  letter-spacing: var(--bh-track-label);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.bh-muted { color: var(--bh-muted); }
+.bh-small { font-size: var(--bh-size-small); }
+.bh-mono { font-family: var(--bh-mono); font-size: 13px; }
+
+/* --- buttons ------------------------------------------------------------ */
+/* Red is never a body-text surface (3.4:1): primary is navy; red appears
+   as the hover shift, the focus ring, and the destructive OUTLINE. */
+
+.bh-btn {
+  display: inline-block;
+  font: 600 14px / 1 var(--bh-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 16px 24px;
+  border: none;
+  background: var(--bh-ink);
+  color: var(--bh-paper);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--bh-fast) var(--bh-ease),
+              border-color var(--bh-fast) var(--bh-ease),
+              color var(--bh-fast) var(--bh-ease);
+}
+.bh-btn:hover { background: var(--bh-accent); }
+
+.bh-btn--ghost { background: rgba(21, 42, 73, 0.08); color: var(--bh-ink); }
+.bh-btn--ghost:hover { background: var(--bh-ink); color: var(--bh-paper); }
+.bh-band--ink .bh-btn--ghost { color: var(--bh-paper); background: rgba(240, 232, 216, 0.14); }
+.bh-band--ink .bh-btn--ghost:hover { background: var(--bh-paper); color: var(--bh-ink); }
+
+.bh-btn--danger { background: rgba(226, 66, 41, 0.12); color: var(--bh-ink); }
+.bh-btn--danger:hover { background: var(--bh-accent); color: var(--bh-paper); }
+
+.bh-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.bh-btn:disabled:hover { background: var(--bh-ink); }
+
+/* --- cards (flat color blocks, from the v2 work grid) -------------------- */
+
+.bh-card {
+  background: var(--bh-card-on-paper);
+  padding: var(--bh-gap);
+}
+.bh-card--ink { background: var(--bh-ink); color: var(--bh-paper); }
+.bh-card--accent { background: var(--bh-accent); color: var(--bh-paper); }
+/* Accent cards: title sizes only (large-text rule); body copy stays off red. */
+
+.bh-card .bh-card-title {
+  font: 800 23px / 1 var(--bh-display);
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  margin: 0;
+}
+.bh-card .bh-card-sub {
+  font: 600 var(--bh-size-label) / 1.4 var(--bh-label);
+  letter-spacing: var(--bh-track-label);
+  text-transform: uppercase;
+  margin-top: 6px;
+  opacity: 0.85;
+}
+
+/* --- stat tile (from the v2 impact band) --------------------------------- */
+
+.bh-stat { padding-top: 14px; }
+.bh-stat-value {
+  font: 800 clamp(38px, 3.4vw, 60px) / 0.98 var(--bh-display);
+  letter-spacing: -0.035em;
+}
+.bh-stat-label { margin-top: 9px; font-size: var(--bh-size-small); }
+
+/* --- nav ------------------------------------------------------------------ */
+
+.bh-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--bh-gap);
+  padding: 14px var(--bh-gutter);
+  border-bottom: var(--bh-border) solid var(--bh-ink);
+}
+.bh-wordmark {
+  font: 800 26px / 1 var(--bh-display);
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  text-decoration: none;
+  color: inherit;
+  white-space: nowrap;
+}
+.bh-nav-links { display: flex; gap: 28px; list-style: none; margin: 0; padding: 0; }
+.bh-nav-links a {
+  font: 600 12px / 1 var(--bh-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+  padding: 6px 0;
+  border-bottom: 3px solid transparent;
+}
+.bh-nav-links a:hover,
+.bh-nav-links a[aria-current="page"] { border-bottom-color: var(--bh-accent); }
+
+/* --- forms ----------------------------------------------------------------- */
+
+.bh-field { display: block; margin-bottom: var(--bh-gap); }
+.bh-field > .bh-eyebrow { margin-bottom: 8px; }
+
+.bh-input, .bh-select, .bh-textarea {
+  width: 100%;
+  font: 400 var(--bh-size-body) / 1.4 var(--bh-body);
+  color: var(--bh-ink);
+  background: rgba(21, 42, 73, 0.07);
+  border: none;
+  padding: 13px 15px;
+  transition: border-color var(--bh-fast) var(--bh-ease);
+}
+.bh-input::placeholder, .bh-textarea::placeholder { color: var(--bh-muted); }
+.bh-input:focus, .bh-select:focus, .bh-textarea:focus {
+  outline: 2px solid var(--bh-accent);
+  outline-offset: 0;
+}
+.bh-input[aria-invalid="true"], .bh-textarea[aria-invalid="true"] {
+  background: rgba(226, 66, 41, 0.10);
+}
+.bh-error {
+  color: var(--bh-accent);
+  font: 600 var(--bh-size-small) / 1.4 var(--bh-body);
+  margin-top: 6px;
+}
+/* Error text is red at 13px/600 - below the large-text threshold, so it is
+   ALWAYS paired with the red border + an icon/prefix, never color alone. */
+
+.bh-check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; }
+.bh-check input {
+  appearance: none;
+  width: 18px; height: 18px; flex: none; margin-top: 1px;
+  background: rgba(21, 42, 73, 0.18);
+  cursor: pointer;
+}
+.bh-check input:checked { background: var(--bh-ink); box-shadow: inset 0 0 0 3px var(--bh-paper); }
+.bh-check input[type="radio"] { border-radius: 50%; } /* the circle IS Bauhaus */
+
+/* --- table (the data products live here) ----------------------------------- */
+
+.bh-table { width: 100%; border-collapse: collapse; font-size: var(--bh-size-small); }
+.bh-table th {
+  font: 600 var(--bh-size-label) / 1 var(--bh-label);
+  letter-spacing: var(--bh-track-label);
+  text-transform: uppercase;
+  text-align: left;
+  background: var(--bh-ink);
+  color: var(--bh-paper);
+  padding: 12px 14px;
+}
+.bh-table td { padding: 11px 14px; border-bottom: 1px solid var(--bh-hairline); }
+.bh-table tr:hover td { background: var(--bh-card-on-paper); }
+.bh-table td.bh-num { font-family: var(--bh-mono); text-align: right; }
+
+/* --- badge / status ---------------------------------------------------------- */
+
+.bh-badge {
+  display: inline-block;
+  font: 600 var(--bh-size-label) / 1 var(--bh-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  }
+.bh-badge--solid { background: var(--bh-ink); color: var(--bh-paper); }
+.bh-badge--warn { border-color: rgba(21, 42, 73, 0.45); }
+.bh-badge--alert { border-color: var(--bh-accent); color: var(--bh-accent); }
+/* Red badge text is 11px - always pair with a glyph or wording, never color alone. */
+
+/* --- callouts ------------------------------------------------------------------ */
+
+.bh-callout {
+  border-left: 6px solid var(--bh-ink);
+  background: var(--bh-card-on-paper);
+  padding: 16px 20px;
+}
+.bh-callout--warn { border-left-color: rgba(21, 42, 73, 0.45); }
+.bh-callout--alert { border-left-color: var(--bh-accent); }
+.bh-callout .bh-eyebrow { margin-bottom: 6px; }
+
+/* --- meter ------------------------------------------------------------------- */
+
+.bh-meter { height: 10px; background: var(--bh-card-on-paper); }
+.bh-meter > span { display: block; height: 100%; background: var(--bh-ink); }
+.bh-meter--accent > span { background: var(--bh-accent); }
+
+/* --- geometry (the signature; decoration NEVER behind body text) --------------- */
+
+.bh-geo { position: relative; }
+.bh-geo-circle, .bh-geo-tri, .bh-geo-bar { position: absolute; pointer-events: none; }
+.bh-geo-circle { width: 120px; height: 120px; border-radius: 50%; background: var(--bh-accent); }
+.bh-geo-circle--paper { background: var(--bh-paper); }
+.bh-geo-tri {
+  width: 0; height: 0;
+  border-left: 70px solid transparent;
+  border-right: 70px solid transparent;
+  border-bottom: 120px solid var(--bh-ink);
+}
+.bh-geo-bar { width: 160px; height: 22px; background: var(--bh-ink); }
+/* Composition rules: edge-anchor (crop off the viewport edge), max 3 shapes per
+   band, one red element per composition, and shapes sit behind headings only. */
+
+/* --- footer ---------------------------------------------------------------------- */
+
+.bh-footer {
+  background: var(--bh-ink);
+  color: var(--bh-muted-on-ink);
+  padding: 40px var(--bh-gutter);
+  font-size: var(--bh-size-small);
+}
+.bh-footer a { color: var(--bh-paper); }
+
+/* --- v1.1 additions: the full element inventory (2026-07-03) -------------- */
+
+/* dropdown / menu (native details-based; JS-free) */
+.bh-menu { position: relative; display: inline-block; }
+.bh-menu > summary {
+  list-style: none; cursor: pointer; display: inline-block;
+  font: 600 14px/1 var(--bh-label); letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 14px 22px; }
+.bh-menu > summary::-webkit-details-marker { display: none; }
+.bh-menu > summary::after { content: " \25BE"; }
+.bh-menu[open] > summary { background: var(--bh-ink); color: var(--bh-paper); }
+.bh-menu-list {
+  position: absolute; z-index: 30; min-width: 220px; margin-top: -2px;
+  background: var(--bh-card-on-paper); list-style: none; padding: 6px 0;
+}
+.bh-menu-list a {
+  display: block; padding: 10px 16px; text-decoration: none; color: inherit;
+  font-size: var(--bh-size-small);
+}
+.bh-menu-list a:hover { background: var(--bh-ink); color: var(--bh-paper); }
+
+/* modal / dialog (native <dialog>) */
+.bh-dialog {
+  background: var(--bh-paper);
+  color: var(--bh-ink); padding: 0; max-width: min(520px, 90vw);
+}
+.bh-dialog::backdrop { background: rgba(21, 42, 73, 0.55); }
+.bh-dialog-head {
+  background: var(--bh-ink); color: var(--bh-paper); padding: 14px 20px;
+  font: 800 18px/1 var(--bh-display); letter-spacing: -0.02em; text-transform: lowercase;
+}
+.bh-dialog-body { padding: 20px; }
+.bh-dialog-actions { display: flex; gap: 12px; justify-content: flex-end; padding: 0 20px 20px; }
+
+/* tabs (radio-driven, JS-free) */
+.bh-tabs { border-bottom: var(--bh-border) solid var(--bh-ink); display: flex; gap: 4px; }
+.bh-tab {
+  font: 600 12px/1 var(--bh-label); letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 12px 18px; cursor: pointer; border-bottom: none; margin-bottom: calc(-1 * var(--bh-border));
+}
+.bh-tab[aria-selected="true"], .bh-tab.is-active {
+  background: var(--bh-ink); color: var(--bh-paper);
+}
+.bh-tab:hover { color: var(--bh-accent); }
+
+/* accordion (native details) */
+.bh-accordion { }
+.bh-accordion + .bh-accordion { border-top: none; }
+.bh-accordion > summary {
+  cursor: pointer; padding: 14px 18px; font: 600 14px/1.3 var(--bh-body);
+  list-style: none; display: flex; justify-content: space-between; gap: 12px;
+}
+.bh-accordion > summary::-webkit-details-marker { display: none; }
+.bh-accordion > summary::after { content: "+"; font: 800 18px/1 var(--bh-display); color: var(--bh-accent); }
+.bh-accordion[open] > summary::after { content: "\2212"; }
+.bh-accordion-body { padding: 0 18px 16px; color: var(--bh-muted); font-size: var(--bh-size-small); }
+
+/* tooltip (CSS-only, for supplementary hints - never sole affordance) */
+.bh-tip { position: relative; border-bottom: 2px dotted var(--bh-accent); cursor: help; }
+.bh-tip::after {
+  content: attr(data-tip); position: absolute; left: 0; bottom: calc(100% + 8px);
+  background: var(--bh-ink); color: var(--bh-paper); font-size: 12px; line-height: 1.4;
+  padding: 8px 10px; min-width: 180px; opacity: 0; pointer-events: none;
+  transition: opacity var(--bh-fast) var(--bh-ease); z-index: 40;
+}
+.bh-tip:hover::after, .bh-tip:focus-visible::after { opacity: 1; }
+
+/* toast */
+.bh-toast {
+  display: inline-flex; align-items: center; gap: 12px;
+  background: var(--bh-ink); color: var(--bh-paper); padding: 14px 18px;
+  border-left: 6px solid var(--bh-accent); font-size: var(--bh-size-small);
+}
+.bh-toast--ok { border-left-color: rgba(21, 42, 73, 0.45); }
+
+/* pagination */
+.bh-pages { display: flex; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.bh-pages a, .bh-pages span {
+  display: inline-block; min-width: 38px; text-align: center; padding: 9px 6px;
+  text-decoration: none; color: inherit;
+  font: 600 13px/1 var(--bh-label);
+}
+.bh-pages [aria-current="page"] { background: var(--bh-ink); color: var(--bh-paper); }
+.bh-pages a:hover { border-color: var(--bh-accent); color: var(--bh-accent); }
+
+/* breadcrumbs */
+.bh-crumbs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0;
+  font: 600 var(--bh-size-label)/1 var(--bh-label); letter-spacing: var(--bh-track-label);
+  text-transform: uppercase; }
+.bh-crumbs li + li::before { content: "\25B8"; color: var(--bh-accent); margin-right: 8px; }
+.bh-crumbs a { color: var(--bh-muted); text-decoration: none; }
+.bh-crumbs a:hover { color: var(--bh-accent); }
+
+/* avatar (flat monogram block - no photos required) */
+.bh-avatar {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; background: var(--bh-ink); color: var(--bh-paper);
+  font: 800 16px/1 var(--bh-display); text-transform: lowercase;
+}
+.bh-avatar--accent { background: var(--bh-accent); }
+.bh-avatar--round { border-radius: 50%; } /* the circle is Bauhaus */
+
+/* chips / tags (removable filter tokens; distinct from status badges) */
+.bh-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  font: 600 12px/1 var(--bh-label); padding: 8px 12px;
+  background: var(--bh-card-on-paper); }
+.bh-chip button {
+  all: unset; cursor: pointer; font-weight: 800; color: var(--bh-accent); line-height: 1;
+}
+
+/* toggle switch */
+.bh-switch { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+.bh-switch input { appearance: none; width: 46px; height: 24px; margin: 0;
+  background: var(--bh-paper);
+  cursor: pointer; transition: background var(--bh-fast) var(--bh-ease); }
+.bh-switch input::before { content: ""; position: absolute; top: 4px; left: 4px;
+  width: 16px; height: 16px; background: var(--bh-ink);
+  transition: transform var(--bh-fast) var(--bh-ease); }
+.bh-switch input:checked { background: var(--bh-ink); }
+.bh-switch input:checked::before { background: var(--bh-paper); transform: translateX(22px); }
+
+/* slider (range) */
+.bh-range { appearance: none; width: 100%; height: 6px; background: var(--bh-hairline);
+  outline-offset: 4px; }
+.bh-range::-webkit-slider-thumb { appearance: none; width: 20px; height: 20px;
+  background: var(--bh-accent); cursor: pointer; }
+.bh-range::-moz-range-thumb { width: 20px; height: 20px; background: var(--bh-accent);
+  cursor: pointer; border-radius: 0; }
+
+/* stepper (process position - use only for real sequences) */
+.bh-steps { display: flex; gap: 0; list-style: none; padding: 0; margin: 0; counter-reset: step; }
+.bh-steps li { counter-increment: step; flex: 1; text-align: center; position: relative;
+  font: 600 var(--bh-size-label)/1.3 var(--bh-label); letter-spacing: 0.08em;
+  text-transform: uppercase; padding-top: 34px; color: var(--bh-muted); }
+.bh-steps li::before { content: counter(step); position: absolute; top: 0; left: 50%;
+  transform: translateX(-50%); width: 26px; height: 26px; line-height: 24px;
+  background: var(--bh-paper);
+  color: var(--bh-ink); font: 800 13px/24px var(--bh-display); }
+.bh-steps li[aria-current="step"] { color: var(--bh-ink); }
+.bh-steps li[aria-current="step"]::before { background: var(--bh-accent); color: var(--bh-paper);
+  border-color: var(--bh-accent); }
+.bh-steps li.is-done::before { background: var(--bh-ink); color: var(--bh-paper); content: "\2713"; }
+
+/* skeleton loading (flat pulse; respects reduced motion via base rule) */
+.bh-skeleton { background: var(--bh-hairline); animation: bh-pulse 1.4s var(--bh-ease) infinite; }
+@keyframes bh-pulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 0.9; } }
+
+/* spinner (rotating quarter - the circle again) */
+.bh-spinner { width: 26px; height: 26px; border-radius: 50%;
+  border: 3px solid var(--bh-hairline); border-top-color: var(--bh-accent);
+  animation: bh-spin 0.9s linear infinite; }
+@keyframes bh-spin { to { transform: rotate(360deg); } }
+
+/* empty state (an invitation to act, not a mood) */
+.bh-empty { text-align: center; padding: 56px 24px; background: rgba(21, 42, 73, 0.05); }
+.bh-empty .bh-h3 { margin-bottom: 8px; }
+.bh-empty p { color: var(--bh-muted); margin: 0 0 20px; }
+
+/* inline code, kbd, blockquote, divider */
+.bh-code { font-family: var(--bh-mono); font-size: 13px; background: var(--bh-card-on-paper);
+  border: 1px solid var(--bh-hairline); padding: 2px 6px; }
+.bh-pre { font-family: var(--bh-mono); font-size: 13px; line-height: 1.6;
+  background: var(--bh-ink); color: var(--bh-paper); padding: 18px 20px; overflow-x: auto; }
+.bh-kbd { font-family: var(--bh-mono); font-size: 12px;  padding: 2px 7px; background: var(--bh-card-on-paper); }
+.bh-quote { border-left: 6px solid var(--bh-accent); margin: 0; padding: 4px 0 4px 20px;
+  font-size: 17px; line-height: 1.55; }
+.bh-quote cite { display: block; margin-top: 8px; font: 600 var(--bh-size-label)/1 var(--bh-label);
+  letter-spacing: var(--bh-track-label); text-transform: uppercase; font-style: normal; }
+.bh-rule { border: none; border-top: var(--bh-border) solid var(--bh-ink); margin: var(--bh-gap) 0; }
+.bh-link { color: inherit; text-decoration-color: var(--bh-accent); text-decoration-thickness: 2px;
+  text-underline-offset: 3px; }
+.bh-link:hover { color: var(--bh-accent); }

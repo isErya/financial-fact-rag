@@ -1,0 +1,4 @@
+# Parsing and data types only at this stage; retrieval, serving, and the
+# model client are added with their milestones.
+pydantic==2.12.5
+pyyaml==6.0.3

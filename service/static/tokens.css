@@ -1,0 +1,64 @@
+/* bauhaus/tokens.css - the emmadurr house design system, v1 (2026-07-03)
+   Derived from emmadurr.com v2. Canonical source for ALL emmadurr products.
+   Rule zero: flat color, sharp corners, NO OUTLINES on shapes - separation
+   comes from fill contrast and spacing. One palette (the v2 colors), always:
+   no dark-mode inversion.
+
+   Contrast contract (measured):
+   - navy on cream / cream on navy ........ ~11.7:1  (body text ok)
+   - muted on cream (.68 navy) ............ ~4.7:1   (body text ok)
+   - muted on navy (.6 cream) ............. ~5.2:1   (body text ok)
+   - red on cream OR navy ............... ~3.4:1   (LARGE/decor only - red
+     is an accent, never a reading surface at body sizes)
+*/
+
+:root {
+  /* color */
+  --bh-paper: #f0e8d8;              /* cream - page background */
+  --bh-ink: #152a49;                /* navy - text, and full-bleed bands */
+  --bh-accent: #e24229;             /* red - THE accent; never body-text bg */
+  --bh-accent-text: #bc341d;        /* red as TEXT at small sizes (4.73:1 on cream) */
+  --bh-muted: rgba(21, 42, 73, 0.68);        /* secondary text on cream */
+  --bh-muted-on-ink: rgba(240, 232, 216, 0.6); /* secondary text on navy */
+  --bh-card-on-paper: #fbf6ea;      /* subtle lift above cream */
+  --bh-card-on-ink: #1d3557;        /* subtle lift above navy */
+  --bh-hairline: rgba(21, 42, 73, 0.22);
+  --bh-hairline-on-ink: rgba(240, 232, 216, 0.25);
+
+  /* type */
+  --bh-display: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif; /* 800, lowercase */
+  --bh-label: "Jost", "Montserrat", "Helvetica Neue", sans-serif;             /* 600, CAPS */
+  --bh-body: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;    /* 400/600 */
+  --bh-mono: "JetBrains Mono", ui-monospace, monospace;         /* data/code */
+
+  --bh-size-hero: clamp(42px, 7vw, 104px);
+  --bh-size-h2: clamp(34px, 4vw, 48px);
+  --bh-size-h3: 23px;
+  --bh-size-body: 15px;
+  --bh-size-small: 13px;
+  --bh-size-label: 11px;
+  --bh-track-display: -0.03em;
+  --bh-track-label: 0.14em;
+  --bh-leading-body: 1.55;
+
+  /* layout - 8px grid */
+  --bh-max: 1280px;
+  --bh-gutter: 48px;
+  --bh-section: 80px;
+  --bh-gap: 24px;
+  --bh-radius: 0;                   /* Bauhaus: geometry is sharp */
+  --bh-border: 2px;                 /* structural borders are honest, not hairline */
+
+  /* motion - calm, few, meaningful */
+  --bh-ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --bh-fast: 140ms;
+  --bh-slow: 320ms;
+}
+
+@media (max-width: 720px) {
+  :root {
+    --bh-gutter: 24px;
+    --bh-section: 56px;
+  }
+}
+

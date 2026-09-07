@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+index/
+eval/results/*.raw.json
+.playwright-mcp/
+.venv/
+.fastembed/
+.fastembed/
+index-*/
