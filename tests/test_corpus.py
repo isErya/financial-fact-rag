@@ -144,6 +144,26 @@ def test_jpm_10q_risk_factors_is_a_pointer_stub(corpus):
     assert section(one(corpus, "JPM_10Q_2025Q3"), "II.1A").is_pointer_stub
 
 
+def test_jpm_10q_annual_style_part_i_found_by_fallback(corpus):
+    """JPMorgan writes no "Item 1." or "Item 2." heading in Part I: the
+    MD&A starts at its introduction sentence and the statements at their
+    title over the first table, MD&A first, both inside the span bounds,
+    and the items the headings do name are untouched."""
+    jpm = one(corpus, "JPM_10Q_2025Q3_2025-11-04")
+    mdna, statements = section(jpm, "I.2"), section(jpm, "I.1")
+    assert mdna is not None and statements is not None
+    assert mdna.start < statements.start
+    assert jpm.body[mdna.start:mdna.start + 30].startswith("The following is Management")
+    assert jpm.body[statements.start:statements.start + 40].lower().startswith("consolidated statements of income")
+    assert 10_000 <= mdna.end - mdna.start <= 600_000
+    assert 10_000 <= statements.end - statements.start <= 1_500_000
+    for item in ("I.3", "I.4", "II.1A"):
+        assert section(jpm, item) is not None, item
+    assert len(statements.notes) >= 5
+    for prefix in ("JPM_10Q_2025Q1", "JPM_10Q_2025Q2"):
+        assert section(one(corpus, prefix), "I.2") is not None, prefix
+
+
 # --- notes -------------------------------------------------------------------
 
 

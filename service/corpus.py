@@ -15,11 +15,13 @@ Where each decision is made:
                    count what was removed
   cut_signatures   runs before detection, so nothing after the signatures
                    block can become a heading
-  detect_sections  the three candidate forms ("Item N" headings, title-only
-                   headings, the auditor's report as the start of Item 8),
-                   the TOC region, the rejection rules, the greedy choice
-                   with span validation, and the Item 15 hand-off for filers
-                   who put the statements there
+  detect_sections  the candidate forms ("Item N" headings, title-only
+                   headings, the auditor's report as the start of Item 8,
+                   and for a 10-Q filed in annual-report style the MD&A
+                   introduction and the statements title), the TOC region,
+                   the rejection rules, the greedy choice with span
+                   validation, and the Item 15 hand-off for filers who put
+                   the statements there
   detect_notes     note heading styles, the footnote filter, and the
                    ascending-number chain
   assign_fiscal_labels  the only place fiscal years and quarters are computed
@@ -426,6 +428,20 @@ AUDITOR_REPORT_RE = re.compile(
 STATEMENTS_RE = re.compile(r"(?i)consolidated\s+(?:statements?|balance\s+sheets?)")
 STATEMENTS_WINDOW = 20000
 
+# A 10-Q filed in annual-report style (JPMorgan) has no "Item 1." or
+# "Item 2." heading in Part I; the MD&A opens with this sentence at a line
+# start and the statements open with this title over their first table.
+# The optional tail of the MD&A sentence is part of the match so that the
+# cross-reference rule, which rejects a title followed by "of the", does not
+# reject the sentence itself. The lookahead on the statements title asks
+# for a pipe row on the next line, which the table-of-contents entry and
+# the exhibit-index entry for the same title do not have.
+MDNA_INTRO_RE = re.compile(
+    r"(?im)^The following is Management'?s discussion and analysis"
+    r"(?:\s+of\s+(?:the\s+)?financial\s+condition\s+and\s+results\s+of\s+operations)?")
+STATEMENTS_TITLE_RE = re.compile(
+    r"(?i)Consolidated\s+statements?\s+of\s+(?:income|operations|earnings)\s*\(unaudited\)(?=\s*\n\|)")
+
 
 def _after_item_re(title: str) -> re.Pattern:
     """Separator plus title, matched right after an "Item N" token."""
@@ -659,8 +675,28 @@ def detect_sections(body: str, form: str) -> list[Section]:
             followed = STATEMENTS_RE.search(body, match.end(), match.end() + STATEMENTS_WINDOW)
             if followed and _survives(body, match.start(), match.end(), toc):
                 cands["8"].append(match.start())
-
     chosen = _choose(body, form, order, cands, part_of, part2)
+    if form == "10-Q":
+        # Only for an item the "Item N" form produced no section for. A
+        # filer who writes "Item 2." also writes the MD&A sentence, and the
+        # heading is the earlier and better boundary. The gate is the
+        # outcome of the choice rather than an empty candidate list because
+        # JPMorgan's contents rows for Items 1 and 2 carry their page
+        # numbers on the sub-entry lines below them, so they pass the
+        # rejection rules and fail span validation instead; a list whose
+        # every member failed is replaced, then the choice runs again.
+        found = {item for item, _pos in chosen}
+        replaced = False
+        for item, pattern in (("I.2", MDNA_INTRO_RE), ("I.1", STATEMENTS_TITLE_RE)):
+            if item in found:
+                continue
+            hits = [m.start() for m in pattern.finditer(body)
+                    if _survives(body, m.start(), m.end(), toc)]
+            if hits:
+                cands[item] = hits
+                replaced = True
+        if replaced:
+            chosen = _choose(body, form, order, cands, part_of, part2)
 
     sections = []
     first = chosen[0][1] if chosen else len(body)
@@ -853,12 +889,15 @@ def parse_filing(name: str, raw_text: str, stats: dict | None = None) -> Filing:
 
 
 def load_corpus(zip_path: str, companies: dict | None = None,
-                stats: dict | None = None) -> list[Filing]:
-    """Parse every .txt member of the zip, then label fiscal periods."""
+                stats: dict | None = None, files: set[str] | None = None) -> list[Filing]:
+    """Parse every .txt member of the zip, or only `files`, then label
+    fiscal periods. A subset is what tests and the tuning-set index build
+    ask for; the fiscal-year-end month of a ticker whose 10-K is outside
+    the subset comes from the registry."""
     filings = []
     with zipfile.ZipFile(zip_path) as zf:
         for name in sorted(zf.namelist()):
-            if not name.endswith(".txt"):
+            if not name.endswith(".txt") or (files is not None and name not in files):
                 continue
             filings.append(parse_filing(name, zf.read(name).decode("utf-8"), stats))
     assign_fiscal_labels(filings, companies)
@@ -903,7 +942,9 @@ def assign_fiscal_labels(filings: list[Filing], companies: dict | None = None) -
             fye[f.ticker] = fiscal_anchor(dt.date.fromisoformat(f.period_end)).month
     for f in filings:
         if f.ticker not in fye:
-            fye[f.ticker] = fiscal_anchor(dt.date.fromisoformat(f.period_end)).month
+            registry = (companies.get(f.ticker) or {}).get("fye_month")
+            fye[f.ticker] = int(registry) if registry else fiscal_anchor(
+                dt.date.fromisoformat(f.period_end)).month
 
     for f in filings:
         anchor = fiscal_anchor(dt.date.fromisoformat(f.period_end))

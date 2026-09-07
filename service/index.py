@@ -1,8 +1,12 @@
-"""Command-line entry points for the corpus.
+"""Command-line entry points for the corpus, and the retrieval index.
 
   python service/index.py report                  -> eval/parse_report.md
   python service/index.py gen-companies [--merge] -> service/companies.yaml
-  python service/index.py build                   -> milestone 2
+  python service/index.py build [--index-dir DIR] [--dense 0|1] [--files a.txt,b.txt]
+                                                  -> DIR/chunks.jsonl.gz, DIR/bm25/,
+                                                     DIR/dense.npy, DIR/files.json,
+                                                     DIR/ticker_ranges.json,
+                                                     DIR/fingerprint.json
 
 `report` is the parser's acceptance test in prose: summary rates against the
 thresholds the milestone promises, then one row per file so a reviewer can
@@ -10,12 +14,23 @@ spot-check a boundary. `gen-companies` writes the per-ticker facts the parser
 measured and leaves the hand-written fields empty; with --merge the hand
 fields already in the file survive a regeneration.
 
-Failure policy: any parse error propagates. A report over a partial corpus
-would hide exactly the file that needs attention.
+`build` parses the corpus, chunks every filing, and writes a lexical index
+(bm25s) and, when asked, a dense one (fastembed MiniLM-L6). Chunks are laid
+out ticker by ticker so a company's chunks are one contiguous id range and
+a search over one ticker is a slice. `load` reads the directory back into
+an Index whose `search` fuses the two rankings with reciprocal rank fusion.
+
+Failure policy: any parse error propagates. A report or an index over a
+partial corpus would hide exactly the file that needs attention.
 """
 
 import argparse
+import dataclasses
 import datetime as dt
+import gzip
+import hashlib
+import json
+import multiprocessing
 import os
 import re
 import sys
@@ -23,9 +38,13 @@ import time
 import zipfile
 from collections import Counter
 
+import bm25s
+import numpy as np
+import Stemmer
 import yaml
 
 import config
+from chunk import chunk_filing
 from corpus import (
     HEADER_RULE,
     body_start,
@@ -33,7 +52,7 @@ from corpus import (
     load_corpus,
     normalize,
 )
-from models import Filing
+from models import Chunk, Column, Filing
 
 MIN_NOTES = 5
 OFFSET_SCAN_CHARS = 60000
@@ -158,6 +177,7 @@ def build_report(filings: list[Filing], stats: dict, parse_seconds: float,
     k_1a_ok = sum(1 for f in tenk if span_ok(f, "1A", 5_000, 400_000))
     k_7 = sum(1 for f in tenk if section_of(f, "7"))
     k_8 = sum(1 for f in tenk if section_of(f, "8"))
+    q_i1 = sum(1 for f in tenq if section_of(f, "I.1"))
     q_i2 = sum(1 for f in tenq if section_of(f, "I.2"))
     q_ii1a = sum(1 for f in tenq if section_of(f, "II.1A"))
     q_stub = sum(1 for f in tenq if section_of(f, "II.1A") and section_of(f, "II.1A").is_pointer_stub)
@@ -181,6 +201,7 @@ def build_report(filings: list[Filing], stats: dict, parse_seconds: float,
         "| 10-Ks with Item 1A span 5k-400k | %s | >= 95%% |" % pct(k_1a_ok, len(tenk)),
         "| 10-Ks with Item 7 | %s | >= 95%% |" % pct(k_7, len(tenk)),
         "| 10-Ks with Item 8 | %s | >= 90%% |" % pct(k_8, len(tenk)),
+        "| 10-Qs with I.1 | %s | |" % pct(q_i1, len(tenq)),
         "| 10-Qs with I.2 | %s | |" % pct(q_i2, len(tenq)),
         "| 10-Qs with II.1A | %s | |" % pct(q_ii1a, len(tenq)),
         "| 10-Q II.1A pointer stubs | %d | |" % q_stub,
@@ -295,8 +316,320 @@ def cmd_gen_companies(args: argparse.Namespace) -> None:
     print("wrote", args.out, "with", len(ordered), "companies")
 
 
+# ---------------------------------------------------------------------------
+# build
+# ---------------------------------------------------------------------------
+
+STEMMER = Stemmer.Stemmer("english")
+# Chunks handed to one embedding worker per task: a few batches, so the
+# progress line moves and no worker sits on one giant task at the end.
+EMBED_SLAB = config.EMBED_BATCH * 8
+# Below this many chunks one process embeds faster than a pool can start.
+POOL_MIN_TEXTS = 1000
+PROGRESS_EVERY = 1000
+RRF_K = 60
+
+
+def index_text(chunk: Chunk) -> str:
+    """What both indexes see: the header line first, so a truncated
+    embedding loses chunk tail, never the filing, item, units or columns."""
+    return chunk.header + "\n" + chunk.text
+
+
+# Stopwords and stemming are fixed in these two functions so the index and
+# every query agree on the vocabulary.
+
+
+def tokenize_documents(texts: list[str]):
+    return bm25s.tokenize(texts, stopwords="en", stemmer=STEMMER, show_progress=False)
+
+
+def tokenize_query(query: str) -> list[str]:
+    return bm25s.tokenize(query, stopwords="en", stemmer=STEMMER, show_progress=False,
+                          return_ids=False)[0]
+
+
+def fingerprint(zip_path: str, dense: bool, files: list[str] | None) -> str:
+    """One hash over everything that changes the index: the zip bytes, the
+    chunker version, the embedding model, the dense flag, the file subset."""
+    digest = hashlib.sha256()
+    with open(zip_path, "rb") as fh:
+        for block in iter(lambda: fh.read(1 << 20), b""):
+            digest.update(block)
+    tail = "|%s|%s|%d|%s" % (config.CHUNKER_VERSION, config.EMBED_MODEL, dense,
+                             ",".join(sorted(files or [])))
+    digest.update(tail.encode())
+    return digest.hexdigest()
+
+
+def embedder(threads: int | None = None):
+    """The fastembed model, loaded from the local cache only.
+
+    Imported here so the web process and the BM25-only build never pay for
+    onnxruntime. The tokenizer file ships with truncation and padding fixed
+    at 128 tokens for MiniLM; truncation is raised to EMBED_MAX_TOKENS and
+    padding switched to the longest sequence in the batch, since a fixed
+    128 pad under a 256 cut gives ragged batches. fastembed offers no
+    argument for either, which is also why the parallel build below runs
+    its own worker pool instead of fastembed's `parallel=`. `threads` caps
+    the onnxruntime session so several workers share the cores instead of
+    each claiming all of them.
+    """
+    from fastembed import TextEmbedding
+
+    model = TextEmbedding(config.EMBED_MODEL, cache_dir=config.FASTEMBED_CACHE,
+                          local_files_only=True, threads=threads)
+    tokenizer = model.model.tokenizer
+    tokenizer.enable_truncation(max_length=config.EMBED_MAX_TOKENS)
+    padding = dict(tokenizer.padding or {})
+    padding["length"] = None
+    tokenizer.enable_padding(**padding)
+    return model
+
+
+_WORKER_MODEL = None
+
+
+def _init_worker(threads: int) -> None:
+    global _WORKER_MODEL
+    _WORKER_MODEL = embedder(threads)
+
+
+def _embed_slab(texts: list[str]) -> np.ndarray:
+    return np.stack(list(_WORKER_MODEL.embed(texts, batch_size=config.EMBED_BATCH)))
+
+
+def embed_texts(texts: list[str], workers: int) -> np.ndarray:
+    """float32 [n, 384] unit vectors for `texts`, in order.
+
+    Workers use the spawn start method, since onnxruntime's thread pool
+    does not survive a fork; each worker loads the model once in
+    `_init_worker` with a share of the cores. On the 10-core laptop this
+    was developed on, one session already saturates the cores and the pool
+    adds little (21 versus 22 chunks per second); it earns its keep on a
+    host with more cores. Under POOL_MIN_TEXTS chunks one process wins
+    outright, since spawning workers costs more than embedding that many.
+    """
+    slabs = [texts[i:i + EMBED_SLAB] for i in range(0, len(texts), EMBED_SLAB)]
+    parts: list[np.ndarray] = []
+    done = 0
+    next_mark = PROGRESS_EVERY
+
+    def took(vecs: np.ndarray) -> None:
+        nonlocal done, next_mark
+        parts.append(vecs)
+        done += len(vecs)
+        if done >= next_mark:
+            print("embedded %d / %d chunks" % (done, len(texts)), flush=True)
+            next_mark += PROGRESS_EVERY
+
+    if workers <= 1 or len(texts) < POOL_MIN_TEXTS:
+        model = embedder()
+        for slab in slabs:
+            took(np.stack(list(model.embed(slab, batch_size=config.EMBED_BATCH))))
+    else:
+        threads = max(1, (os.cpu_count() or workers) // workers)
+        context = multiprocessing.get_context("spawn")
+        with context.Pool(workers, initializer=_init_worker, initargs=(threads,)) as pool:
+            for vecs in pool.imap(_embed_slab, slabs):
+                took(vecs)
+    dense = np.concatenate(parts).astype(np.float32)
+    norms = np.linalg.norm(dense, axis=1, keepdims=True)
+    return dense / np.maximum(norms, 1e-12)
+
+
+def build(index_dir: str, dense: bool = False, files: list[str] | None = None) -> dict:
+    """Build the index into `index_dir`; returns the fingerprint record.
+
+    Skips the whole build when the directory already holds an index with
+    the same fingerprint, so a container start or a test can call it
+    unconditionally.
+    """
+    os.makedirs(index_dir, exist_ok=True)
+    sha = fingerprint(config.CORPUS_ZIP, dense, files)
+    record_path = os.path.join(index_dir, "fingerprint.json")
+    if os.path.exists(record_path):
+        with open(record_path) as fh:
+            record = json.load(fh)
+        if record.get("sha256") == sha:
+            print("index up to date")
+            return record
+
+    phases: dict[str, float] = {}
+    started = time.perf_counter()
+    filings = load_corpus(config.CORPUS_ZIP, load_companies(config.COMPANIES_FILE),
+                          files=set(files) if files else None)
+    phases["parse"] = round(time.perf_counter() - started, 1)
+
+    started = time.perf_counter()
+    filings.sort(key=lambda f: (f.ticker, f.file))
+    chunks: list[Chunk] = []
+    file_records = []
+    ticker_ranges: dict[str, list[int]] = {}
+    for filing in filings:
+        first = len(chunks)
+        own = chunk_filing(filing)
+        chunks.extend(own)
+        sections = []
+        for section in filing.sections:
+            members = [k for k, c in enumerate(own) if c.item == section.item]
+            sections.append({
+                "item": section.item,
+                "title": section.title,
+                "is_pointer_stub": section.is_pointer_stub,
+                "chunk_start": first + members[0] if members else first + len(own),
+                "chunk_end": first + members[-1] + 1 if members else first + len(own),
+            })
+        file_records.append({
+            "file": filing.file,
+            "ticker": filing.ticker,
+            "form": filing.form,
+            "period_end": filing.period_end,
+            "fiscal_label": filing.fiscal_label,
+            "filing_date": filing.filing_date,
+            "chunk_start": first,
+            "chunk_end": len(chunks),
+            "sections": sections,
+        })
+        span = ticker_ranges.setdefault(filing.ticker, [first, first])
+        span[1] = len(chunks)
+    phases["chunk"] = round(time.perf_counter() - started, 1)
+
+    started = time.perf_counter()
+    with gzip.open(os.path.join(index_dir, "chunks.jsonl.gz"), "wt") as fh:
+        for chunk in chunks:
+            fh.write(json.dumps(dataclasses.asdict(chunk)) + "\n")
+    with open(os.path.join(index_dir, "ticker_ranges.json"), "w") as fh:
+        json.dump(ticker_ranges, fh, indent=1)
+    with open(os.path.join(index_dir, "files.json"), "w") as fh:
+        json.dump(file_records, fh, indent=1)
+    phases["write"] = round(time.perf_counter() - started, 1)
+
+    started = time.perf_counter()
+    texts = [index_text(c) for c in chunks]
+    retriever = bm25s.BM25()
+    retriever.index(tokenize_documents(texts), show_progress=False)
+    retriever.save(os.path.join(index_dir, "bm25"))
+    phases["bm25"] = round(time.perf_counter() - started, 1)
+
+    dense_path = os.path.join(index_dir, "dense.npy")
+    if dense:
+        started = time.perf_counter()
+        np.save(dense_path, embed_texts(texts, config.EMBED_WORKERS))
+        phases["dense"] = round(time.perf_counter() - started, 1)
+    elif os.path.exists(dense_path):
+        os.remove(dense_path)
+
+    tables = [c for c in chunks if c.kind == "table"]
+    with_columns = sum(1 for c in tables if c.column_source == "parsed")
+    record = {
+        "sha256": sha,
+        "chunks": len(chunks),
+        "files": len(filings),
+        "dense": dense,
+        "built_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "phase_seconds": phases,
+    }
+    with open(record_path, "w") as fh:
+        json.dump(record, fh, indent=1)
+    print("parsed %d filings | %d chunks | tables with columns %d%% | bm25 in %ss | dense in %s" % (
+        len(filings), len(chunks), round(100.0 * with_columns / len(tables)) if tables else 0,
+        phases["bm25"], "%ss" % phases["dense"] if dense else "off"))
+    print("phase seconds:", json.dumps(phases))
+    return record
+
+
 def cmd_build(args: argparse.Namespace) -> None:
-    raise NotImplementedError("build arrives with milestone 2")
+    files = [f for f in args.files.split(",") if f] if args.files else None
+    build(args.index_dir, dense=args.dense == "1", files=files)
+
+
+# ---------------------------------------------------------------------------
+# load and search
+# ---------------------------------------------------------------------------
+
+
+def _ranks(scores: np.ndarray) -> np.ndarray:
+    """1-based rank of each score, best first; ties keep index order."""
+    order = np.argsort(-scores, kind="stable")
+    ranks = np.empty(len(scores), dtype=np.int64)
+    ranks[order] = np.arange(1, len(scores) + 1)
+    return ranks
+
+
+class Index:
+    """A loaded index. Scores are over all chunk ids; `search` restricts to
+    a caller-chosen id set (a ticker's range, a section's range) and ranks
+    inside it, so a small company is never crowded out by a large one."""
+
+    def __init__(self, chunks: list[Chunk], ticker_ranges: dict, files: list[dict],
+                 bm25: bm25s.BM25, dense: np.ndarray | None):
+        self.chunks = chunks
+        self.by_id = {c.chunk_id: c for c in chunks}
+        self.ticker_ranges = ticker_ranges
+        self.files = files
+        self.bm25 = bm25
+        self.dense = dense
+        self._model = None
+
+    def bm25_scores(self, query: str) -> np.ndarray:
+        tokens = tokenize_query(query)
+        if not tokens:
+            # Every query word was a stopword; bm25s raises on an empty list.
+            return np.zeros(len(self.chunks), dtype=np.float32)
+        return self.bm25.get_scores(tokens)
+
+    def dense_scores(self, query: str) -> np.ndarray:
+        if self.dense is None:
+            raise RuntimeError("index was built without dense vectors")
+        if self._model is None:
+            # Lazy so a web process that never sees a dense query starts fast.
+            self._model = embedder()
+        vector = np.asarray(list(self._model.query_embed(query))[0], dtype=np.float32)
+        vector /= max(float(np.linalg.norm(vector)), 1e-12)
+        return np.asarray(self.dense @ vector)
+
+    def search(self, query: str, ids: np.ndarray, k: int) -> list[tuple[str, int, int | None, float]]:
+        """Top k of `ids` by reciprocal rank fusion of the BM25 and dense
+        rankings computed within `ids`. Each hit is (chunk_id, bm25_rank,
+        dense_rank or None, rrf)."""
+        ids = np.asarray(ids, dtype=np.int64)
+        if ids.size == 0:
+            return []
+        bm25_rank = _ranks(self.bm25_scores(query)[ids])
+        rrf = 1.0 / (RRF_K + bm25_rank)
+        dense_rank = None
+        if self.dense is not None:
+            dense_rank = _ranks(self.dense_scores(query)[ids])
+            rrf = rrf + 1.0 / (RRF_K + dense_rank)
+        order = np.argsort(-rrf, kind="stable")[:k]
+        return [(self.chunks[ids[j]].chunk_id, int(bm25_rank[j]),
+                 None if dense_rank is None else int(dense_rank[j]), float(rrf[j]))
+                for j in order]
+
+
+def read_chunks(index_dir: str) -> list[Chunk]:
+    chunks = []
+    with gzip.open(os.path.join(index_dir, "chunks.jsonl.gz"), "rt") as fh:
+        for line in fh:
+            record = json.loads(line)
+            record["columns"] = [Column(**c) for c in record["columns"]]
+            chunks.append(Chunk(**record))
+    return chunks
+
+
+def load(index_dir: str) -> Index:
+    """Read an index directory. The dense matrix is memory-mapped, so load
+    time does not grow with the corpus."""
+    chunks = read_chunks(index_dir)
+    with open(os.path.join(index_dir, "ticker_ranges.json")) as fh:
+        ticker_ranges = json.load(fh)
+    with open(os.path.join(index_dir, "files.json")) as fh:
+        files = json.load(fh)
+    retriever = bm25s.BM25.load(os.path.join(index_dir, "bm25"))
+    dense_path = os.path.join(index_dir, "dense.npy")
+    dense = np.load(dense_path, mmap_mode="r") if os.path.exists(dense_path) else None
+    return Index(chunks, ticker_ranges, files, retriever, dense)
 
 
 def main(argv: list[str]) -> None:
@@ -312,7 +645,12 @@ def main(argv: list[str]) -> None:
     p_gen.add_argument("--out", default=config.COMPANIES_FILE)
     p_gen.set_defaults(func=cmd_gen_companies)
 
-    p_build = sub.add_parser("build", help="build the retrieval index (milestone 2)")
+    p_build = sub.add_parser("build", help="build the retrieval index")
+    p_build.add_argument("--index-dir", default=config.INDEX_DIR)
+    p_build.add_argument("--dense", default=config.DENSE, choices=["0", "1"],
+                         help="also embed every chunk (slow on a full corpus)")
+    p_build.add_argument("--files", default="",
+                         help="comma-separated corpus members; default is the whole zip")
     p_build.set_defaults(func=cmd_build)
 
     args = parser.parse_args(argv)

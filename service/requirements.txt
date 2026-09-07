@@ -1,4 +1,9 @@
-# Parsing and data types only at this stage; retrieval, serving, and the
-# model client are added with their milestones.
+# Parsing and data types (milestone 1), retrieval (milestone 2). Serving and
+# the model client are added with their milestones.
 pydantic==2.12.5
 pyyaml==6.0.3
+bm25s==0.3.11
+PyStemmer==3.1.0
+fastembed==0.8.0
+numpy==2.5.3
+tiktoken==0.14.0
