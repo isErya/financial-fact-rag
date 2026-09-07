@@ -1,0 +1,292 @@
+{
+ "set": "tuning",
+ "index_dir": "index",
+ "mode": "hybrid",
+ "pin": true,
+ "rows": [
+  {
+   "id": "q01",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL",
+    "JPM",
+    "TSLA"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 3,
+   "files_n": 3,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 16127,
+   "budget_ok": true,
+   "chunks": 48
+  },
+  {
+   "id": "q02",
+   "tickers_ok": true,
+   "resolved": [
+    "NVDA"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 2,
+   "files_n": 2,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 14790,
+   "budget_ok": true,
+   "chunks": 48
+  },
+  {
+   "id": "q03",
+   "tickers_ok": true,
+   "resolved": [
+    "ABBV",
+    "JNJ",
+    "LLY",
+    "MRK",
+    "PFE"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 2,
+   "files_n": 2,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 26277,
+   "budget_ok": true,
+   "chunks": 75
+  },
+  {
+   "id": "q04",
+   "tickers_ok": true,
+   "resolved": [
+    "BAC",
+    "JPM"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 2,
+   "files_n": 2,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 16353,
+   "budget_ok": true,
+   "chunks": 48
+  },
+  {
+   "id": "q05",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 6663,
+   "budget_ok": true,
+   "chunks": 24
+  },
+  {
+   "id": "q06",
+   "tickers_ok": true,
+   "resolved": [
+    "JPM"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 7463,
+   "budget_ok": true,
+   "chunks": 24
+  },
+  {
+   "id": "q07",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 6939,
+   "budget_ok": true,
+   "chunks": 24
+  },
+  {
+   "id": "q08",
+   "tickers_ok": true,
+   "resolved": [
+    "BAC"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 7280,
+   "budget_ok": true,
+   "chunks": 24
+  },
+  {
+   "id": "q09",
+   "tickers_ok": true,
+   "resolved": [
+    "NVDA"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 6734,
+   "budget_ok": true,
+   "chunks": 24
+  },
+  {
+   "id": "q10",
+   "tickers_ok": true,
+   "resolved": [],
+   "items_hit": 0,
+   "items_n": 0,
+   "items_missing": [],
+   "files_hit": 0,
+   "files_n": 0,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "not_covered",
+   "status_ok": true,
+   "abstain_row": true,
+   "tokens": 0,
+   "budget_ok": true,
+   "chunks": 0
+  },
+  {
+   "id": "q11",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL"
+   ],
+   "items_hit": 0,
+   "items_n": 0,
+   "items_missing": [],
+   "files_hit": 0,
+   "files_n": 0,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "period_not_covered",
+   "status_ok": true,
+   "abstain_row": true,
+   "tokens": 0,
+   "budget_ok": true,
+   "chunks": 0
+  },
+  {
+   "id": "q12",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 8708,
+   "budget_ok": true,
+   "chunks": 24
+  }
+ ],
+ "summary": {
+  "section_hit": [
+   10,
+   10
+  ],
+  "file_coverage": [
+   15,
+   15
+  ],
+  "passage_hit": [
+   6,
+   6
+  ],
+  "abstain": [
+   2,
+   2
+  ],
+  "status_ok": [
+   12,
+   12
+  ],
+  "budget_ok": [
+   10,
+   10
+  ],
+  "mean_tokens": 11733
+ }
+}

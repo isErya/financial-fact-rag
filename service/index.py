@@ -589,17 +589,24 @@ class Index:
         vector /= max(float(np.linalg.norm(vector)), 1e-12)
         return np.asarray(self.dense @ vector)
 
-    def search(self, query: str, ids: np.ndarray, k: int) -> list[tuple[str, int, int | None, float]]:
+    def search(self, query: str, ids: np.ndarray, k: int,
+               mode: str = "hybrid") -> list[tuple[str, int, int | None, float]]:
         """Top k of `ids` by reciprocal rank fusion of the BM25 and dense
         rankings computed within `ids`. Each hit is (chunk_id, bm25_rank,
-        dense_rank or None, rrf)."""
+        dense_rank or None, rrf). `mode` is "hybrid" (both rankings when
+        the index has dense vectors), "bm25" or "dense"; the last two exist
+        for the retrieval ablation and each fuses a single ranking."""
+        if mode not in ("hybrid", "bm25", "dense"):
+            raise ValueError("unknown search mode %r" % mode)
         ids = np.asarray(ids, dtype=np.int64)
         if ids.size == 0:
             return []
         bm25_rank = _ranks(self.bm25_scores(query)[ids])
-        rrf = 1.0 / (RRF_K + bm25_rank)
+        rrf = np.zeros(ids.size)
+        if mode != "dense":
+            rrf = rrf + 1.0 / (RRF_K + bm25_rank)
         dense_rank = None
-        if self.dense is not None:
+        if mode != "bm25" and (self.dense is not None or mode == "dense"):
             dense_rank = _ranks(self.dense_scores(query)[ids])
             rrf = rrf + 1.0 / (RRF_K + dense_rank)
         order = np.argsort(-rrf, kind="stable")[:k]

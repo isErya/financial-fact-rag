@@ -127,6 +127,10 @@ class Plan:
     quotas: list[dict]
     sub_queries: list[str]
     budget_tokens: int
+    # Scope notes the coverage block prints: missing years, comparative
+    # columns, pointer stubs pinned to a 10-K, fiscal-quarter notes, stale
+    # filers, the narrowing to six companies.
+    notes: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -135,6 +139,18 @@ class Context:
 
     chunks: list[Chunk]
     n_tokens: int
+    # Filled by retrieve.assemble: the C-id per chunk (same order as
+    # `chunks`), the ids that were seated rather than found by search and
+    # why ("section lead" or "row label"), the coverage block and the
+    # excerpts block exactly as the model will see them, and the budget
+    # accounting the dry run reports.
+    cids: list[str] = field(default_factory=list)
+    pinned: list[str] = field(default_factory=list)
+    pinned_reason: dict[str, str] = field(default_factory=dict)
+    coverage: str = ""
+    rendered: str = ""
+    budget_tokens: int = 0
+    chunks_dropped: int = 0
 
 
 @dataclass

@@ -538,7 +538,8 @@ companies:
     - GE Capital
     aliases_cs: []
     sector: industrials
-    groups: []
+    groups:
+    - industrials
     notes: Only filing is a FY2014 10-K for GE Capital, filed 2015-02-27; excluded from group expansion
       and marked stale when named.
   GOOG:
@@ -1915,3 +1916,7 @@ groups:
     - RTX
     - LMT
     - UPS
+    # GE is listed so the stale rule in rules.py has a member to exclude:
+    # its one filing is a FY2014 annual report, so "industrial companies"
+    # never expands to it and naming it directly marks it stale.
+    - GE
