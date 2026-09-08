@@ -129,21 +129,23 @@ a "show the request" card holding the exact system and user text that was sent, 
 the attempt and completion counters. Nothing on the page is hidden behind a control. The page has
 two: the example questions, which fill the box, and the ask button.
 
-Screenshots (taken against the running stack on the fake backend):
+Screenshots, taken against the running stack with a live key, so every answer below is one the
+model actually wrote:
 
 ![The first screen: the four example questions, the question box, the ask button, and the index
-line in the footer](docs/ui-first.png)
+line and model in the left rail](docs/ui-first.png)
 
-![The interpreted scope band for the three-company risk question, showing each company with the
-alias that matched it and the filings that will be read](docs/ui.png)
+![The filings-read band for the three-company risk question: a sentence naming what will be read,
+then a card per company with the filings chosen and why, decided in code before any model request](docs/ui.png)
 
-![The bank disclosure brief, scoped to the two banks' Q3 2025 10-Qs with each bank's newest
-10-K as an annual baseline](docs/ui-bank.png)
+![The bank disclosure brief: the figures with their periods and units, citation tags linking each
+to its excerpt, and the note that Bank of America's uninsured-deposit disclosure is at a different
+date from JPMorgan's and so is not comparable](docs/ui-bank.png)
 
-- `docs/ui-scope.png` is the answer band for the three-company risk question: the summary, its
-  citation tags, and the start of the claims. The whole page runs past 30,000 pixels once every
+- `docs/ui-scope.png` is the brief for the three-company risk question: the summary sentences with
+  the citation tags that link each to its claim. The whole page runs past 30,000 pixels once every
   source card is on it, which is why it is not captured as one image.
-- `docs/ui-mobile.png` is the same page at 390 px wide.
+- `docs/ui-mobile.png` is the filings-read band at 390 px wide.
 
 ### Stop it
 
