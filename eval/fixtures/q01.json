@@ -1,0 +1,333 @@
+{
+ "question": "What are the primary risk factors facing Apple, Tesla, and JPMorgan, and how do they compare?",
+ "question_key": "4982cd1e95ff1e0a",
+ "prompt_version": "v3",
+ "saved": "2026-09-08",
+ "result": {
+  "parsed": {
+   "summary": [
+    {
+     "text": "Apple's risk disclosure is led by macroeconomic and supply-chain exposure \u2014 a majority of net sales and of supplier facilities sit outside the U.S. \u2014 plus intense competition (it holds a minority market share in smartphones, PCs, tablets and wearables) and margin volatility from pricing pressure, FX and new or increased tariffs.",
+     "claim_ids": [
+      "K1",
+      "K2",
+      "K3",
+      "K4"
+     ]
+    },
+    {
+     "text": "Tesla's risks are execution-centric: delays in developing, launching and ramping products (including driver assistance/autonomy and Cybercab), product defect and liability exposure where it generally self-insures vehicle product liability, and heavy dependence on Elon Musk and key personnel.",
+     "claim_ids": [
+      "K5",
+      "K6",
+      "K7"
+     ]
+    },
+    {
+     "text": "JPMorgan frames its principal risks in prudential categories \u2014 legal and regulatory, political, market, credit, liquidity, capital, operational, strategic, country and people \u2014 reflecting its status as a highly regulated financial institution, with cyber attack and resolution loss-absorption among named operational and regulatory concerns.",
+     "claim_ids": [
+      "K8",
+      "K9",
+      "K10"
+     ]
+    },
+    {
+     "text": "The comparison is qualitative: all three cite macro/geopolitical shocks and cybersecurity, but Apple's are demand, supply-chain and margin risks, Tesla's are product ramp, safety and key-person risks, and JPMorgan's are balance-sheet and regulatory risks; the excerpts give no quantified risk metrics for any of them.",
+     "claim_ids": [
+      "K2",
+      "K5",
+      "K8",
+      "K11"
+     ]
+    }
+   ],
+   "claims": [
+    {
+     "id": "K1",
+     "text": "Apple states there have been no material changes to its risk factors since the 2025 Form 10-K, so the FY2025 Item 1A stands as the current disclosure.",
+     "tickers": [
+      "AAPL"
+     ],
+     "period_end": "2025-12-27",
+     "period_kind": "quarter",
+     "citations": [
+      "C1"
+     ],
+     "quote": "There have been no material changes to the Company's risk factors since the 2025 Form 10-K."
+    },
+    {
+     "id": "K2",
+     "text": "Apple's macroeconomic risk rests on international concentration: sales outside the U.S. represent a majority of total net sales and a majority of supplier facilities are located outside the U.S.",
+     "tickers": [
+      "AAPL"
+     ],
+     "period_end": "2025-09-27",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C3"
+     ],
+     "quote": "representing a majority of the Company's total net sales. In addition, the Company's global supply chain is large and complex and a majority of the Company's supplier facilities, including manufacturing and assembly sites, are located outside the U.S."
+    },
+    {
+     "id": "K3",
+     "text": "Apple discloses that it holds a minority market share in the global smartphone, personal computer, tablet and wearables markets, some of which have experienced little to no growth or contracted.",
+     "tickers": [
+      "AAPL"
+     ],
+     "period_end": "2025-09-27",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C5"
+     ],
+     "quote": "The Company has a minority market share in the global smartphone, personal computer, tablet and wearables markets, and some of the markets in which the Company competes have from time to time experienced little to no growth or contracted overall."
+    },
+    {
+     "id": "K4",
+     "text": "Apple cites net sales and gross margin volatility from pricing pressure, competition, supply shortages, FX, inflation and new or increased tariffs and retaliatory actions.",
+     "tickers": [
+      "AAPL"
+     ],
+     "period_end": "2025-09-27",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C14"
+     ],
+     "quote": "fluctuations in foreign exchange rates; inflation and other macroeconomic pressures; the imposition of new or increased tariffs and other trade restrictions, their overall magnitude and duration, and retaliatory actions in response"
+    },
+    {
+     "id": "K5",
+     "text": "Tesla's lead risk is issues or delays in developing, launching and ramping production, with future business depending on driver assistance and autonomous driving solutions and mass-market vehicle production including Cybercab/Robotaxi.",
+     "tickers": [
+      "TSLA"
+     ],
+     "period_end": "2025-12-31",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C17"
+     ],
+     "quote": "In particular, our future business depends on development of our driver assistance systems and autonomous driving solutions and increasing the production of mass-market vehicles, including Cybercab, our purpose-built Robotaxi product."
+    },
+    {
+     "id": "K6",
+     "text": "Tesla generally self-insures against vehicle product liability claims in most jurisdictions, meaning claims are paid from company funds rather than insurance.",
+     "tickers": [
+      "TSLA"
+     ],
+     "period_end": "2025-12-31",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C24"
+     ],
+     "quote": "In most jurisdictions, we generally self-insure against the risk of product liability claims for vehicle exposure, meaning that any product liability claims will likely have to be paid from company funds and not by insurance."
+    },
+    {
+     "id": "K7",
+     "text": "Tesla identifies key-person risk, stating it is highly dependent on the services of Elon Musk, its Chief Executive Officer, and that no key employee is bound by an employment agreement for a specific term.",
+     "tickers": [
+      "TSLA"
+     ],
+     "period_end": "2025-12-31",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C26"
+     ],
+     "quote": "In particular, we are highly dependent on the services of Elon Musk, Technoking of Tesla and our Chief Executive Officer. None of our key employees is bound by an employment agreement for any specific term"
+    },
+    {
+     "id": "K8",
+     "text": "JPMorgan's principal risk factors begin with legal and regulatory risks, including extensive supervision and regulation and changes in the application or enforcement of applicable law or executive branch actions.",
+     "tickers": [
+      "JPM"
+     ],
+     "period_end": "2025-12-31",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C33"
+     ],
+     "quote": "The principal risk factors include:\u2022Legal and Regulatory risks, including the impact of extensive supervision and regulation, as well as changes to or in the application, interpretation or enforcement of applicable law or executive branch actions"
+    },
+    {
+     "id": "K9",
+     "text": "JPMorgan's summarized risk categories also include political, market, credit and liquidity risks, covering interest rates and credit spreads, client and counterparty credit deterioration, and constrained liquidity.",
+     "tickers": [
+      "JPM"
+     ],
+     "period_end": "2025-12-31",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C34"
+     ],
+     "quote": "\u2022Political risks, including the potential negative effects on JPMorganChase's businesses due to economic uncertainty resulting from political developments.\u2022Market risks, including the effects that unfavorable economic and market events and conditions, political developments, changes in interest rates and credit spreads"
+    },
+    {
+     "id": "K10",
+     "text": "JPMorgan lists capital risks (regulatory capital limits on distributions) and operational risks, including harm from a successful cyber attack and from risk management framework and model weaknesses.",
+     "tickers": [
+      "JPM"
+     ],
+     "period_end": "2025-12-31",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C35"
+     ],
+     "quote": "\u2022Capital risks, including the risk that JPMorganChase's ability to distribute capital to shareholders or to support its business activities could be limited if it does not satisfy applicable regulatory capital requirements."
+    },
+    {
+     "id": "K11",
+     "text": "JPMorgan also names country risk and people risk, including the criticality of attracting and retaining qualified employees, and cautions the summary is not a complete set of all potential risks.",
+     "tickers": [
+      "JPM"
+     ],
+     "period_end": "2025-12-31",
+     "period_kind": "fiscal_year",
+     "citations": [
+      "C36"
+     ],
+     "quote": "\u2022People risks, including the criticality of attracting and retaining qualified employees.The above summary is subject in its entirety to the discussion of the risk factors set forth below."
+    }
+   ],
+   "table": [
+    {
+     "dimension": "Lead / framing risk",
+     "cells": [
+      {
+       "column": "AAPL",
+       "text": "Macroeconomic and industry risks; majority of net sales and of supplier facilities outside the U.S.",
+       "claim_ids": [
+        "K2"
+       ]
+      },
+      {
+       "column": "TSLA",
+       "text": "Ability to grow: delays in developing, launching and ramping products; dependence on driver assistance/autonomy and Cybercab Robotaxi",
+       "claim_ids": [
+        "K5"
+       ]
+      },
+      {
+       "column": "JPM",
+       "text": "Legal and Regulatory risks from extensive supervision and regulation and changes in enforcement of applicable law",
+       "claim_ids": [
+        "K8"
+       ]
+      }
+     ]
+    },
+    {
+     "dimension": "Competitive / market position",
+     "cells": [
+      {
+       "column": "AAPL",
+       "text": "Minority market share in global smartphone, PC, tablet and wearables markets",
+       "claim_ids": [
+        "K3"
+       ]
+      },
+      {
+       "column": "TSLA",
+       "text": "Not disclosed in these excerpts in market-share terms",
+       "claim_ids": []
+      },
+      {
+       "column": "JPM",
+       "text": "Market, credit and liquidity risks from interest rates, credit spreads and counterparty condition",
+       "claim_ids": [
+        "K9"
+       ]
+      }
+     ]
+    },
+    {
+     "dimension": "Financial / margin exposure",
+     "cells": [
+      {
+       "column": "AAPL",
+       "text": "Gross margin pressure from FX, inflation and new or increased tariffs and retaliatory actions",
+       "claim_ids": [
+        "K4"
+       ]
+      },
+      {
+       "column": "TSLA",
+       "text": "Self-insures vehicle product liability; claims paid from company funds, not insurance",
+       "claim_ids": [
+        "K6"
+       ]
+      },
+      {
+       "column": "JPM",
+       "text": "Capital distribution could be limited if regulatory capital requirements are not satisfied",
+       "claim_ids": [
+        "K10"
+       ]
+      }
+     ]
+    },
+    {
+     "dimension": "People / key personnel",
+     "cells": [
+      {
+       "column": "AAPL",
+       "text": "Not separately summarized in these excerpts",
+       "claim_ids": []
+      },
+      {
+       "column": "TSLA",
+       "text": "Highly dependent on Elon Musk; no key employee bound by a fixed-term employment agreement",
+       "claim_ids": [
+        "K7"
+       ]
+      },
+      {
+       "column": "JPM",
+       "text": "People risk: criticality of attracting and retaining qualified employees",
+       "claim_ids": [
+        "K11"
+       ]
+      }
+     ]
+    }
+   ],
+   "not_comparable": [
+    {
+     "dimension": "Risk factor taxonomy and ranking",
+     "tickers": [
+      "AAPL",
+      "TSLA",
+      "JPM"
+     ],
+     "reason": "Each filer organizes Item 1A on its own basis (Apple by macro/business/legal/financial; Tesla by growth and operational themes; JPMorgan by prudential risk types), and none ranks or quantifies risks, so severity is not comparable."
+    },
+    {
+     "dimension": "Reporting period of the risk disclosure",
+     "tickers": [
+      "AAPL",
+      "TSLA",
+      "JPM"
+     ],
+     "reason": "Apple's pinned Item 1A is for the fiscal year ended 2025-09-27 (10-Q confirms no material change as of 2025-12-27), while Tesla's and JPMorgan's are for fiscal years ended 2025-12-31."
+    }
+   ],
+   "gaps": [
+    "No quantified risk exposure metrics (e.g., VaR, allowance for credit losses, warranty reserves, tariff cost impact) are provided for any of the three companies.",
+    "Apple's excerpts do not include a people/key-personnel risk summary comparable to Tesla's and JPMorgan's.",
+    "Tesla's excerpts do not include a competitive market-share disclosure comparable to Apple's."
+   ]
+  },
+  "raw_text": "{\"summary\":[{\"text\":\"Apple's risk disclosure is led by macroeconomic and supply-chain exposure \u2014 a majority of net sales and of supplier facilities sit outside the U.S. \u2014 plus intense competition (it holds a minority market share in smartphones, PCs, tablets and wearables) and margin volatility from pricing pressure, FX and new or increased tariffs.\",\"claim_ids\":[\"K1\",\"K2\",\"K3\",\"K4\"]},{\"text\":\"Tesla's risks are execution-centric: delays in developing, launching and ramping products (including driver assistance/autonomy and Cybercab), product defect and liability exposure where it generally self-insures vehicle product liability, and heavy dependence on Elon Musk and key personnel.\",\"claim_ids\":[\"K5\",\"K6\",\"K7\"]},{\"text\":\"JPMorgan frames its principal risks in prudential categories \u2014 legal and regulatory, political, market, credit, liquidity, capital, operational, strategic, country and people \u2014 reflecting its status as a highly regulated financial institution, with cyber attack and resolution loss-absorption among named operational and regulatory concerns.\",\"claim_ids\":[\"K8\",\"K9\",\"K10\"]},{\"text\":\"The comparison is qualitative: all three cite macro/geopolitical shocks and cybersecurity, but Apple's are demand, supply-chain and margin risks, Tesla's are product ramp, safety and key-person risks, and JPMorgan's are balance-sheet and regulatory risks; the excerpts give no quantified risk metrics for any of them.\",\"claim_ids\":[\"K2\",\"K5\",\"K8\",\"K11\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"Apple states there have been no material changes to its risk factors since the 2025 Form 10-K, so the FY2025 Item 1A stands as the current disclosure.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-12-27\",\"period_kind\":\"quarter\",\"citations\":[\"C1\"],\"quote\":\"There have been no material changes to the Company's risk factors since the 2025 Form 10-K.\"},{\"id\":\"K2\",\"text\":\"Apple's macroeconomic risk rests on international concentration: sales outside the U.S. represent a majority of total net sales and a majority of supplier facilities are located outside the U.S.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C3\"],\"quote\":\"representing a majority of the Company's total net sales. In addition, the Company's global supply chain is large and complex and a majority of the Company's supplier facilities, including manufacturing and assembly sites, are located outside the U.S.\"},{\"id\":\"K3\",\"text\":\"Apple discloses that it holds a minority market share in the global smartphone, personal computer, tablet and wearables markets, some of which have experienced little to no growth or contracted.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C5\"],\"quote\":\"The Company has a minority market share in the global smartphone, personal computer, tablet and wearables markets, and some of the markets in which the Company competes have from time to time experienced little to no growth or contracted overall.\"},{\"id\":\"K4\",\"text\":\"Apple cites net sales and gross margin volatility from pricing pressure, competition, supply shortages, FX, inflation and new or increased tariffs and retaliatory actions.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C14\"],\"quote\":\"fluctuations in foreign exchange rates; inflation and other macroeconomic pressures; the imposition of new or increased tariffs and other trade restrictions, their overall magnitude and duration, and retaliatory actions in response\"},{\"id\":\"K5\",\"text\":\"Tesla's lead risk is issues or delays in developing, launching and ramping production, with future business depending on driver assistance and autonomous driving solutions and mass-market vehicle production including Cybercab/Robotaxi.\",\"tickers\":[\"TSLA\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C17\"],\"quote\":\"In particular, our future business depends on development of our driver assistance systems and autonomous driving solutions and increasing the production of mass-market vehicles, including Cybercab, our purpose-built Robotaxi product.\"},{\"id\":\"K6\",\"text\":\"Tesla generally self-insures against vehicle product liability claims in most jurisdictions, meaning claims are paid from company funds rather than insurance.\",\"tickers\":[\"TSLA\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C24\"],\"quote\":\"In most jurisdictions, we generally self-insure against the risk of product liability claims for vehicle exposure, meaning that any product liability claims will likely have to be paid from company funds and not by insurance.\"},{\"id\":\"K7\",\"text\":\"Tesla identifies key-person risk, stating it is highly dependent on the services of Elon Musk, its Chief Executive Officer, and that no key employee is bound by an employment agreement for a specific term.\",\"tickers\":[\"TSLA\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C26\"],\"quote\":\"In particular, we are highly dependent on the services of Elon Musk, Technoking of Tesla and our Chief Executive Officer. None of our key employees is bound by an employment agreement for any specific term\"},{\"id\":\"K8\",\"text\":\"JPMorgan's principal risk factors begin with legal and regulatory risks, including extensive supervision and regulation and changes in the application or enforcement of applicable law or executive branch actions.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C33\"],\"quote\":\"The principal risk factors include:\u2022Legal and Regulatory risks, including the impact of extensive supervision and regulation, as well as changes to or in the application, interpretation or enforcement of applicable law or executive branch actions\"},{\"id\":\"K9\",\"text\":\"JPMorgan's summarized risk categories also include political, market, credit and liquidity risks, covering interest rates and credit spreads, client and counterparty credit deterioration, and constrained liquidity.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C34\"],\"quote\":\"\u2022Political risks, including the potential negative effects on JPMorganChase's businesses due to economic uncertainty resulting from political developments.\u2022Market risks, including the effects that unfavorable economic and market events and conditions, political developments, changes in interest rates and credit spreads\"},{\"id\":\"K10\",\"text\":\"JPMorgan lists capital risks (regulatory capital limits on distributions) and operational risks, including harm from a successful cyber attack and from risk management framework and model weaknesses.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C35\"],\"quote\":\"\u2022Capital risks, including the risk that JPMorganChase's ability to distribute capital to shareholders or to support its business activities could be limited if it does not satisfy applicable regulatory capital requirements.\"},{\"id\":\"K11\",\"text\":\"JPMorgan also names country risk and people risk, including the criticality of attracting and retaining qualified employees, and cautions the summary is not a complete set of all potential risks.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C36\"],\"quote\":\"\u2022People risks, including the criticality of attracting and retaining qualified employees.The above summary is subject in its entirety to the discussion of the risk factors set forth below.\"}],\"table\":[{\"dimension\":\"Lead / framing risk\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"Macroeconomic and industry risks; majority of net sales and of supplier facilities outside the U.S.\",\"claim_ids\":[\"K2\"]},{\"column\":\"TSLA\",\"text\":\"Ability to grow: delays in developing, launching and ramping products; dependence on driver assistance/autonomy and Cybercab Robotaxi\",\"claim_ids\":[\"K5\"]},{\"column\":\"JPM\",\"text\":\"Legal and Regulatory risks from extensive supervision and regulation and changes in enforcement of applicable law\",\"claim_ids\":[\"K8\"]}]},{\"dimension\":\"Competitive / market position\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"Minority market share in global smartphone, PC, tablet and wearables markets\",\"claim_ids\":[\"K3\"]},{\"column\":\"TSLA\",\"text\":\"Not disclosed in these excerpts in market-share terms\",\"claim_ids\":[]},{\"column\":\"JPM\",\"text\":\"Market, credit and liquidity risks from interest rates, credit spreads and counterparty condition\",\"claim_ids\":[\"K9\"]}]},{\"dimension\":\"Financial / margin exposure\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"Gross margin pressure from FX, inflation and new or increased tariffs and retaliatory actions\",\"claim_ids\":[\"K4\"]},{\"column\":\"TSLA\",\"text\":\"Self-insures vehicle product liability; claims paid from company funds, not insurance\",\"claim_ids\":[\"K6\"]},{\"column\":\"JPM\",\"text\":\"Capital distribution could be limited if regulatory capital requirements are not satisfied\",\"claim_ids\":[\"K10\"]}]},{\"dimension\":\"People / key personnel\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"Not separately summarized in these excerpts\",\"claim_ids\":[]},{\"column\":\"TSLA\",\"text\":\"Highly dependent on Elon Musk; no key employee bound by a fixed-term employment agreement\",\"claim_ids\":[\"K7\"]},{\"column\":\"JPM\",\"text\":\"People risk: criticality of attracting and retaining qualified employees\",\"claim_ids\":[\"K11\"]}]}],\"not_comparable\":[{\"dimension\":\"Risk factor taxonomy and ranking\",\"tickers\":[\"AAPL\",\"TSLA\",\"JPM\"],\"reason\":\"Each filer organizes Item 1A on its own basis (Apple by macro/business/legal/financial; Tesla by growth and operational themes; JPMorgan by prudential risk types), and none ranks or quantifies risks, so severity is not comparable.\"},{\"dimension\":\"Reporting period of the risk disclosure\",\"tickers\":[\"AAPL\",\"TSLA\",\"JPM\"],\"reason\":\"Apple's pinned Item 1A is for the fiscal year ended 2025-09-27 (10-Q confirms no material change as of 2025-12-27), while Tesla's and JPMorgan's are for fiscal years ended 2025-12-31.\"}],\"gaps\":[\"No quantified risk exposure metrics (e.g., VaR, allowance for credit losses, warranty reserves, tariff cost impact) are provided for any of the three companies.\",\"Apple's excerpts do not include a people/key-personnel risk summary comparable to Tesla's and JPMorgan's.\",\"Tesla's excerpts do not include a competitive market-share disclosure comparable to Apple's.\"]}",
+  "stop_reason": "end_turn",
+  "usage": {
+   "input_tokens": 20991,
+   "output_tokens": 3720,
+   "cache_creation_input_tokens": 2329,
+   "cache_read_input_tokens": 0
+  },
+  "model": "claude-opus-5",
+  "backend": "anthropic",
+  "request_id": "req_011CeqimNoFkwCxD6ovxDdXL",
+  "latency_ms": 36386,
+  "attempts": 1,
+  "completed": 1,
+  "error": null
+ }
+}

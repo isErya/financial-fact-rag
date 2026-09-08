@@ -6,7 +6,7 @@
 # Startup order that matters: web waits for the indexer to exit 0, so a
 # request can never land on a half-written index. On a re-up the indexer
 # compares the corpus fingerprint with the one in the volume, prints
-# "index up to date" and exits in a second; the parse and BM25 build run
+# "index up to date" and exits in a second; the parse, BM25 and dense build run
 # only when the corpus, the chunker version or the DENSE flag changed.
 #
 # One shared environment block feeds both services, so the index the

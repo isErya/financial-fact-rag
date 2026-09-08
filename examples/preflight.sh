@@ -25,11 +25,30 @@ say "images:"
 docker image ls --filter "reference=*eliza*" --format '  {{.Repository}}:{{.Tag}}  {{.Size}}' | sed '/^$/d' || fail "docker not reachable"
 
 say "index volume:"
-if docker compose run --rm --no-deps indexer 2>/dev/null | grep -q "index up to date"; then
-  say "  index up to date"
-else
-  fail "index missing or stale; run: docker compose up indexer"
-fi
+# The fingerprint in the volume against one computed from the corpus now,
+# read through the web image on CPU. Starting the indexer here would ask
+# for a GPU, which a demo laptop without the container toolkit cannot
+# give, and Docker then waits rather than failing.
+project="$(basename "$(pwd)")"
+check="$(docker run --rm -v "${project}_index_data:/index:ro" -v "$(pwd)/data:/app/data:ro" \
+  --entrypoint python -e INDEX_DIR=/index "${project}-web" -c '
+import json, os, sys
+sys.path.insert(0, "/app/service"); os.chdir("/app")
+import config, index
+try:
+    rec = json.load(open("/index/fingerprint.json"))
+except FileNotFoundError:
+    print("missing"); sys.exit(0)
+now = index.fingerprint(config.CORPUS_ZIP, config.DENSE == "1", None)
+dense = os.path.exists("/index/dense.npy")
+print("match" if rec.get("sha256") == now and (dense or config.DENSE != "1") else "stale")
+' 2>/dev/null || echo "unreadable")"
+case "$check" in
+  match) say "  index up to date (fingerprint matches the corpus and the dense setting)" ;;
+  missing) fail "index missing; on a GPU host run: docker compose up indexer" ;;
+  stale) fail "index stale for this corpus or dense setting; on a GPU host run: docker compose up indexer" ;;
+  *) fail "could not read the index volume through the web image (is it built?)" ;;
+esac
 
 say "port $PORT:"
 if curl -s --max-time 3 "localhost:$PORT/health" >/dev/null 2>&1; then

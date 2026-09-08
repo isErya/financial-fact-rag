@@ -41,7 +41,10 @@ def test_full_ask_on_q01_makes_one_request(tuning_index, registry, fake):
     assert payload["llm_attempts"] == 1 and payload["llm_completed"] == 1
     assert isinstance(payload["answer"], Answer)
     assert isinstance(payload["checks"], EvidenceChecks)
-    assert payload["prompt_version"] == "v1" and payload["replayed"] is False
+    # The shipped default, by name from prompts.py rather than a literal, so a
+    # new winner in the prompt log does not fail this test.
+    import prompts
+    assert payload["prompt_version"] == prompts.PROMPT_VERSION and payload["replayed"] is False
     assert payload["llm_error"] is None and payload["cost_usd"] is None
     assert isinstance(payload["budget"]["input_tokens_actual"], int)
     assert set(payload["timing_ms"]) == {"plan_and_retrieve", "render", "model", "parse", "check"}

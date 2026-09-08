@@ -15,7 +15,7 @@ measured and leaves the hand-written fields empty; with --merge the hand
 fields already in the file survive a regeneration.
 
 `build` parses the corpus, chunks every filing, and writes a lexical index
-(bm25s) and, when asked, a dense one (fastembed MiniLM-L6). Chunks are laid
+(bm25s) and a dense one (fastembed, BGE base at 768 dimensions). Chunks are laid
 out ticker by ticker so a company's chunks are one contiguous id range and
 a search over one ticker is a slice. `load` reads the directory back into
 an Index whose `search` fuses the two rankings with reciprocal rank fusion.
@@ -366,14 +366,12 @@ def embedder(threads: int | None = None):
     """The fastembed model, loaded from the local cache only.
 
     Imported here so the web process and the BM25-only build never pay for
-    onnxruntime. The tokenizer file ships with truncation and padding fixed
-    at 128 tokens for MiniLM; truncation is raised to EMBED_MAX_TOKENS and
-    padding switched to the longest sequence in the batch, since a fixed
-    128 pad under a 256 cut gives ragged batches. fastembed offers no
-    argument for either, which is also why the parallel build below runs
-    its own worker pool instead of fastembed's `parallel=`. `threads` caps
-    the onnxruntime session so several workers share the cores instead of
-    each claiming all of them.
+    onnxruntime. Truncation is set to EMBED_MAX_TOKENS and padding to the
+    longest sequence in the batch, since a fixed pad under the cut gives
+    ragged batches; fastembed offers no argument for either, which is also
+    why the parallel build below runs its own worker pool instead of
+    fastembed's `parallel=`. `threads` caps the onnxruntime session so
+    several workers share the cores instead of each claiming all of them.
     """
     from fastembed import TextEmbedding
 
@@ -420,7 +418,8 @@ def _embed_slab(texts: list[str]) -> np.ndarray:
 
 
 def embed_texts(texts: list[str], workers: int) -> np.ndarray:
-    """float32 [n, 384] unit vectors for `texts`, in order.
+    """float32 [n, d] unit vectors for `texts`, in order, d being the
+    encoder's width (768 for BGE base).
 
     Workers use the spawn start method, since onnxruntime's thread pool
     does not survive a fork; each worker loads the model once in
@@ -606,7 +605,7 @@ class Index:
         One question runs this once per quota per sub-query, ten times for a
         five-company question, and every call is identical work: the same
         encoder pass and the same pass over all 198 MB of vectors. Caching by
-        query text took a five-company question from 7.1 s to under a second.
+        query text took a five-company question from 7.1 s to 1.3 s.
         The cache is small and per process, since a web worker only ever holds
         the handful of sub-queries belonging to the question in flight.
         """

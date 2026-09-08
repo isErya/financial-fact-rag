@@ -1,0 +1,237 @@
+{
+ "question": "Prepare a Q3 2025 bank-disclosure brief for a PE portfolio CFO. Compare JPMorgan and Bank of America on CET1 ratio, estimated uninsured deposits, and third-quarter net interest income. State the reporting period and units, cite each figure, and flag disclosures that are not comparable.",
+ "question_key": "fe0caace562cd097",
+ "prompt_version": "v3",
+ "saved": "2026-09-08",
+ "result": {
+  "parsed": {
+   "summary": [
+    {
+     "text": "At September 30, 2025 JPMorgan reported a Standardized CET1 capital ratio of 14.8% and third-quarter net interest income of $23,966 million, with firmwide estimated uninsured deposits of $1,548.1 billion.",
+     "claim_ids": [
+      "K1",
+      "K2",
+      "K3"
+     ]
+    },
+    {
+     "text": "Bank of America reported a Standardized CET1 capital ratio of 11.6% at September 30, 2025 against a 10.7% minimum requirement, and third-quarter net interest income of $15,233 million.",
+     "claim_ids": [
+      "K4",
+      "K5"
+     ]
+    },
+    {
+     "text": "BAC's only uninsured-deposit disclosure in the excerpts is as of December 31, 2024 ($646.2 billion U.S. and $124.9 billion non-U.S.), so it is not date-comparable with JPM's September 30, 2025 figure.",
+     "claim_ids": [
+      "K6",
+      "K3"
+     ]
+    },
+    {
+     "text": "BAC's reported net interest income includes an FTE adjustment of $154 million for the third quarter of 2025, a basis difference to note when comparing NII levels.",
+     "claim_ids": [
+      "K7"
+     ]
+    }
+   ],
+   "claims": [
+    {
+     "id": "K1",
+     "text": "JPMorgan's Standardized CET1 capital ratio was 14.8% at September 30, 2025 (vs. a 12.3% Standardized requirement).",
+     "tickers": [
+      "JPM"
+     ],
+     "period_end": "2025-09-30",
+     "period_kind": "point_in_time",
+     "citations": [
+      "C12"
+     ],
+     "quote": "CET1 capital ratio | 14.8% | 15.7% | 12.3% | 14.9% | 15.8% | 11.5%"
+    },
+    {
+     "id": "K2",
+     "text": "JPMorgan's net interest income was $23,966 million for the three months ended September 30, 2025, up 2% from $23,405 million a year earlier.",
+     "tickers": [
+      "JPM"
+     ],
+     "period_end": "2025-09-30",
+     "period_kind": "quarter",
+     "citations": [
+      "C11"
+     ],
+     "quote": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2"
+    },
+    {
+     "id": "K3",
+     "text": "JPMorgan's firmwide estimated uninsured deposits were $1,548.1 billion at September 30, 2025 (and $1,414.0 billion at December 31, 2024).",
+     "tickers": [
+      "JPM"
+     ],
+     "period_end": "2025-09-30",
+     "period_kind": "point_in_time",
+     "citations": [
+      "C16"
+     ],
+     "quote": "At September 30, 2025 and December 31, 2024, Firmwide estimated uninsured deposits were $1,548.1 billion and $1,414.0 billion, respectively, primarily reflecting wholesale operating deposits."
+    },
+    {
+     "id": "K4",
+     "text": "Bank of America's CET1 capital ratio under the Standardized approach was 11.6 percent at September 30, 2025, above its 10.7 percent minimum requirement.",
+     "tickers": [
+      "BAC"
+     ],
+     "period_end": "2025-09-30",
+     "period_kind": "point_in_time",
+     "citations": [
+      "C31"
+     ],
+     "quote": "At September 30, 2025, the Corporation's CET1 capital ratio of 11.6 percent under the Standardized approach exceeded its"
+    },
+    {
+     "id": "K5",
+     "text": "Bank of America's net interest income was $15,233 million for the three months ended September 30, 2025, versus $13,967 million a year earlier.",
+     "tickers": [
+      "BAC"
+     ],
+     "period_end": "2025-09-30",
+     "period_kind": "quarter",
+     "citations": [
+      "C27"
+     ],
+     "quote": "Net interest income | $15,233 | $13,967 | $44,346 | $41,701"
+    },
+    {
+     "id": "K6",
+     "text": "Bank of America's total estimated uninsured U.S. and non-U.S. deposits were $646.2 billion and $124.9 billion at December 31, 2024.",
+     "tickers": [
+      "BAC"
+     ],
+     "period_end": "2024-12-31",
+     "period_kind": "point_in_time",
+     "citations": [
+      "C44"
+     ],
+     "quote": "and non-U.S. deposits were $646.2 billion and $124.9 billion."
+    },
+    {
+     "id": "K7",
+     "text": "Bank of America's net interest income includes FTE adjustments of $154 million for the third quarter of 2025 ($147 million in the third quarter of 2024).",
+     "tickers": [
+      "BAC"
+     ],
+     "period_end": "2025-09-30",
+     "period_kind": "quarter",
+     "citations": [
+      "C30"
+     ],
+     "quote": "(6)Net interest income includes FTE adjustments of $154 million and $147 million for the third quarter of 2025 and 2024."
+    }
+   ],
+   "table": [
+    {
+     "dimension": "CET1 capital ratio, Standardized approach (point in time, Sept 30, 2025)",
+     "cells": [
+      {
+       "column": "JPM",
+       "text": "14.8%",
+       "claim_ids": [
+        "K1"
+       ]
+      },
+      {
+       "column": "BAC",
+       "text": "11.6 percent",
+       "claim_ids": [
+        "K4"
+       ]
+      }
+     ]
+    },
+    {
+     "dimension": "Net interest income, three months ended Sept 30, 2025 (USD millions)",
+     "cells": [
+      {
+       "column": "JPM",
+       "text": "23,966",
+       "claim_ids": [
+        "K2"
+       ]
+      },
+      {
+       "column": "BAC",
+       "text": "$15,233",
+       "claim_ids": [
+        "K5"
+       ]
+      }
+     ]
+    },
+    {
+     "dimension": "Estimated uninsured deposits (USD billions; different as-of dates)",
+     "cells": [
+      {
+       "column": "JPM",
+       "text": "$1,548.1 billion firmwide at Sept 30, 2025",
+       "claim_ids": [
+        "K3"
+       ]
+      },
+      {
+       "column": "BAC",
+       "text": "$646.2 billion U.S. and $124.9 billion non-U.S. at Dec 31, 2024",
+       "claim_ids": [
+        "K6"
+       ]
+      }
+     ]
+    }
+   ],
+   "not_comparable": [
+    {
+     "dimension": "Estimated uninsured deposits",
+     "tickers": [
+      "JPM",
+      "BAC"
+     ],
+     "reason": "JPM's figure is a single firmwide total at September 30, 2025; the only BAC disclosure in the excerpts is at December 31, 2024 and is split into U.S. and non-U.S. amounts, so the dates and presentation bases differ."
+    },
+    {
+     "dimension": "Net interest income basis",
+     "tickers": [
+      "JPM",
+      "BAC"
+     ],
+     "reason": "BAC's reported net interest income includes FTE adjustments ($154 million in Q3 2025); the excerpts do not state an equivalent adjustment for JPM's NII."
+    },
+    {
+     "dimension": "CET1 minimum requirement",
+     "tickers": [
+      "JPM",
+      "BAC"
+     ],
+     "reason": "JPM's Standardized CET1 requirement (12.3%) is a table column at September 30, 2025, while BAC's 10.7 percent minimum applies to the period October 1, 2024 through September 30, 2025."
+    }
+   ],
+   "gaps": [
+    "No BAC estimated uninsured deposit amount as of September 30, 2025 in the excerpts (only December 31, 2024 and December 31, 2023).",
+    "No BAC CET1 capital ratio under the Advanced approaches at September 30, 2025."
+   ]
+  },
+  "raw_text": "{\"summary\":[{\"text\":\"At September 30, 2025 JPMorgan reported a Standardized CET1 capital ratio of 14.8% and third-quarter net interest income of $23,966 million, with firmwide estimated uninsured deposits of $1,548.1 billion.\",\"claim_ids\":[\"K1\",\"K2\",\"K3\"]},{\"text\":\"Bank of America reported a Standardized CET1 capital ratio of 11.6% at September 30, 2025 against a 10.7% minimum requirement, and third-quarter net interest income of $15,233 million.\",\"claim_ids\":[\"K4\",\"K5\"]},{\"text\":\"BAC's only uninsured-deposit disclosure in the excerpts is as of December 31, 2024 ($646.2 billion U.S. and $124.9 billion non-U.S.), so it is not date-comparable with JPM's September 30, 2025 figure.\",\"claim_ids\":[\"K6\",\"K3\"]},{\"text\":\"BAC's reported net interest income includes an FTE adjustment of $154 million for the third quarter of 2025, a basis difference to note when comparing NII levels.\",\"claim_ids\":[\"K7\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"JPMorgan's Standardized CET1 capital ratio was 14.8% at September 30, 2025 (vs. a 12.3% Standardized requirement).\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"point_in_time\",\"citations\":[\"C12\"],\"quote\":\"CET1 capital ratio | 14.8% | 15.7% | 12.3% | 14.9% | 15.8% | 11.5%\"},{\"id\":\"K2\",\"text\":\"JPMorgan's net interest income was $23,966 million for the three months ended September 30, 2025, up 2% from $23,405 million a year earlier.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C11\"],\"quote\":\"Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2\"},{\"id\":\"K3\",\"text\":\"JPMorgan's firmwide estimated uninsured deposits were $1,548.1 billion at September 30, 2025 (and $1,414.0 billion at December 31, 2024).\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"point_in_time\",\"citations\":[\"C16\"],\"quote\":\"At September 30, 2025 and December 31, 2024, Firmwide estimated uninsured deposits were $1,548.1 billion and $1,414.0 billion, respectively, primarily reflecting wholesale operating deposits.\"},{\"id\":\"K4\",\"text\":\"Bank of America's CET1 capital ratio under the Standardized approach was 11.6 percent at September 30, 2025, above its 10.7 percent minimum requirement.\",\"tickers\":[\"BAC\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"point_in_time\",\"citations\":[\"C31\"],\"quote\":\"At September 30, 2025, the Corporation's CET1 capital ratio of 11.6 percent under the Standardized approach exceeded its\"},{\"id\":\"K5\",\"text\":\"Bank of America's net interest income was $15,233 million for the three months ended September 30, 2025, versus $13,967 million a year earlier.\",\"tickers\":[\"BAC\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C27\"],\"quote\":\"Net interest income | $15,233 | $13,967 | $44,346 | $41,701\"},{\"id\":\"K6\",\"text\":\"Bank of America's total estimated uninsured U.S. and non-U.S. deposits were $646.2 billion and $124.9 billion at December 31, 2024.\",\"tickers\":[\"BAC\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"point_in_time\",\"citations\":[\"C44\"],\"quote\":\"and non-U.S. deposits were $646.2 billion and $124.9 billion.\"},{\"id\":\"K7\",\"text\":\"Bank of America's net interest income includes FTE adjustments of $154 million for the third quarter of 2025 ($147 million in the third quarter of 2024).\",\"tickers\":[\"BAC\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C30\"],\"quote\":\"(6)Net interest income includes FTE adjustments of $154 million and $147 million for the third quarter of 2025 and 2024.\"}],\"table\":[{\"dimension\":\"CET1 capital ratio, Standardized approach (point in time, Sept 30, 2025)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"14.8%\",\"claim_ids\":[\"K1\"]},{\"column\":\"BAC\",\"text\":\"11.6 percent\",\"claim_ids\":[\"K4\"]}]},{\"dimension\":\"Net interest income, three months ended Sept 30, 2025 (USD millions)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"23,966\",\"claim_ids\":[\"K2\"]},{\"column\":\"BAC\",\"text\":\"$15,233\",\"claim_ids\":[\"K5\"]}]},{\"dimension\":\"Estimated uninsured deposits (USD billions; different as-of dates)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"$1,548.1 billion firmwide at Sept 30, 2025\",\"claim_ids\":[\"K3\"]},{\"column\":\"BAC\",\"text\":\"$646.2 billion U.S. and $124.9 billion non-U.S. at Dec 31, 2024\",\"claim_ids\":[\"K6\"]}]}],\"not_comparable\":[{\"dimension\":\"Estimated uninsured deposits\",\"tickers\":[\"JPM\",\"BAC\"],\"reason\":\"JPM's figure is a single firmwide total at September 30, 2025; the only BAC disclosure in the excerpts is at December 31, 2024 and is split into U.S. and non-U.S. amounts, so the dates and presentation bases differ.\"},{\"dimension\":\"Net interest income basis\",\"tickers\":[\"JPM\",\"BAC\"],\"reason\":\"BAC's reported net interest income includes FTE adjustments ($154 million in Q3 2025); the excerpts do not state an equivalent adjustment for JPM's NII.\"},{\"dimension\":\"CET1 minimum requirement\",\"tickers\":[\"JPM\",\"BAC\"],\"reason\":\"JPM's Standardized CET1 requirement (12.3%) is a table column at September 30, 2025, while BAC's 10.7 percent minimum applies to the period October 1, 2024 through September 30, 2025.\"}],\"gaps\":[\"No BAC estimated uninsured deposit amount as of September 30, 2025 in the excerpts (only December 31, 2024 and December 31, 2023).\",\"No BAC CET1 capital ratio under the Advanced approaches at September 30, 2025.\"]}",
+  "stop_reason": "end_turn",
+  "usage": {
+   "input_tokens": 26275,
+   "output_tokens": 3205,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 2329
+  },
+  "model": "claude-opus-5",
+  "backend": "anthropic",
+  "request_id": "req_011Ceqiv36LjSzPUxAf9cY93",
+  "latency_ms": 29523,
+  "attempts": 1,
+  "completed": 1,
+  "error": null
+ }
+}

@@ -57,7 +57,9 @@ Two measurements, and they disagreed.
 The first ran the 12 tuning rows over the full 64,612-chunk index in three modes. Every hit-rate
 measure above came out identical, and on the rank of the first correct passage dense retrieval
 looked better (MRR 0.671 against 0.501 lexical) on ten gradeable rows, which is too few to act on.
-That run is kept in `eval/results/retrieval_modes_full.json`.
+That run is kept in `eval/results/retrieval_modes_full.json`. An older file,
+`eval/results/retrieval_ablation.json`, is a four-mode run over a twelve-filing test index; it is
+kept as history and nothing rests on it, since a sample that small cannot show a ranking gap.
 
 The second was built to discriminate. Sixty rows were written from the filings, each carrying a
 literal string copied out of the passage that answers it, so the set of correct passages is
@@ -91,10 +93,27 @@ the only measure of that.
 
 ### Layer 2
 
-Not yet run. One model request per row is needed for the evidence-check rates, tokens billed
-against tokens estimated, cost and latency, the first-try parse rate, the held-out set's single
-final run, and the rubric scores. Those land here and in `docs/PROMPT-LOG.md` once the prompt
-version is frozen.
+Run on 2026-09-08 on the shipped backend, Opus 5, over the 12 tuning rows, for three prompt
+versions. Ten rows make a request; the two refusals are answered before any request.
+
+| Version | Quotes located | Figures in quote | Columns matched | Units matched | Flags | Mean output tokens | Cost |
+|---|---|---|---|---|---|---|---|
+| v1 | 125 of 129 | 105 of 111 | 37 of 47 | 40 of 40 | 56 | 3,933 | $1.85 |
+| v2 | 61 of 67 | 62 of 71 | 23 of 36 | 21 of 21 | 34 | 2,902 | $1.61 |
+| v3 | 63 of 63 | 64 of 76 | 24 of 36 | 25 of 25 | 32 | 2,352 | $1.47 |
+
+All 30 replies parsed on the first try. The rubric below was applied blind, every answer with
+its version label replaced by a letter and shuffled per row, scored before the key was opened:
+v1 75, v2 73, v3 78 out of 80. The entire separation sits in the second criterion; the three
+versions tie on the other three. v3 ships. The scores, the one-line reasons, and the key are in
+`eval/results/rubric-blind-2026-09-08.json`; the version-by-version story is in
+`docs/PROMPT-LOG.md`.
+
+Two things this measures and one it does not. It measures whether what the model wrote can be
+traced to the excerpts it was given, and whether a shorter answer costs that traceability. It
+does not measure whether the answer is what a portfolio CFO would have wanted from the filing
+as a whole, because the model only ever sees the excerpts retrieval chose. The held-out set was
+not run.
 
 ## Sample size
 

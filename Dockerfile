@@ -15,8 +15,8 @@ RUN pip install --no-cache-dir -r service/requirements.txt
 # Only config.py is copied first, so the model layer is invalidated by a
 # change to the model name and by nothing else; with the whole source
 # tree above this line every edit to the page re-downloaded the model.
-# The corpus itself is never embedded at build time; DENSE defaults to 0
-# and the dense build is an explicit run-time choice in the indexer.
+# The corpus itself is never embedded at image build time; the indexer
+# service embeds it on the GPU when the container runs.
 ENV FASTEMBED_CACHE_PATH=/app/models
 COPY service/config.py ./service/config.py
 RUN cd service && python -c "import config; from fastembed import TextEmbedding; TextEmbedding(config.EMBED_MODEL, cache_dir='/app/models')"

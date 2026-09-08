@@ -11,9 +11,14 @@ during iteration and logged in docs/PROMPT-LOG.md with the failure that
 prompted them.
 """
 
+import os
+
 from models import Context, Plan
 
-PROMPT_VERSION = "v1"
+# Read from the environment so an evaluation run can select a version
+# without editing this file; the shipped default is the version the log
+# names as the winner.
+PROMPT_VERSION = os.environ.get("PROMPT_VERSION", "v3")
 
 # The schema hint spells out the Answer fields in words. The request also
 # carries the JSON schema itself (llm_client sets it on the request), so the
@@ -69,6 +74,40 @@ PROMPTS = {
             "Answer in the required structure."
         ),
     },
+    # v3: v2's shape caps plus two rules, each written against a failure the
+    # evidence checks flagged on the v1 run of 2026-09-08 (eval/results/
+    # tuning-v1.json). q01 claim K2 quoted four section headings joined with
+    # ellipses, which no excerpt contains as one passage; q02 claims K6, K7
+    # and K16 paraphrased their passages, so the percentages they state fell
+    # outside the quote and their columns could not be read; q02's summary
+    # restated $26,974 million as $26.97 billion, so the sentence could not
+    # be linked to its own claim. Neither rule is about length.
+    "v3": {
+        "system": (
+            "You are an analyst supporting a private equity deal team. Answer the question using "
+            "only the excerpts. Cite excerpt ids. Return the required structure.\n\n" + SCHEMA_HINT +
+            "\n\nKeep the answer short enough to read on one screen. Write at most four claims "
+            "per company and at most twelve in total, choosing the ones that carry the figures and "
+            "the disclosures the question asks about. Write at most one summary sentence per "
+            "company plus one closing sentence. Give the table at most five rows. Say less rather "
+            "than repeating a figure that is already in the table.\n\n"
+            "Two rules about fidelity. A quote is one contiguous passage copied exactly from a "
+            "single excerpt: no ellipsis, no paraphrase, no joining of separate lines or headings. "
+            "If a fact needs two passages, write two claims. And when a summary sentence or a table "
+            "cell restates a figure, write it exactly as its claim states it, with the same digits "
+            "and the same units; never convert millions to billions or round a figure the claim "
+            "gives in full.\n\n"
+            "None of this loosens the rules above: a shorter answer still cites, still quotes, "
+            "still names the period and the units, and still records what the excerpts do not "
+            "support."
+        ),
+        "user": (
+            "<coverage>\n{coverage}\n</coverage>\n\n"
+            "<question>\n{question}\n</question>\n\n"
+            "<excerpts>\n{excerpts}\n</excerpts>\n\n"
+            "Answer in the required structure."
+        ),
+    },
 }
 
 
@@ -80,7 +119,10 @@ def fence(text: str, tag: str) -> str:
     return text.replace("</%s>" % tag, "< /%s>" % tag)
 
 
-def render(question: str, context: Context, plan: Plan, version: str = PROMPT_VERSION) -> tuple[str, str]:
+def render(question: str, context: Context, plan: Plan, version: str | None = None) -> tuple[str, str]:
+    # Resolved here rather than as a default argument, which would bind the
+    # value at import and ignore a version chosen for one run.
+    version = version or PROMPT_VERSION
     """(system_text, user_text) for one request. The coverage block opens
     with the tickers in scope so the model has the exact strings the
     claims' tickers field expects."""

@@ -1,0 +1,303 @@
+{
+ "method": "ten answered tuning rows x three prompt versions, rendered with version labels replaced by letters shuffled per row, scored on the four rubric criteria (0-2 each) before the key was opened; q04 and q05 read unblinded earlier and scored on content",
+ "criteria": [
+  "addresses",
+  "follows",
+  "complete",
+  "gaps"
+ ],
+ "scores": {
+  "q01": {
+   "A": [
+    2,
+    2,
+    2,
+    2,
+    "13 claims, comparison sentence, one approximate quote"
+   ],
+   "B": [
+    2,
+    2,
+    2,
+    2,
+    "11 claims, honest 'not disclosed' cells"
+   ],
+   "C": [
+    2,
+    1,
+    2,
+    2,
+    "23 claims, most complete, but K2 quote stitched from headings with ellipses (not a passage)"
+   ]
+  },
+  "q02": {
+   "A": [
+    2,
+    1,
+    2,
+    2,
+    "richest (margins, H20, concentration) but K3 labels three-month figures nine_months; 9 unit-drift unlinked figures"
+   ],
+   "B": [
+    2,
+    1,
+    2,
+    2,
+    "5 claims; same K3 duration error; states no guidance"
+   ],
+   "C": [
+    2,
+    1,
+    2,
+    2,
+    "5 claims; same K3 duration error; states no guidance"
+   ]
+  },
+  "q03": {
+   "A": [
+    2,
+    2,
+    2,
+    2,
+    "12 claims, five companies, mitigation named (Lilly agreements, JNJ captive), 0 flags"
+   ],
+   "B": [
+    2,
+    2,
+    2,
+    2,
+    "11 claims, five companies, mitigation table row"
+   ],
+   "C": [
+    2,
+    2,
+    2,
+    2,
+    "30 claims, most complete (talc, BIOSECURE, counterfeits), 3 approximate quotes"
+   ]
+  },
+  "q04": {
+   "v1": [
+    2,
+    2,
+    2,
+    2,
+    "Standardized and Advanced both named, 4 not-comparable incl. annual baselines; 2 column flags on CET1 minimum period"
+   ],
+   "v2": [
+    2,
+    1,
+    2,
+    2,
+    "one quote not found, six figures outside quotes; substance right"
+   ],
+   "v3": [
+    2,
+    2,
+    2,
+    2,
+    "7 claims, 3 rows, all three not-comparable notes, 23,966 as three months"
+   ]
+  },
+  "q05": {
+   "v1": [
+    2,
+    2,
+    2,
+    2,
+    "6/6 quotes, 383,285 attached to FY2023, prior-year column not confused"
+   ],
+   "v2": [
+    2,
+    0,
+    2,
+    2,
+    "computed $10.8 billion not in the excerpts; two stitched quotes not located"
+   ],
+   "v3": [
+    2,
+    2,
+    2,
+    2,
+    "7/7 quotes; ten figures sit in the cited chunk outside a one-row quote, all real, none invented"
+   ]
+  },
+  "q06": {
+   "A": [
+    2,
+    2,
+    2,
+    2,
+    "23,966 as quarter, managed 24,071 and ex-Markets named, 0 flags"
+   ],
+   "B": [
+    2,
+    1,
+    2,
+    2,
+    "one figure flagged not in chunk ($24.0 billion rounding)"
+   ],
+   "C": [
+    2,
+    1,
+    2,
+    2,
+    "one quote not found; 6,084 output tokens for a one-figure question"
+   ]
+  },
+  "q07": {
+   "A": [
+    2,
+    1,
+    2,
+    2,
+    "units in thousands right; one column mismatch and one quote not found"
+   ],
+   "B": [
+    2,
+    1,
+    2,
+    2,
+    "units right; one quote not found"
+   ],
+   "C": [
+    2,
+    1,
+    2,
+    2,
+    "units right, 4/4 quotes; summary carries two figures no claim grounds"
+   ]
+  },
+  "q08": {
+   "A": [
+    2,
+    2,
+    2,
+    2,
+    "FY2024 10-K used, pointer stated as gap, 0 flags, four categories"
+   ],
+   "B": [
+    2,
+    2,
+    2,
+    2,
+    "FY2024 10-K used, CRE office detail, pointer stated"
+   ],
+   "C": [
+    2,
+    2,
+    2,
+    2,
+    "18 claims, seven categories incl. legal, competition, climate; 2 approximate quotes"
+   ]
+  },
+  "q09": {
+   "A": [
+    2,
+    2,
+    2,
+    2,
+    "Compute & Networking from the note, FY2025 and Q3 FY2026 splits, 7/8 columns"
+   ],
+   "B": [
+    2,
+    1,
+    2,
+    2,
+    "one quote not found; adds nine-month split"
+   ],
+   "C": [
+    2,
+    1,
+    2,
+    2,
+    "two quotes not found, two approximate; most complete incl. operating income"
+   ]
+  },
+  "q12": {
+   "A": [
+    2,
+    2,
+    2,
+    2,
+    "no target stated as the answer, historicals given, 0 flags"
+   ],
+   "B": [
+    2,
+    2,
+    2,
+    2,
+    "same, 0 flags"
+   ],
+   "C": [
+    2,
+    2,
+    2,
+    2,
+    "same, notes target would need outside sources, 0 flags"
+   ]
+  }
+ },
+ "key": {
+  "q01": {
+   "A": "v2",
+   "B": "v3",
+   "C": "v1"
+  },
+  "q02": {
+   "A": "v1",
+   "B": "v3",
+   "C": "v2"
+  },
+  "q03": {
+   "A": "v3",
+   "B": "v2",
+   "C": "v1"
+  },
+  "q04": {
+   "A": "v2",
+   "B": "v1",
+   "C": "v3"
+  },
+  "q05": {
+   "A": "v1",
+   "B": "v2",
+   "C": "v3"
+  },
+  "q06": {
+   "A": "v3",
+   "B": "v1",
+   "C": "v2"
+  },
+  "q07": {
+   "A": "v2",
+   "B": "v1",
+   "C": "v3"
+  },
+  "q08": {
+   "A": "v3",
+   "B": "v2",
+   "C": "v1"
+  },
+  "q09": {
+   "A": "v3",
+   "B": "v2",
+   "C": "v1"
+  },
+  "q10": {
+   "A": "v3",
+   "B": "v2",
+   "C": "v1"
+  },
+  "q11": {
+   "A": "v2",
+   "B": "v3",
+   "C": "v1"
+  },
+  "q12": {
+   "A": "v2",
+   "B": "v1",
+   "C": "v3"
+  }
+ }
+}

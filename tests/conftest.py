@@ -27,10 +27,10 @@ def model_cache_dir() -> str:
     """Directory fastembed fills when it downloads config.EMBED_MODEL.
 
     fastembed names the cache after the Hugging Face repo it pulls from, and
-    that repo is the model's registered source (qdrant/all-MiniLM-L6-v2-onnx
-    for the MiniLM id), so a path derived from the model id itself points at
-    a directory a fresh download never creates. The dense tests check this
-    path to decide whether to run, so the mapping has to be the real one.
+    that repo is the model's registered source (qdrant/bge-base-en-v1.5-onnx-q
+    for the BGE id), so a path derived from the model id itself points at a
+    directory a fresh download never creates. The dense tests check this path
+    to decide whether to run, so the mapping has to be the real one.
     """
     repo = config.EMBED_MODEL
     try:

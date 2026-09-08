@@ -244,13 +244,29 @@ per query; BGE base scored highest on the paraphrase rows, which is the case the
 and runs in the image as shipped. Vector files run 99 MB to 265 MB across the five and are built
 by the indexer rather than committed.
 
-### Not yet measured
+### Layer 2: one request per row, three prompt versions
 
-Layer 2 needs one model request per row, and those runs are not in this repo yet: the evidence-check
-rates per prompt version, tokens billed against tokens estimated, cost and latency, the first-try
-parse rate, the held-out set's single final run, and the rubric averages. They land in
-`eval/results/` and `docs/PROMPT-LOG.md` when the prompt version is frozen. Layer 1 above needs no
-model request and is complete.
+Run on 2026-09-08 on the shipped backend, Opus 5, over the 12 tuning rows; ten make a request
+and two are refused before any request. Results in `eval/results/tuning-v1.json`, `tuning-v2.json`
+and `tuning-v3.json`; the changes and the reasons are in `docs/PROMPT-LOG.md`.
+
+| Version | Quotes located | Figures in quote | Columns matched | Units matched | Flags | Mean output tokens | Cost for the set |
+|---|---|---|---|---|---|---|---|
+| v1, baseline | 125 of 129 | 105 of 111 | 37 of 47 | 40 of 40 | 56 | 3,933 | $1.85 |
+| v2, shape caps | 61 of 67 | 62 of 71 | 23 of 36 | 21 of 21 | 34 | 2,902 | $1.61 |
+| v3, caps plus fidelity rules | 63 of 63 | 64 of 76 | 24 of 36 | 25 of 25 | 32 | 2,352 | $1.47 |
+
+Every reply parsed on the first try in every version. v3 is the shipped default: it is the only
+version in which every quote is located, it invented nothing where v2 invented one figure, and
+it is a third shorter than the baseline. Figures-in-quote is the one number it gave back, and
+the prompt log says exactly why.
+
+The rubric was applied blind: all 30 answers rendered with the version label replaced by a
+letter, shuffled per row, and scored before the key was opened. Out of 80, v1 scored 75, v2
+scored 73, v3 scored 78. Every version addressed every question, was complete against the key,
+and stated gaps and comparability; the whole difference was whether conclusions rested on the
+cited excerpts. Scores and key: `eval/results/rubric-blind-2026-09-08.json`. The held-out set
+was not run.
 
 What these numbers do not prove is in `eval/notes.md` and bears repeating here. The layer-2 counts
 establish presence and provenance. Whether an answer is right is the rubric's business, the rubric

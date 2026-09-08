@@ -1,0 +1,3410 @@
+{
+ "set": "tuning",
+ "index_dir": "index",
+ "layer": 2,
+ "prompt_version": "v2",
+ "backend": "anthropic",
+ "model": "claude-opus-5",
+ "mode": "dense",
+ "rows": [
+  {
+   "id": "q01",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL",
+    "JPM",
+    "TSLA"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 3,
+   "files_n": 3,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 16661,
+   "budget_ok": true,
+   "chunks": 48,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqiLD9db7VXZYEd9wHFh",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 13,
+   "timing_ms": {
+    "plan_and_retrieve": 20711,
+    "render": 0,
+    "model": 41654,
+    "parse": 0,
+    "check": 35
+   },
+   "total_ms": 62400,
+   "input_tokens": 23181,
+   "output_tokens": 4190,
+   "cost_usd": 0.223392,
+   "checks": {
+    "quotes_located_hit": 13,
+    "quotes_located_n": 13,
+    "figures_in_quote_hit": 0,
+    "figures_in_quote_n": 0,
+    "figures_unchecked": 0,
+    "columns_matched_hit": 0,
+    "columns_matched_n": 0,
+    "columns_unverified": 0,
+    "units_matched_hit": 0,
+    "units_matched_n": 0,
+    "units_unchecked": 0,
+    "flags_count": 2,
+    "notes_count": 0,
+    "unlinked_count": 1
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "Apple's FY2025 10-K organizes risks into macroeconomic/industry, business, legal and regulatory, and financial categories, emphasizing global supply-chain and international sales concentration, intense competition with minority market share, product-transition execution, and margin pressure from tariffs, FX and pricing.",
+      "claim_ids": [
+       "K1",
+       "K2",
+       "K3",
+       "K4"
+      ]
+     },
+     {
+      "text": "Tesla's FY2025 10-K centers on growth-execution risk \u2014 production ramps of Cybercab/Robotaxi and AI-based autonomy, EV demand perception and cyclicality, product defects and largely self-insured product liability, and dependence on Elon Musk.",
+      "claim_ids": [
+       "K5",
+       "K6",
+       "K7",
+       "K8"
+      ]
+     },
+     {
+      "text": "JPMorgan's FY2025 10-K enumerates a financial-institution risk taxonomy \u2014 legal/regulatory, political, market, credit, liquidity, capital, operational, strategic, country and people risks \u2014 with cyber attack, private-credit contagion and model/risk-framework failure highlighted.",
+      "claim_ids": [
+       "K9",
+       "K10",
+       "K11"
+      ]
+     },
+     {
+      "text": "Comparison: all three flag macro/geopolitical shocks, cybersecurity and data-privacy exposure and regulatory scrutiny, but Apple's and Tesla's are product, supply-chain and demand risks while JPMorgan's are balance-sheet risks (credit, liquidity, capital) tied to regulatory capital requirements; Apple's FY2026 Q1 10-Q reports no material change.",
+      "claim_ids": [
+       "K4",
+       "K7",
+       "K10",
+       "K12"
+      ]
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "Apple states its operations and performance depend significantly on global and regional economic conditions, with sales outside the U.S. a majority of total net sales and a majority of supplier facilities located outside the U.S.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-09-27",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C3"
+      ],
+      "quote": "representing a majority of the Company's total net sales. In addition, the Company's global supply chain is large and complex and a majority of the Company's supplier facilities, including manufacturing and assembly sites, are located outside the U.S."
+     },
+     {
+      "id": "K2",
+      "text": "Apple cites competitive risk, noting it has a minority market share in the global smartphone, personal computer, tablet and wearables markets.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-09-27",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C5"
+      ],
+      "quote": "The Company has a minority market share in the global smartphone, personal computer, tablet and wearables markets, and some of the markets in which the Company competes have from time to time experienced little to no growth or contracted overall."
+     },
+     {
+      "id": "K3",
+      "text": "Apple flags net sales and gross margin volatility from pricing pressure, competition, supply shortages, component costs, FX, inflation and new or increased tariffs and retaliatory actions; it also notes a significant portion of net sales comes from a single product category.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-09-27",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C14",
+       "C15"
+      ],
+      "quote": "the Company generates a significant portion of its net sales from a single product category and a decline in demand for that product could significantly impact net sales and gross margins."
+     },
+     {
+      "id": "K4",
+      "text": "Apple identifies IT system failures, network disruptions and cybersecurity incidents, plus losses or unauthorized release of confidential personal information, as risks to its business and reputation.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-09-27",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C7",
+       "C8"
+      ],
+      "quote": "Losses or unauthorized access to or releases of confidential information, including personal information, could subject the Company to significant reputational, financial, legal and operational consequences."
+     },
+     {
+      "id": "K5",
+      "text": "Tesla's lead risk is issues or delays in developing, launching and ramping production, stating its future business depends on driver assistance and autonomous driving solutions and increasing production of mass-market vehicles including Cybercab, its Robotaxi product.",
+      "tickers": [
+       "TSLA"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C17"
+      ],
+      "quote": "our future business depends on development of our driver assistance systems and autonomous driving solutions and increasing the production of mass-market vehicles, including Cybercab, our purpose-built Robotaxi product."
+     },
+     {
+      "id": "K6",
+      "text": "Tesla notes electric vehicles still constitute a small percentage of overall vehicle sales and that demand may be affected by perceptions of range, charging access, competition, oil and energy price volatility and government incentives, with automotive sales tending to be cyclical.",
+      "tickers": [
+       "TSLA"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C20"
+      ],
+      "quote": "In addition, electric vehicles still constitute a small percentage of overall vehicle sales. As a result, the market for our vehicles could be negatively affected by numerous factors"
+     },
+     {
+      "id": "K7",
+      "text": "Tesla discloses product defect, recall and product liability risk and states that in most jurisdictions it generally self-insures against product liability claims for vehicle exposure, so claims are paid from company funds.",
+      "tickers": [
+       "TSLA"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C24"
+      ],
+      "quote": "In most jurisdictions, we generally self-insure against the risk of product liability claims for vehicle exposure, meaning that any product liability claims will likely have to be paid from company funds and not by insurance."
+     },
+     {
+      "id": "K8",
+      "text": "Tesla identifies key-person risk, stating it is highly dependent on the services of Elon Musk and that none of its key employees is bound by an employment agreement for any specific term.",
+      "tickers": [
+       "TSLA"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C26"
+      ],
+      "quote": "In particular, we are highly dependent on the services of Elon Musk, Technoking of Tesla and our Chief Executive Officer. None of our key employees is bound by an employment agreement for any specific term"
+     },
+     {
+      "id": "K9",
+      "text": "JPMorgan's principal risk factors begin with legal and regulatory risks, including extensive supervision and regulation, changes in application or enforcement of law, litigation and investigation penalties, and losses absorbed by security holders in a resolution.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C33"
+      ],
+      "quote": "The principal risk factors include:\u2022Legal and Regulatory risks, including the impact of extensive supervision and regulation, as well as changes to or in the application, interpretation or enforcement of applicable law or executive branch actions"
+     },
+     {
+      "id": "K10",
+      "text": "JPMorgan also lists political, market, credit, liquidity and capital risks, including effects of interest rates and credit spreads, collateral value declines, constrained liquidity, credit rating downgrades, and limits on capital distribution if regulatory capital requirements are not satisfied.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C34",
+       "C35"
+      ],
+      "quote": "\u2022Capital risks, including the risk that JPMorganChase's ability to distribute capital to shareholders or to support its business activities could be limited if it does not satisfy applicable regulatory capital requirements."
+     },
+     {
+      "id": "K11",
+      "text": "JPMorgan's operational risks include dependence on operational systems and employees, harm from a successful cyber attack or other extraordinary events, data management and personal information safeguarding, vendor oversight, and its risk management framework and models.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C35"
+      ],
+      "quote": "\u2022Operational risks, including risks associated with JPMorganChase's dependence on its operational systems and its employees... the harm that could be caused by a successful cyber attack affecting JPMorganChase or by other extraordinary events"
+     },
+     {
+      "id": "K12",
+      "text": "Apple's FY2026 Q1 10-Q reports no material changes to its risk factors since the 2025 Form 10-K.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-12-27",
+      "period_kind": "quarter",
+      "citations": [
+       "C1"
+      ],
+      "quote": "There have been no material changes to the Company's risk factors since the 2025 Form 10-K."
+     },
+     {
+      "id": "K13",
+      "text": "JPMorgan cites private-credit contagion risk, noting the significant expansion of private credit could worsen losses among non-bank lenders and borrowers, impair asset valuations and increase default rates.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C40"
+      ],
+      "quote": "the interconnectivity across credit markets increases the risk that the significant expansion of private credit could worsen losses among non-bank lenders and their borrowers, particularly if stress or defaults spread to broader funding and credit markets."
+     }
+    ],
+    "table": [
+     {
+      "dimension": "Lead / defining risk",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "Global macro conditions plus concentrated non-U.S. sales and supply chain",
+        "claim_ids": [
+         "K1"
+        ]
+       },
+       {
+        "column": "TSLA",
+        "text": "Delays in developing, launching and ramping products; dependence on autonomy and Cybercab/Robotaxi",
+        "claim_ids": [
+         "K5"
+        ]
+       },
+       {
+        "column": "JPM",
+        "text": "Legal and regulatory risk from extensive supervision and regulation",
+        "claim_ids": [
+         "K9"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Demand / competitive risk",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "Minority market share across smartphone, PC, tablet, wearables markets",
+        "claim_ids": [
+         "K2"
+        ]
+       },
+       {
+        "column": "TSLA",
+        "text": "EVs a small share of vehicle sales; cyclical, perception-driven demand",
+        "claim_ids": [
+         "K6"
+        ]
+       },
+       {
+        "column": "JPM",
+        "text": "Market and credit risk from rates, spreads, collateral values and private-credit expansion",
+        "claim_ids": [
+         "K10",
+         "K13"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Cyber / data risk",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "IT failures, network disruption and unauthorized release of confidential information",
+        "claim_ids": [
+         "K4"
+        ]
+       },
+       {
+        "column": "TSLA",
+        "text": "Not separately quoted among top four Tesla claims",
+        "claim_ids": []
+       },
+       {
+        "column": "JPM",
+        "text": "Operational risk including successful cyber attack and personal-information safeguarding",
+        "claim_ids": [
+         "K11"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Company-specific / other",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "Margin volatility incl. tariffs; single product category concentration",
+        "claim_ids": [
+         "K3"
+        ]
+       },
+       {
+        "column": "TSLA",
+        "text": "Self-insured product liability; high dependence on Elon Musk",
+        "claim_ids": [
+         "K7",
+         "K8"
+        ]
+       },
+       {
+        "column": "JPM",
+        "text": "Liquidity and capital constraints tied to regulatory capital requirements",
+        "claim_ids": [
+         "K10"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [
+     {
+      "dimension": "Risk factor taxonomy and periods",
+      "tickers": [
+       "AAPL",
+       "TSLA",
+       "JPM"
+      ],
+      "reason": "Apple's pinned risk factors are for a fiscal year ended 2025-09-27 while Tesla's and JPMorgan's are for fiscal years ended 2025-12-31; each company uses its own risk categories (Apple: macro/business/legal/financial; Tesla: growth/operational; JPM: bank-specific legal, market, credit, liquidity, capital, operational), so headings do not map one-to-one."
+     },
+     {
+      "dimension": "Severity or ranking of risks",
+      "tickers": [
+       "AAPL",
+       "TSLA",
+       "JPM"
+      ],
+      "reason": "Excerpts are narrative disclosures without quantified likelihood, exposure amounts or explicit ranking, so relative magnitude cannot be compared."
+     }
+    ],
+    "gaps": [
+     "No quantified exposure figures (e.g., loss estimates, reserve or capital amounts) accompany any of the three companies' risk factors in the excerpts.",
+     "Tesla excerpts do not include a summary list of principal risks comparable to JPMorgan's, and Apple/Tesla excerpts are partial (mid-sentence continuations), so some risk headings may be omitted.",
+     "No excerpts on Tesla's regulatory credits, Apple's China-specific dependency detail, or JPMorgan's strategic and country risk factor text beyond the summary list."
+    ]
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"Apple's FY2025 10-K organizes risks into macroeconomic/industry, business, legal and regulatory, and financial categories, emphasizing global supply-chain and international sales concentration, intense competition with minority market share, product-transition execution, and margin pressure from tariffs, FX and pricing.\",\"claim_ids\":[\"K1\",\"K2\",\"K3\",\"K4\"]},{\"text\":\"Tesla's FY2025 10-K centers on growth-execution risk \u2014 production ramps of Cybercab/Robotaxi and AI-based autonomy, EV demand perception and cyclicality, product defects and largely self-insured product liability, and dependence on Elon Musk.\",\"claim_ids\":[\"K5\",\"K6\",\"K7\",\"K8\"]},{\"text\":\"JPMorgan's FY2025 10-K enumerates a financial-institution risk taxonomy \u2014 legal/regulatory, political, market, credit, liquidity, capital, operational, strategic, country and people risks \u2014 with cyber attack, private-credit contagion and model/risk-framework failure highlighted.\",\"claim_ids\":[\"K9\",\"K10\",\"K11\"]},{\"text\":\"Comparison: all three flag macro/geopolitical shocks, cybersecurity and data-privacy exposure and regulatory scrutiny, but Apple's and Tesla's are product, supply-chain and demand risks while JPMorgan's are balance-sheet risks (credit, liquidity, capital) tied to regulatory capital requirements; Apple's FY2026 Q1 10-Q reports no material change.\",\"claim_ids\":[\"K4\",\"K7\",\"K10\",\"K12\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"Apple states its operations and performance depend significantly on global and regional economic conditions, with sales outside the U.S. a majority of total net sales and a majority of supplier facilities located outside the U.S.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C3\"],\"quote\":\"representing a majority of the Company's total net sales. In addition, the Company's global supply chain is large and complex and a majority of the Company's supplier facilities, including manufacturing and assembly sites, are located outside the U.S.\"},{\"id\":\"K2\",\"text\":\"Apple cites competitive risk, noting it has a minority market share in the global smartphone, personal computer, tablet and wearables markets.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C5\"],\"quote\":\"The Company has a minority market share in the global smartphone, personal computer, tablet and wearables markets, and some of the markets in which the Company competes have from time to time experienced little to no growth or contracted overall.\"},{\"id\":\"K3\",\"text\":\"Apple flags net sales and gross margin volatility from pricing pressure, competition, supply shortages, component costs, FX, inflation and new or increased tariffs and retaliatory actions; it also notes a significant portion of net sales comes from a single product category.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C14\",\"C15\"],\"quote\":\"the Company generates a significant portion of its net sales from a single product category and a decline in demand for that product could significantly impact net sales and gross margins.\"},{\"id\":\"K4\",\"text\":\"Apple identifies IT system failures, network disruptions and cybersecurity incidents, plus losses or unauthorized release of confidential personal information, as risks to its business and reputation.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C7\",\"C8\"],\"quote\":\"Losses or unauthorized access to or releases of confidential information, including personal information, could subject the Company to significant reputational, financial, legal and operational consequences.\"},{\"id\":\"K5\",\"text\":\"Tesla's lead risk is issues or delays in developing, launching and ramping production, stating its future business depends on driver assistance and autonomous driving solutions and increasing production of mass-market vehicles including Cybercab, its Robotaxi product.\",\"tickers\":[\"TSLA\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C17\"],\"quote\":\"our future business depends on development of our driver assistance systems and autonomous driving solutions and increasing the production of mass-market vehicles, including Cybercab, our purpose-built Robotaxi product.\"},{\"id\":\"K6\",\"text\":\"Tesla notes electric vehicles still constitute a small percentage of overall vehicle sales and that demand may be affected by perceptions of range, charging access, competition, oil and energy price volatility and government incentives, with automotive sales tending to be cyclical.\",\"tickers\":[\"TSLA\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C20\"],\"quote\":\"In addition, electric vehicles still constitute a small percentage of overall vehicle sales. As a result, the market for our vehicles could be negatively affected by numerous factors\"},{\"id\":\"K7\",\"text\":\"Tesla discloses product defect, recall and product liability risk and states that in most jurisdictions it generally self-insures against product liability claims for vehicle exposure, so claims are paid from company funds.\",\"tickers\":[\"TSLA\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C24\"],\"quote\":\"In most jurisdictions, we generally self-insure against the risk of product liability claims for vehicle exposure, meaning that any product liability claims will likely have to be paid from company funds and not by insurance.\"},{\"id\":\"K8\",\"text\":\"Tesla identifies key-person risk, stating it is highly dependent on the services of Elon Musk and that none of its key employees is bound by an employment agreement for any specific term.\",\"tickers\":[\"TSLA\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C26\"],\"quote\":\"In particular, we are highly dependent on the services of Elon Musk, Technoking of Tesla and our Chief Executive Officer. None of our key employees is bound by an employment agreement for any specific term\"},{\"id\":\"K9\",\"text\":\"JPMorgan's principal risk factors begin with legal and regulatory risks, including extensive supervision and regulation, changes in application or enforcement of law, litigation and investigation penalties, and losses absorbed by security holders in a resolution.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C33\"],\"quote\":\"The principal risk factors include:\u2022Legal and Regulatory risks, including the impact of extensive supervision and regulation, as well as changes to or in the application, interpretation or enforcement of applicable law or executive branch actions\"},{\"id\":\"K10\",\"text\":\"JPMorgan also lists political, market, credit, liquidity and capital risks, including effects of interest rates and credit spreads, collateral value declines, constrained liquidity, credit rating downgrades, and limits on capital distribution if regulatory capital requirements are not satisfied.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C34\",\"C35\"],\"quote\":\"\u2022Capital risks, including the risk that JPMorganChase's ability to distribute capital to shareholders or to support its business activities could be limited if it does not satisfy applicable regulatory capital requirements.\"},{\"id\":\"K11\",\"text\":\"JPMorgan's operational risks include dependence on operational systems and employees, harm from a successful cyber attack or other extraordinary events, data management and personal information safeguarding, vendor oversight, and its risk management framework and models.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C35\"],\"quote\":\"\u2022Operational risks, including risks associated with JPMorganChase's dependence on its operational systems and its employees... the harm that could be caused by a successful cyber attack affecting JPMorganChase or by other extraordinary events\"},{\"id\":\"K12\",\"text\":\"Apple's FY2026 Q1 10-Q reports no material changes to its risk factors since the 2025 Form 10-K.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-12-27\",\"period_kind\":\"quarter\",\"citations\":[\"C1\"],\"quote\":\"There have been no material changes to the Company's risk factors since the 2025 Form 10-K.\"},{\"id\":\"K13\",\"text\":\"JPMorgan cites private-credit contagion risk, noting the significant expansion of private credit could worsen losses among non-bank lenders and borrowers, impair asset valuations and increase default rates.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C40\"],\"quote\":\"the interconnectivity across credit markets increases the risk that the significant expansion of private credit could worsen losses among non-bank lenders and their borrowers, particularly if stress or defaults spread to broader funding and credit markets.\"}],\"table\":[{\"dimension\":\"Lead / defining risk\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"Global macro conditions plus concentrated non-U.S. sales and supply chain\",\"claim_ids\":[\"K1\"]},{\"column\":\"TSLA\",\"text\":\"Delays in developing, launching and ramping products; dependence on autonomy and Cybercab/Robotaxi\",\"claim_ids\":[\"K5\"]},{\"column\":\"JPM\",\"text\":\"Legal and regulatory risk from extensive supervision and regulation\",\"claim_ids\":[\"K9\"]}]},{\"dimension\":\"Demand / competitive risk\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"Minority market share across smartphone, PC, tablet, wearables markets\",\"claim_ids\":[\"K2\"]},{\"column\":\"TSLA\",\"text\":\"EVs a small share of vehicle sales; cyclical, perception-driven demand\",\"claim_ids\":[\"K6\"]},{\"column\":\"JPM\",\"text\":\"Market and credit risk from rates, spreads, collateral values and private-credit expansion\",\"claim_ids\":[\"K10\",\"K13\"]}]},{\"dimension\":\"Cyber / data risk\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"IT failures, network disruption and unauthorized release of confidential information\",\"claim_ids\":[\"K4\"]},{\"column\":\"TSLA\",\"text\":\"Not separately quoted among top four Tesla claims\",\"claim_ids\":[]},{\"column\":\"JPM\",\"text\":\"Operational risk including successful cyber attack and personal-information safeguarding\",\"claim_ids\":[\"K11\"]}]},{\"dimension\":\"Company-specific / other\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"Margin volatility incl. tariffs; single product category concentration\",\"claim_ids\":[\"K3\"]},{\"column\":\"TSLA\",\"text\":\"Self-insured product liability; high dependence on Elon Musk\",\"claim_ids\":[\"K7\",\"K8\"]},{\"column\":\"JPM\",\"text\":\"Liquidity and capital constraints tied to regulatory capital requirements\",\"claim_ids\":[\"K10\"]}]}],\"not_comparable\":[{\"dimension\":\"Risk factor taxonomy and periods\",\"tickers\":[\"AAPL\",\"TSLA\",\"JPM\"],\"reason\":\"Apple's pinned risk factors are for a fiscal year ended 2025-09-27 while Tesla's and JPMorgan's are for fiscal years ended 2025-12-31; each company uses its own risk categories (Apple: macro/business/legal/financial; Tesla: growth/operational; JPM: bank-specific legal, market, credit, liquidity, capital, operational), so headings do not map one-to-one.\"},{\"dimension\":\"Severity or ranking of risks\",\"tickers\":[\"AAPL\",\"TSLA\",\"JPM\"],\"reason\":\"Excerpts are narrative disclosures without quantified likelihood, exposure amounts or explicit ranking, so relative magnitude cannot be compared.\"}],\"gaps\":[\"No quantified exposure figures (e.g., loss estimates, reserve or capital amounts) accompany any of the three companies' risk factors in the excerpts.\",\"Tesla excerpts do not include a summary list of principal risks comparable to JPMorgan's, and Apple/Tesla excerpts are partial (mid-sentence continuations), so some risk headings may be omitted.\",\"No excerpts on Tesla's regulatory credits, Apple's China-specific dependency detail, or JPMorgan's strategic and country risk factor text beyond the summary list.\"]}",
+   "flags": [
+    {
+     "where": "K11",
+     "kind": "approximate_quote",
+     "detail": "the closest passage of C35, not the quote as written",
+     "source_string": "\u2022Operational risks, including risks associated with JPMorganChase's dependence on its operational systems and its employees, as well as the systems and employees of acquired businesses and external parties; the harm that could be caused by a "
+    },
+    {
+     "where": "table cell Cyber / data risk / TSLA",
+     "kind": "unlinked_sentence",
+     "detail": "names no claim",
+     "source_string": "Not separately quoted among top four Tesla claims"
+    }
+   ],
+   "notes": []
+  },
+  {
+   "id": "q02",
+   "tickers_ok": true,
+   "resolved": [
+    "NVDA"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 2,
+   "files_n": 2,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 15089,
+   "budget_ok": true,
+   "chunks": 48,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqiPXw4uZqVAW3VzakQa",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 5,
+   "timing_ms": {
+    "plan_and_retrieve": 1580,
+    "render": 0,
+    "model": 24630,
+    "parse": 0,
+    "check": 25
+   },
+   "total_ms": 26235,
+   "input_tokens": 24992,
+   "output_tokens": 2391,
+   "cost_usd": 0.17488,
+   "checks": {
+    "quotes_located_hit": 5,
+    "quotes_located_n": 5,
+    "figures_in_quote_hit": 11,
+    "figures_in_quote_n": 12,
+    "figures_unchecked": 0,
+    "columns_matched_hit": 2,
+    "columns_matched_n": 7,
+    "columns_unverified": 0,
+    "units_matched_hit": 4,
+    "units_matched_n": 4,
+    "units_unchecked": 7,
+    "flags_count": 6,
+    "notes_count": 10,
+    "unlinked_count": 1
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "NVIDIA's revenue base has expanded roughly fivefold in two fiscal years: FY2024 revenue was $60.9 billion, up 126% year over year, driven by a 217% increase in Data Center revenue.",
+      "claim_ids": [
+       "K1"
+      ]
+     },
+     {
+      "text": "FY2025 revenue reached $130,497 million versus $60,922 million in FY2024, with growth driven by data center compute and networking platforms and the start of Blackwell production shipments in Q4 FY2025.",
+      "claim_ids": [
+       "K2",
+       "K4"
+      ]
+     },
+     {
+      "text": "Growth remains rapid but the year-over-year rate has moderated from triple digits: Q3 FY2026 revenue was $57,006 million versus $35,082 million a year earlier, and nine-month revenue was $147,811 million versus $91,166 million.",
+      "claim_ids": [
+       "K3"
+      ]
+     },
+     {
+      "text": "Management now attributes growth to three platform shifts (accelerated computing, powerful AI models, agentic applications) rather than the single Hopper generative-AI surge cited in FY2024.",
+      "claim_ids": [
+       "K4",
+       "K5"
+      ]
+     },
+     {
+      "text": "The excerpts contain no forward revenue guidance figures, so the forward outlook is qualitative only.",
+      "claim_ids": []
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "FY2024 revenue was $60.9 billion, up 126% from the prior year, with Data Center revenue up 217%.",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2024-01-28",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C11"
+      ],
+      "quote": "Revenue for fiscal year 2024 was $60.9 billion, up 126% from a year ago.Data Center revenue for fiscal year 2024 was up 217%."
+     },
+     {
+      "id": "K2",
+      "text": "Total revenue was $130,497 million in FY2025 versus $60,922 million in FY2024 and $26,974 million in FY2023.",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2025-01-26",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C32"
+      ],
+      "quote": "Total revenue | $130,497 | $60,922 | $26,974"
+     },
+     {
+      "id": "K3",
+      "text": "Revenue was $57,006 million in Q3 FY2026 versus $35,082 million a year earlier, and $147,811 million for the first nine months of FY2026 versus $91,166 million.",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2025-10-26",
+      "period_kind": "quarter",
+      "citations": [
+       "C44"
+      ],
+      "quote": "Revenue | $57,006 | $35,082 | $147,811 | $91,166"
+     },
+     {
+      "id": "K4",
+      "text": "FY2025 growth was driven by data center compute and networking for accelerated computing and AI, with Hopper driving full-year growth and Blackwell production systems beginning to ship in Q4 FY2025.",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2025-01-26",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C28"
+      ],
+      "quote": "Revenue growth in fiscal year 2025 was driven by data center compute and networking platforms for accelerated computing and AI solutions. Demand for our Hopper architecture drove our significant growth for the full year. We began shipping production systems of the Blackwell architecture in the fourth quarter"
+     },
+     {
+      "id": "K5",
+      "text": "In Q3 FY2026, Compute & Networking growth was attributed to three platform shifts, with nine-month Data Center computing revenue up 59% and Data Center networking up 105% year over year.",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2025-10-26",
+      "period_kind": "nine_months",
+      "citations": [
+       "C47"
+      ],
+      "quote": "driven by three platform shifts -accelerated computing, powerful AI models, and agentic applications. Revenue from Data Center computing grew 59% year-on-year compared to the first nine months of fiscal year 2025... Data Center networking grew 105% year-on-year"
+     }
+    ],
+    "table": [
+     {
+      "dimension": "Revenue, FY2024",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "$60.9bn, up 126% YoY",
+        "claim_ids": [
+         "K1",
+         "K2"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Revenue, FY2025",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "$130,497mn vs $60,922mn FY2024",
+        "claim_ids": [
+         "K2"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Revenue, Q3 FY2026",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "$57,006mn vs $35,082mn Q3 FY2025",
+        "claim_ids": [
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Revenue, first nine months FY2026",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "$147,811mn vs $91,166mn prior-year period",
+        "claim_ids": [
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Stated growth drivers (latest)",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "Blackwell ramp; DC compute +59% and networking +105% YoY for 9M FY2026",
+        "claim_ids": [
+         "K4",
+         "K5"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [],
+    "gaps": [
+     "No forward revenue or next-quarter guidance figures appear in the excerpts.",
+     "No FY2026 full-year revenue outlook or backlog/purchase-commitment figures quantifying future demand."
+    ]
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"NVIDIA's revenue base has expanded roughly fivefold in two fiscal years: FY2024 revenue was $60.9 billion, up 126% year over year, driven by a 217% increase in Data Center revenue.\",\"claim_ids\":[\"K1\"]},{\"text\":\"FY2025 revenue reached $130,497 million versus $60,922 million in FY2024, with growth driven by data center compute and networking platforms and the start of Blackwell production shipments in Q4 FY2025.\",\"claim_ids\":[\"K2\",\"K4\"]},{\"text\":\"Growth remains rapid but the year-over-year rate has moderated from triple digits: Q3 FY2026 revenue was $57,006 million versus $35,082 million a year earlier, and nine-month revenue was $147,811 million versus $91,166 million.\",\"claim_ids\":[\"K3\"]},{\"text\":\"Management now attributes growth to three platform shifts (accelerated computing, powerful AI models, agentic applications) rather than the single Hopper generative-AI surge cited in FY2024.\",\"claim_ids\":[\"K4\",\"K5\"]},{\"text\":\"The excerpts contain no forward revenue guidance figures, so the forward outlook is qualitative only.\",\"claim_ids\":[]}],\"claims\":[{\"id\":\"K1\",\"text\":\"FY2024 revenue was $60.9 billion, up 126% from the prior year, with Data Center revenue up 217%.\",\"tickers\":[\"NVDA\"],\"period_end\":\"2024-01-28\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C11\"],\"quote\":\"Revenue for fiscal year 2024 was $60.9 billion, up 126% from a year ago.Data Center revenue for fiscal year 2024 was up 217%.\"},{\"id\":\"K2\",\"text\":\"Total revenue was $130,497 million in FY2025 versus $60,922 million in FY2024 and $26,974 million in FY2023.\",\"tickers\":[\"NVDA\"],\"period_end\":\"2025-01-26\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C32\"],\"quote\":\"Total revenue | $130,497 | $60,922 | $26,974\"},{\"id\":\"K3\",\"text\":\"Revenue was $57,006 million in Q3 FY2026 versus $35,082 million a year earlier, and $147,811 million for the first nine months of FY2026 versus $91,166 million.\",\"tickers\":[\"NVDA\"],\"period_end\":\"2025-10-26\",\"period_kind\":\"quarter\",\"citations\":[\"C44\"],\"quote\":\"Revenue | $57,006 | $35,082 | $147,811 | $91,166\"},{\"id\":\"K4\",\"text\":\"FY2025 growth was driven by data center compute and networking for accelerated computing and AI, with Hopper driving full-year growth and Blackwell production systems beginning to ship in Q4 FY2025.\",\"tickers\":[\"NVDA\"],\"period_end\":\"2025-01-26\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C28\"],\"quote\":\"Revenue growth in fiscal year 2025 was driven by data center compute and networking platforms for accelerated computing and AI solutions. Demand for our Hopper architecture drove our significant growth for the full year. We began shipping production systems of the Blackwell architecture in the fourth quarter\"},{\"id\":\"K5\",\"text\":\"In Q3 FY2026, Compute & Networking growth was attributed to three platform shifts, with nine-month Data Center computing revenue up 59% and Data Center networking up 105% year over year.\",\"tickers\":[\"NVDA\"],\"period_end\":\"2025-10-26\",\"period_kind\":\"nine_months\",\"citations\":[\"C47\"],\"quote\":\"driven by three platform shifts -accelerated computing, powerful AI models, and agentic applications. Revenue from Data Center computing grew 59% year-on-year compared to the first nine months of fiscal year 2025... Data Center networking grew 105% year-on-year\"}],\"table\":[{\"dimension\":\"Revenue, FY2024\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"$60.9bn, up 126% YoY\",\"claim_ids\":[\"K1\",\"K2\"]}]},{\"dimension\":\"Revenue, FY2025\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"$130,497mn vs $60,922mn FY2024\",\"claim_ids\":[\"K2\"]}]},{\"dimension\":\"Revenue, Q3 FY2026\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"$57,006mn vs $35,082mn Q3 FY2025\",\"claim_ids\":[\"K3\"]}]},{\"dimension\":\"Revenue, first nine months FY2026\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"$147,811mn vs $91,166mn prior-year period\",\"claim_ids\":[\"K3\"]}]},{\"dimension\":\"Stated growth drivers (latest)\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"Blackwell ramp; DC compute +59% and networking +105% YoY for 9M FY2026\",\"claim_ids\":[\"K4\",\"K5\"]}]}],\"not_comparable\":[],\"gaps\":[\"No forward revenue or next-quarter guidance figures appear in the excerpts.\",\"No FY2026 full-year revenue outlook or backlog/purchase-commitment figures quantifying future demand.\"]}",
+   "flags": [
+    {
+     "where": "K3",
+     "kind": "duration_mismatch",
+     "detail": "$147,811 million sits in a nine_months column; the claim says quarter",
+     "source_string": "Nine Months Ended Oct 26, 2025"
+    },
+    {
+     "where": "K3",
+     "kind": "duration_mismatch",
+     "detail": "$91,166 million sits in a nine_months column; the claim says quarter",
+     "source_string": "Nine Months Ended Oct 27, 2024"
+    },
+    {
+     "where": "K5",
+     "kind": "approximate_quote",
+     "detail": "the closest passage of C47, not the quote as written",
+     "source_string": "driven by three platform shifts -accelerated computing, powerful AI models, and agentic applications. Revenue from Data Center computing grew 59% year-on-year compared to the first nine months of fiscal year 2025, driven by demand for our Blackwell computing pl"
+    },
+    {
+     "where": "K5",
+     "kind": "figure_elsewhere_in_chunk",
+     "detail": "105% is printed in C47 outside the quote, so its column and units were not read",
+     "source_string": null
+    },
+    {
+     "where": "summary sentence 5",
+     "kind": "unlinked_sentence",
+     "detail": "names no claim",
+     "source_string": "The excerpts contain no forward revenue guidance figures, so the forward outlook is qualitative only."
+    },
+    {
+     "where": "gap 2",
+     "kind": "ungrounded_gap",
+     "detail": "names 2026, outside the coverage block",
+     "source_string": "No FY2026 full-year revenue outlook or backlog/purchase-commitment figures quantifying future demand."
+    }
+   ],
+   "notes": [
+    {
+     "where": "K1",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 126%",
+     "source_string": null
+    },
+    {
+     "where": "K1",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 217%",
+     "source_string": null
+    },
+    {
+     "where": "K2",
+     "kind": "column_other_period",
+     "detail": "$60,922 million sits in the column for 2024-01-28",
+     "source_string": "FY2024 (2024-01-28)"
+    },
+    {
+     "where": "K2",
+     "kind": "column_other_period",
+     "detail": "$26,974 million sits in the column for 2023-01-29",
+     "source_string": "FY2023 (2023-01-29)"
+    },
+    {
+     "where": "K3",
+     "kind": "column_other_period",
+     "detail": "$35,082 million sits in the column for 2024-10-27",
+     "source_string": "Three Months Ended Oct 27, 2024"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $57,006 million; the excerpt carries no unit line",
+     "source_string": null
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $35,082 million; the excerpt carries no unit line",
+     "source_string": null
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $147,811 million; the excerpt carries no unit line",
+     "source_string": null
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $91,166 million; the excerpt carries no unit line",
+     "source_string": null
+    },
+    {
+     "where": "K5",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 59%",
+     "source_string": null
+    }
+   ]
+  },
+  {
+   "id": "q03",
+   "tickers_ok": true,
+   "resolved": [
+    "ABBV",
+    "JNJ",
+    "LLY",
+    "MRK",
+    "PFE"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 2,
+   "files_n": 2,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 26730,
+   "budget_ok": true,
+   "chunks": 75,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqiRXyrQf88eCgbVh7uc",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 11,
+   "timing_ms": {
+    "plan_and_retrieve": 1306,
+    "render": 0,
+    "model": 43347,
+    "parse": 0,
+    "check": 46
+   },
+   "total_ms": 44699,
+   "input_tokens": 36328,
+   "output_tokens": 3988,
+   "cost_usd": 0.271485,
+   "checks": {
+    "quotes_located_hit": 11,
+    "quotes_located_n": 11,
+    "figures_in_quote_hit": 1,
+    "figures_in_quote_n": 1,
+    "figures_unchecked": 0,
+    "columns_matched_hit": 0,
+    "columns_matched_n": 0,
+    "columns_unverified": 0,
+    "units_matched_hit": 0,
+    "units_matched_n": 0,
+    "units_unchecked": 1,
+    "flags_count": 2,
+    "notes_count": 1,
+    "unlinked_count": 0
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "All five companies flag the same core regulatory exposures: extensive FDA and foreign approval requirements, government and payer price controls, and enforcement/compliance risk around marketing and pricing practices.",
+      "claim_ids": [
+       "K1",
+       "K4",
+       "K6",
+       "K9",
+       "K11"
+      ]
+     },
+     {
+      "text": "JNJ describes broad FDA administrative powers (recalls, seizures, withdrawal of approvals) plus rising compliance costs from new laws, and notes possible delays from reductions to the FDA's budget and personnel; its stated mitigation is to \"identify, manage and mitigate risks\" and to sustain innovation, with new products from the past five years at roughly 25% of 2025 sales.",
+      "claim_ids": [
+       "K1",
+       "K2",
+       "K3"
+      ]
+     },
+     {
+      "text": "Pfizer emphasizes payer/PBM formulary and rebate pressure plus ex-US price regulation, including the EU pharmaceutical legislation reform that may alter regulatory exclusivity periods and the EU HTA Regulation effective January 2025, which it says it is \"engaging and monitoring.\"",
+      "claim_ids": [
+       "K4",
+       "K5"
+      ]
+     },
+     {
+      "text": "Merck cites extensive FDA and foreign regulation and warns that elimination of FDA drug user fee programs could delay inspections and approvals, alongside government-mandated annual price cuts in Japan.",
+      "claim_ids": [
+       "K6",
+       "K7"
+      ]
+     },
+     {
+      "text": "Lilly is most explicit on mitigation: in November 2025 it announced preliminary voluntary agreements with the U.S. government to lower Medicaid and certain other drug prices and to launch new medicines with more balanced pricing across developed nations, while flagging scrutiny of promotional practices and the FDA National Priority Voucher pilot.",
+      "claim_ids": [
+       "K8",
+       "K9"
+      ]
+     },
+     {
+      "text": "AbbVie frames the risk as costly, time-consuming approvals and a highly regulated U.S. healthcare system subject to frequent change, compounded by government-mandated European price reductions and rebate programs.",
+      "claim_ids": [
+       "K10",
+       "K11"
+      ]
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "JNJ states that regulatory agencies have administrative powers to impose product withdrawals, recalls, seizures and civil and criminal sanctions, and that the FDA and global agencies are increasing enforcement activities.",
+      "tickers": [
+       "JNJ"
+      ],
+      "period_end": "2025-12-28",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C5"
+      ],
+      "quote": "The regulatory agencies under whose purview the Company operates have administrative powers that may subject it to actions such as product withdrawals, recalls, seizure of products and other civil and criminal sanctions."
+     },
+     {
+      "id": "K2",
+      "text": "JNJ warns that new product development and regulatory approval may be delayed by limits on federal agency budgets or personnel, including reductions to the U.S. FDA's budget, employees and operations.",
+      "tickers": [
+       "JNJ"
+      ],
+      "period_end": "2025-12-28",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C14"
+      ],
+      "quote": "the development and regulatory approval of new products may be delayed due to limits on federal agency budgets or personnel, including reductions to the U.S. FDA's budget, employees, and operations, which may lead to slower response times and longer review periods"
+     },
+     {
+      "id": "K3",
+      "text": "JNJ's mitigation emphasis is continued innovation to offset revenue losses; new products introduced within the past five years accounted for approximately 25% of 2025 sales.",
+      "tickers": [
+       "JNJ"
+      ],
+      "period_end": "2025-12-28",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C13"
+      ],
+      "quote": "New products introduced within the past five years accounted for approximately 25% of 2025 sales."
+     },
+     {
+      "id": "K4",
+      "text": "Pfizer identifies ex-US government price regulation in markets such as EU member states, the U.K., Japan, China, Canada, Australia and New Zealand, including China's QCE/VBP tender process causing significant price cuts for off-patent medicines.",
+      "tickers": [
+       "PFE"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C20"
+      ],
+      "quote": "In certain markets, such as in EU member states, the U.K., Japan, China, Canada, Australia and New Zealand, governments have significant power as large single payors to regulate prices, access criteria, or impose other means of cost control"
+     },
+     {
+      "id": "K5",
+      "text": "Pfizer notes the proposed EU pharmaceutical legislation reform may alter regulatory exclusivity periods, and says it is engaging with and monitoring the EU Health Technology Assessment Regulation that took effect in January 2025.",
+      "tickers": [
+       "PFE"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C20"
+      ],
+      "quote": "This reform may alter regulatory exclusivity periods for our products... with the European Regulation on Health Technology Assessment (EU HTA-R) taking effect in January 2025, we are engaging and monitoring application of the EU's new clinical assessment program"
+     },
+     {
+      "id": "K6",
+      "text": "Merck states its research, preclinical testing, clinical trials, manufacturing and marketing are subject to extensive regulation by the FDA and foreign authorities including in the EU, Japan and China, and that FDA requirements have increased time and resources to bring products to market.",
+      "tickers": [
+       "MRK"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C40"
+      ],
+      "quote": "The Company's activities, including research, preclinical testing, clinical trials and the manufacturing and marketing of its products, are subject to extensive regulation by numerous federal, state and local governmental authorities in the U.S., including the FDA, and by foreign regulatory authorities"
+     },
+     {
+      "id": "K7",
+      "text": "Merck warns that elimination of FDA drug user fee programs could cause significant delays to facility inspections and approvals of new products, and notes Japan's government-mandated annual price reductions.",
+      "tickers": [
+       "MRK"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C40",
+       "C35"
+      ],
+      "quote": "Additionally, if the FDA drug user fee programs were eliminated, that could cause significant delays to facility inspections and approvals of new products."
+     },
+     {
+      "id": "K8",
+      "text": "Lilly announced in November 2025 preliminary voluntary agreements with the U.S. government to lower Medicaid and certain other drug prices for U.S. patients and to launch new medicines with a more balanced pricing approach across developed nations, while noting risks in negotiating definitive agreements.",
+      "tickers": [
+       "LLY"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C53"
+      ],
+      "quote": "In November 2025, we announced preliminary voluntary agreements with the U.S. government in which, among other arrangements, we agreed to implement measures to lower Medicaid and certain other drug prices for U.S. patients"
+     },
+     {
+      "id": "K9",
+      "text": "Lilly notes extensive scrutiny of marketing, promotional and pricing practices, U.S. actions to restrict direct-to-patient advertising, and that participation in programs such as the FDA Commissioner's National Priority Voucher Pilot Program may expose it to legal, regulatory, political and reputational risks.",
+      "tickers": [
+       "LLY"
+      ],
+      "period_end": "2025-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C58",
+       "C59"
+      ],
+      "quote": "novel regulatory or policy programs such as the FDA Commissioner's National Priority Voucher Pilot Program may attract scrutiny and criticism from various stakeholders. Our participation in such programs... may expose us to legal, regulatory, political, and reputational risks."
+     },
+     {
+      "id": "K10",
+      "text": "AbbVie states obtaining regulatory approvals can be costly and time consuming and approvals may not be granted, and that the U.S. healthcare industry is highly regulated and subject to frequent and substantial regulatory changes.",
+      "tickers": [
+       "ABBV"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C72",
+       "C73"
+      ],
+      "quote": "The process of obtaining regulatory approvals to market a pharmaceutical product can be costly and time consuming, and approvals may not be granted for future products, or additional indications or uses of existing products, on a timely basis, if at all."
+     },
+     {
+      "id": "K11",
+      "text": "AbbVie cites government-mandated price reductions in many European countries and rebates arising from government programs such as Medicaid, which it anticipates will continue to pressure pricing.",
+      "tickers": [
+       "ABBV"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C67"
+      ],
+      "quote": "many European countries have ongoing government-mandated price reductions for many pharmaceutical products, and AbbVie anticipates continuing pricing pressures in Europe"
+     }
+    ],
+    "table": [
+     {
+      "dimension": "FDA / approval-process risk",
+      "cells": [
+       {
+        "column": "JNJ",
+        "text": "Broad FDA powers: recalls, seizure, withdrawal of approvals; possible delays from FDA budget/personnel cuts",
+        "claim_ids": [
+         "K1",
+         "K2"
+        ]
+       },
+       {
+        "column": "MRK",
+        "text": "Extensive FDA/foreign regulation; user-fee program elimination could delay inspections and approvals",
+        "claim_ids": [
+         "K6",
+         "K7"
+        ]
+       },
+       {
+        "column": "ABBV",
+        "text": "Approvals costly, time consuming and may not be granted",
+        "claim_ids": [
+         "K10"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Pricing / reimbursement regulation",
+      "cells": [
+       {
+        "column": "PFE",
+        "text": "Single-payer price regulation in EU, U.K., Japan, China, Canada, Australia, NZ; China VBP price cuts",
+        "claim_ids": [
+         "K4"
+        ]
+       },
+       {
+        "column": "MRK",
+        "text": "Japan government-mandated annual price reductions",
+        "claim_ids": [
+         "K7"
+        ]
+       },
+       {
+        "column": "LLY",
+        "text": "Nov 2025 preliminary voluntary agreements with U.S. government on Medicaid and other drug prices",
+        "claim_ids": [
+         "K8"
+        ]
+       },
+       {
+        "column": "ABBV",
+        "text": "Government-mandated European price reductions; Medicaid rebate programs",
+        "claim_ids": [
+         "K11"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Stated mitigation / response",
+      "cells": [
+       {
+        "column": "JNJ",
+        "text": "Innovation pipeline; new products of past five years ~25% of 2025 sales",
+        "claim_ids": [
+         "K3"
+        ]
+       },
+       {
+        "column": "PFE",
+        "text": "Engaging with and monitoring EU HTA Regulation effective Jan 2025",
+        "claim_ids": [
+         "K5"
+        ]
+       },
+       {
+        "column": "LLY",
+        "text": "Negotiating definitive pricing agreements with U.S. government; participation in FDA National Priority Voucher pilot",
+        "claim_ids": [
+         "K8",
+         "K9"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [
+     {
+      "dimension": "Fiscal period of disclosures",
+      "tickers": [
+       "JNJ",
+       "PFE",
+       "MRK",
+       "LLY",
+       "ABBV"
+      ],
+      "reason": "JNJ and LLY risk factors are from FY2025 10-Ks; PFE, MRK and ABBV from FY2024 10-Ks, so policy developments in 2025 (e.g., U.S. pricing agreements, tariffs) are reflected unevenly."
+     },
+     {
+      "dimension": "Mitigation disclosure",
+      "tickers": [
+       "MRK",
+       "ABBV"
+      ],
+      "reason": "The MRK and ABBV excerpts describe risks but contain no explicit statement of actions taken to address regulatory risk."
+     }
+    ],
+    "gaps": [
+     "No quantified financial impact of regulatory or pricing risk (e.g., estimated revenue at risk from Medicare drug price negotiation) for any of the five companies.",
+     "No PFE FY2025 Q3 risk-factor content; the FY2024 10-K Item 1A is used in its place, so Pfizer's response to 2025 U.S. pricing and tariff actions is not covered.",
+     "No description of internal compliance-program structures, budgets or headcount devoted to regulatory compliance at any company."
+    ]
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"All five companies flag the same core regulatory exposures: extensive FDA and foreign approval requirements, government and payer price controls, and enforcement/compliance risk around marketing and pricing practices.\",\"claim_ids\":[\"K1\",\"K4\",\"K6\",\"K9\",\"K11\"]},{\"text\":\"JNJ describes broad FDA administrative powers (recalls, seizures, withdrawal of approvals) plus rising compliance costs from new laws, and notes possible delays from reductions to the FDA's budget and personnel; its stated mitigation is to \\\"identify, manage and mitigate risks\\\" and to sustain innovation, with new products from the past five years at roughly 25% of 2025 sales.\",\"claim_ids\":[\"K1\",\"K2\",\"K3\"]},{\"text\":\"Pfizer emphasizes payer/PBM formulary and rebate pressure plus ex-US price regulation, including the EU pharmaceutical legislation reform that may alter regulatory exclusivity periods and the EU HTA Regulation effective January 2025, which it says it is \\\"engaging and monitoring.\\\"\",\"claim_ids\":[\"K4\",\"K5\"]},{\"text\":\"Merck cites extensive FDA and foreign regulation and warns that elimination of FDA drug user fee programs could delay inspections and approvals, alongside government-mandated annual price cuts in Japan.\",\"claim_ids\":[\"K6\",\"K7\"]},{\"text\":\"Lilly is most explicit on mitigation: in November 2025 it announced preliminary voluntary agreements with the U.S. government to lower Medicaid and certain other drug prices and to launch new medicines with more balanced pricing across developed nations, while flagging scrutiny of promotional practices and the FDA National Priority Voucher pilot.\",\"claim_ids\":[\"K8\",\"K9\"]},{\"text\":\"AbbVie frames the risk as costly, time-consuming approvals and a highly regulated U.S. healthcare system subject to frequent change, compounded by government-mandated European price reductions and rebate programs.\",\"claim_ids\":[\"K10\",\"K11\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"JNJ states that regulatory agencies have administrative powers to impose product withdrawals, recalls, seizures and civil and criminal sanctions, and that the FDA and global agencies are increasing enforcement activities.\",\"tickers\":[\"JNJ\"],\"period_end\":\"2025-12-28\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C5\"],\"quote\":\"The regulatory agencies under whose purview the Company operates have administrative powers that may subject it to actions such as product withdrawals, recalls, seizure of products and other civil and criminal sanctions.\"},{\"id\":\"K2\",\"text\":\"JNJ warns that new product development and regulatory approval may be delayed by limits on federal agency budgets or personnel, including reductions to the U.S. FDA's budget, employees and operations.\",\"tickers\":[\"JNJ\"],\"period_end\":\"2025-12-28\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C14\"],\"quote\":\"the development and regulatory approval of new products may be delayed due to limits on federal agency budgets or personnel, including reductions to the U.S. FDA's budget, employees, and operations, which may lead to slower response times and longer review periods\"},{\"id\":\"K3\",\"text\":\"JNJ's mitigation emphasis is continued innovation to offset revenue losses; new products introduced within the past five years accounted for approximately 25% of 2025 sales.\",\"tickers\":[\"JNJ\"],\"period_end\":\"2025-12-28\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C13\"],\"quote\":\"New products introduced within the past five years accounted for approximately 25% of 2025 sales.\"},{\"id\":\"K4\",\"text\":\"Pfizer identifies ex-US government price regulation in markets such as EU member states, the U.K., Japan, China, Canada, Australia and New Zealand, including China's QCE/VBP tender process causing significant price cuts for off-patent medicines.\",\"tickers\":[\"PFE\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C20\"],\"quote\":\"In certain markets, such as in EU member states, the U.K., Japan, China, Canada, Australia and New Zealand, governments have significant power as large single payors to regulate prices, access criteria, or impose other means of cost control\"},{\"id\":\"K5\",\"text\":\"Pfizer notes the proposed EU pharmaceutical legislation reform may alter regulatory exclusivity periods, and says it is engaging with and monitoring the EU Health Technology Assessment Regulation that took effect in January 2025.\",\"tickers\":[\"PFE\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C20\"],\"quote\":\"This reform may alter regulatory exclusivity periods for our products... with the European Regulation on Health Technology Assessment (EU HTA-R) taking effect in January 2025, we are engaging and monitoring application of the EU's new clinical assessment program\"},{\"id\":\"K6\",\"text\":\"Merck states its research, preclinical testing, clinical trials, manufacturing and marketing are subject to extensive regulation by the FDA and foreign authorities including in the EU, Japan and China, and that FDA requirements have increased time and resources to bring products to market.\",\"tickers\":[\"MRK\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C40\"],\"quote\":\"The Company's activities, including research, preclinical testing, clinical trials and the manufacturing and marketing of its products, are subject to extensive regulation by numerous federal, state and local governmental authorities in the U.S., including the FDA, and by foreign regulatory authorities\"},{\"id\":\"K7\",\"text\":\"Merck warns that elimination of FDA drug user fee programs could cause significant delays to facility inspections and approvals of new products, and notes Japan's government-mandated annual price reductions.\",\"tickers\":[\"MRK\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C40\",\"C35\"],\"quote\":\"Additionally, if the FDA drug user fee programs were eliminated, that could cause significant delays to facility inspections and approvals of new products.\"},{\"id\":\"K8\",\"text\":\"Lilly announced in November 2025 preliminary voluntary agreements with the U.S. government to lower Medicaid and certain other drug prices for U.S. patients and to launch new medicines with a more balanced pricing approach across developed nations, while noting risks in negotiating definitive agreements.\",\"tickers\":[\"LLY\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C53\"],\"quote\":\"In November 2025, we announced preliminary voluntary agreements with the U.S. government in which, among other arrangements, we agreed to implement measures to lower Medicaid and certain other drug prices for U.S. patients\"},{\"id\":\"K9\",\"text\":\"Lilly notes extensive scrutiny of marketing, promotional and pricing practices, U.S. actions to restrict direct-to-patient advertising, and that participation in programs such as the FDA Commissioner's National Priority Voucher Pilot Program may expose it to legal, regulatory, political and reputational risks.\",\"tickers\":[\"LLY\"],\"period_end\":\"2025-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C58\",\"C59\"],\"quote\":\"novel regulatory or policy programs such as the FDA Commissioner's National Priority Voucher Pilot Program may attract scrutiny and criticism from various stakeholders. Our participation in such programs... may expose us to legal, regulatory, political, and reputational risks.\"},{\"id\":\"K10\",\"text\":\"AbbVie states obtaining regulatory approvals can be costly and time consuming and approvals may not be granted, and that the U.S. healthcare industry is highly regulated and subject to frequent and substantial regulatory changes.\",\"tickers\":[\"ABBV\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C72\",\"C73\"],\"quote\":\"The process of obtaining regulatory approvals to market a pharmaceutical product can be costly and time consuming, and approvals may not be granted for future products, or additional indications or uses of existing products, on a timely basis, if at all.\"},{\"id\":\"K11\",\"text\":\"AbbVie cites government-mandated price reductions in many European countries and rebates arising from government programs such as Medicaid, which it anticipates will continue to pressure pricing.\",\"tickers\":[\"ABBV\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C67\"],\"quote\":\"many European countries have ongoing government-mandated price reductions for many pharmaceutical products, and AbbVie anticipates continuing pricing pressures in Europe\"}],\"table\":[{\"dimension\":\"FDA / approval-process risk\",\"cells\":[{\"column\":\"JNJ\",\"text\":\"Broad FDA powers: recalls, seizure, withdrawal of approvals; possible delays from FDA budget/personnel cuts\",\"claim_ids\":[\"K1\",\"K2\"]},{\"column\":\"MRK\",\"text\":\"Extensive FDA/foreign regulation; user-fee program elimination could delay inspections and approvals\",\"claim_ids\":[\"K6\",\"K7\"]},{\"column\":\"ABBV\",\"text\":\"Approvals costly, time consuming and may not be granted\",\"claim_ids\":[\"K10\"]}]},{\"dimension\":\"Pricing / reimbursement regulation\",\"cells\":[{\"column\":\"PFE\",\"text\":\"Single-payer price regulation in EU, U.K., Japan, China, Canada, Australia, NZ; China VBP price cuts\",\"claim_ids\":[\"K4\"]},{\"column\":\"MRK\",\"text\":\"Japan government-mandated annual price reductions\",\"claim_ids\":[\"K7\"]},{\"column\":\"LLY\",\"text\":\"Nov 2025 preliminary voluntary agreements with U.S. government on Medicaid and other drug prices\",\"claim_ids\":[\"K8\"]},{\"column\":\"ABBV\",\"text\":\"Government-mandated European price reductions; Medicaid rebate programs\",\"claim_ids\":[\"K11\"]}]},{\"dimension\":\"Stated mitigation / response\",\"cells\":[{\"column\":\"JNJ\",\"text\":\"Innovation pipeline; new products of past five years ~25% of 2025 sales\",\"claim_ids\":[\"K3\"]},{\"column\":\"PFE\",\"text\":\"Engaging with and monitoring EU HTA Regulation effective Jan 2025\",\"claim_ids\":[\"K5\"]},{\"column\":\"LLY\",\"text\":\"Negotiating definitive pricing agreements with U.S. government; participation in FDA National Priority Voucher pilot\",\"claim_ids\":[\"K8\",\"K9\"]}]}],\"not_comparable\":[{\"dimension\":\"Fiscal period of disclosures\",\"tickers\":[\"JNJ\",\"PFE\",\"MRK\",\"LLY\",\"ABBV\"],\"reason\":\"JNJ and LLY risk factors are from FY2025 10-Ks; PFE, MRK and ABBV from FY2024 10-Ks, so policy developments in 2025 (e.g., U.S. pricing agreements, tariffs) are reflected unevenly.\"},{\"dimension\":\"Mitigation disclosure\",\"tickers\":[\"MRK\",\"ABBV\"],\"reason\":\"The MRK and ABBV excerpts describe risks but contain no explicit statement of actions taken to address regulatory risk.\"}],\"gaps\":[\"No quantified financial impact of regulatory or pricing risk (e.g., estimated revenue at risk from Medicare drug price negotiation) for any of the five companies.\",\"No PFE FY2025 Q3 risk-factor content; the FY2024 10-K Item 1A is used in its place, so Pfizer's response to 2025 U.S. pricing and tariff actions is not covered.\",\"No description of internal compliance-program structures, budgets or headcount devoted to regulatory compliance at any company.\"]}",
+   "flags": [
+    {
+     "where": "K5",
+     "kind": "approximate_quote",
+     "detail": "the closest passage of C20, not the quote as written",
+     "source_string": "ucts and may add burdensome obligations that impact access. In addition, with the European Regulation on Health Technology Assessment (EU HTA-R) taking effect in January 2025, we are engaging and monitoring application of the EU's new clinical assessment program"
+    },
+    {
+     "where": "K9",
+     "kind": "approximate_quote",
+     "detail": "the closest passage of C59, not the quote as written",
+     "source_string": "novel regulatory or policy programs such as the FDA Commissioner's National Priority Voucher Pilot Program may attract scrutiny and criticism from various stakeholders. Our participation in such programs, notwithstanding the review processes involved and our adherence to appli"
+    }
+   ],
+   "notes": [
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 25%",
+     "source_string": null
+    }
+   ]
+  },
+  {
+   "id": "q04",
+   "tickers_ok": true,
+   "resolved": [
+    "BAC",
+    "JPM"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 2,
+   "files_n": 2,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 15246,
+   "budget_ok": true,
+   "chunks": 48,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqiV7yauiFwaavbXE3nt",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 9,
+   "timing_ms": {
+    "plan_and_retrieve": 2654,
+    "render": 0,
+    "model": 27872,
+    "parse": 0,
+    "check": 34
+   },
+   "total_ms": 30560,
+   "input_tokens": 28465,
+   "output_tokens": 3000,
+   "cost_usd": 0.20747,
+   "checks": {
+    "quotes_located_hit": 8,
+    "quotes_located_n": 9,
+    "figures_in_quote_hit": 11,
+    "figures_in_quote_n": 17,
+    "figures_unchecked": 3,
+    "columns_matched_hit": 2,
+    "columns_matched_n": 4,
+    "columns_unverified": 0,
+    "units_matched_hit": 7,
+    "units_matched_n": 7,
+    "units_unchecked": 4,
+    "flags_count": 8,
+    "notes_count": 7,
+    "unlinked_count": 0
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "At September 30, 2025 JPMorgan reported a Standardized CET1 capital ratio of 14.8% (CET1 capital $287,297 million), firmwide estimated uninsured deposits of $1,548.1 billion, and Q3 2025 net interest income of $23,966 million.",
+      "claim_ids": [
+       "K1",
+       "K2",
+       "K3"
+      ]
+     },
+     {
+      "text": "Bank of America reported a Standardized CET1 ratio of 11.6% at September 30, 2025 (CET1 capital $202.9 billion) and Q3 2025 net interest income of $15,233 million.",
+      "claim_ids": [
+       "K4",
+       "K5",
+       "K6"
+      ]
+     },
+     {
+      "text": "BAC's Q3 2025 uninsured-deposit disclosure is not in the excerpts; only its December 31, 2024 figures ($646.2 billion U.S. and $124.9 billion non-U.S.) are available, so the uninsured-deposit comparison is off-period and split U.S./non-U.S. rather than a single firmwide total.",
+      "claim_ids": [
+       "K7"
+      ]
+     },
+     {
+      "text": "Note also that BAC's net interest income includes FTE adjustments ($154 million in Q3 2025), while JPM's NII is not presented on an FTE basis in these excerpts, and each bank's CET1 minimum differs (JPM 12.3% Standardized vs. BAC 10.7%).",
+      "claim_ids": [
+       "K8",
+       "K9",
+       "K1"
+      ]
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "JPM Standardized CET1 capital ratio was 14.8% at September 30, 2025, versus a Standardized capital ratio requirement of 12.3%; CET1 capital was $287,297 million.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "point_in_time",
+      "citations": [
+       "C12"
+      ],
+      "quote": "CET1 capital | $287,297 | $275,513 ... CET1 capital ratio | 14.8% | 15.7% | 12.3%"
+     },
+     {
+      "id": "K2",
+      "text": "JPM firmwide estimated uninsured deposits were $1,548.1 billion at September 30, 2025 (vs. $1,414.0 billion at December 31, 2024).",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "point_in_time",
+      "citations": [
+       "C16"
+      ],
+      "quote": "At September 30, 2025 and December 31, 2024, Firmwide estimated uninsured deposits were $1,548.1 billion and $1,414.0 billion, respectively, primarily reflecting wholesale operating deposits."
+     },
+     {
+      "id": "K3",
+      "text": "JPM net interest income was $23,966 million for the three months ended September 30, 2025, up 2% from $23,405 million a year earlier.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "quarter",
+      "citations": [
+       "C10"
+      ],
+      "quote": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2"
+     },
+     {
+      "id": "K4",
+      "text": "BAC's CET1 capital ratio under the Standardized approach was 11.6% at September 30, 2025, exceeding its minimum requirement of 10.7%.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "point_in_time",
+      "citations": [
+       "C31"
+      ],
+      "quote": "At September 30, 2025, the Corporation's CET1 capital ratio of 11.6 percent under the Standardized approach exceeded its ... minimum CET1 capital ratio requirement of 10.7 percent."
+     },
+     {
+      "id": "K5",
+      "text": "BAC CET1 capital was $202.9 billion at September 30, 2025, up $1.8 billion from December 31, 2024.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "point_in_time",
+      "citations": [
+       "C32"
+      ],
+      "quote": "At September 30, 2025, CET1 capital was $202.9 billion, an increase of $1.8 billion from December 31, 2024, primarily due to earnings, partially offset by capital distributions."
+     },
+     {
+      "id": "K6",
+      "text": "BAC net interest income was $15,233 million for the three months ended September 30, 2025, versus $13,967 million in Q3 2024.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "quarter",
+      "citations": [
+       "C27"
+      ],
+      "quote": "Net interest income | $15,233 | $13,967 | $44,346 | $41,701"
+     },
+     {
+      "id": "K7",
+      "text": "BAC's estimated uninsured deposits were disclosed at December 31, 2024 as $646.2 billion U.S. and $124.9 billion non-U.S., against total deposits of $1.97 trillion.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "point_in_time",
+      "citations": [
+       "C43",
+       "C44"
+      ],
+      "quote": "and non-U.S. deposits were $646.2 billion and $124.9 billion."
+     },
+     {
+      "id": "K8",
+      "text": "BAC net interest income includes FTE adjustments of $154 million for the third quarter of 2025.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "quarter",
+      "citations": [
+       "C30"
+      ],
+      "quote": "Net interest income includes FTE adjustments of $154 million and $147 million for the third quarter of 2025 and 2024."
+     },
+     {
+      "id": "K9",
+      "text": "For October 1, 2024 through September 30, 2025 BAC's minimum CET1 requirements were 10.7% (Standardized) and 10.0% (Advanced).",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "point_in_time",
+      "citations": [
+       "C31"
+      ],
+      "quote": "For the period from October 1, 2024 through September 30, 2025, the Corporation's minimum CET1 ratio requirements were 10.7 percent under the Standardized approach and 10.0 percent under the Advanced approaches."
+     }
+    ],
+    "table": [
+     {
+      "dimension": "CET1 capital ratio, Standardized, at 2025-09-30 (%)",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "14.8%",
+        "claim_ids": [
+         "K1"
+        ]
+       },
+       {
+        "column": "BAC",
+        "text": "11.6%",
+        "claim_ids": [
+         "K4"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "CET1 capital at 2025-09-30",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "$287,297 million",
+        "claim_ids": [
+         "K1"
+        ]
+       },
+       {
+        "column": "BAC",
+        "text": "$202.9 billion",
+        "claim_ids": [
+         "K5"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Minimum CET1 requirement, Standardized",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "12.3%",
+        "claim_ids": [
+         "K1"
+        ]
+       },
+       {
+        "column": "BAC",
+        "text": "10.7% (Oct 1, 2024-Sep 30, 2025)",
+        "claim_ids": [
+         "K9"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Net interest income, Q3 2025 (USD millions)",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "$23,966",
+        "claim_ids": [
+         "K3"
+        ]
+       },
+       {
+        "column": "BAC",
+        "text": "$15,233 (includes $154mm FTE adjustment)",
+        "claim_ids": [
+         "K6",
+         "K8"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Estimated uninsured deposits",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "$1,548.1 billion firmwide at 2025-09-30",
+        "claim_ids": [
+         "K2"
+        ]
+       },
+       {
+        "column": "BAC",
+        "text": "Q3 2025 not in excerpts; $646.2bn U.S. + $124.9bn non-U.S. at 2024-12-31",
+        "claim_ids": [
+         "K7"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [
+     {
+      "dimension": "Estimated uninsured deposits",
+      "tickers": [
+       "JPM",
+       "BAC"
+      ],
+      "reason": "JPM figure is a firmwide total as of 2025-09-30; the only BAC disclosure in the excerpts is as of 2024-12-31 and split between U.S. and non-U.S. deposits, so periods and presentation bases differ."
+     },
+     {
+      "dimension": "Net interest income basis",
+      "tickers": [
+       "JPM",
+       "BAC"
+      ],
+      "reason": "BAC's reported NII includes FTE adjustments ($154 million in Q3 2025); the JPM excerpts do not state an FTE basis, so the two NII figures are not on an identical basis."
+     },
+     {
+      "dimension": "CET1 minimum requirement",
+      "tickers": [
+       "JPM",
+       "BAC"
+      ],
+      "reason": "Requirements reflect firm-specific SCB and G-SIB surcharges (JPM 12.3% Standardized; BAC 10.7%), so headroom rather than the ratio level is the comparable measure."
+     }
+    ],
+    "gaps": [
+     "BAC estimated uninsured deposits as of September 30, 2025 (Q3 2025 10-Q uninsured deposit disclosure) is not in the excerpts.",
+     "BAC Advanced-approaches CET1 ratio value at September 30, 2025 and RWA detail are not provided.",
+     "No JPM 10-K as of a date on or before 2025-09-30; JPM annual comparatives are FY2025 (December 31, 2025)."
+    ]
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"At September 30, 2025 JPMorgan reported a Standardized CET1 capital ratio of 14.8% (CET1 capital $287,297 million), firmwide estimated uninsured deposits of $1,548.1 billion, and Q3 2025 net interest income of $23,966 million.\",\"claim_ids\":[\"K1\",\"K2\",\"K3\"]},{\"text\":\"Bank of America reported a Standardized CET1 ratio of 11.6% at September 30, 2025 (CET1 capital $202.9 billion) and Q3 2025 net interest income of $15,233 million.\",\"claim_ids\":[\"K4\",\"K5\",\"K6\"]},{\"text\":\"BAC's Q3 2025 uninsured-deposit disclosure is not in the excerpts; only its December 31, 2024 figures ($646.2 billion U.S. and $124.9 billion non-U.S.) are available, so the uninsured-deposit comparison is off-period and split U.S./non-U.S. rather than a single firmwide total.\",\"claim_ids\":[\"K7\"]},{\"text\":\"Note also that BAC's net interest income includes FTE adjustments ($154 million in Q3 2025), while JPM's NII is not presented on an FTE basis in these excerpts, and each bank's CET1 minimum differs (JPM 12.3% Standardized vs. BAC 10.7%).\",\"claim_ids\":[\"K8\",\"K9\",\"K1\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"JPM Standardized CET1 capital ratio was 14.8% at September 30, 2025, versus a Standardized capital ratio requirement of 12.3%; CET1 capital was $287,297 million.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"point_in_time\",\"citations\":[\"C12\"],\"quote\":\"CET1 capital | $287,297 | $275,513 ... CET1 capital ratio | 14.8% | 15.7% | 12.3%\"},{\"id\":\"K2\",\"text\":\"JPM firmwide estimated uninsured deposits were $1,548.1 billion at September 30, 2025 (vs. $1,414.0 billion at December 31, 2024).\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"point_in_time\",\"citations\":[\"C16\"],\"quote\":\"At September 30, 2025 and December 31, 2024, Firmwide estimated uninsured deposits were $1,548.1 billion and $1,414.0 billion, respectively, primarily reflecting wholesale operating deposits.\"},{\"id\":\"K3\",\"text\":\"JPM net interest income was $23,966 million for the three months ended September 30, 2025, up 2% from $23,405 million a year earlier.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C10\"],\"quote\":\"Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2\"},{\"id\":\"K4\",\"text\":\"BAC's CET1 capital ratio under the Standardized approach was 11.6% at September 30, 2025, exceeding its minimum requirement of 10.7%.\",\"tickers\":[\"BAC\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"point_in_time\",\"citations\":[\"C31\"],\"quote\":\"At September 30, 2025, the Corporation's CET1 capital ratio of 11.6 percent under the Standardized approach exceeded its ... minimum CET1 capital ratio requirement of 10.7 percent.\"},{\"id\":\"K5\",\"text\":\"BAC CET1 capital was $202.9 billion at September 30, 2025, up $1.8 billion from December 31, 2024.\",\"tickers\":[\"BAC\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"point_in_time\",\"citations\":[\"C32\"],\"quote\":\"At September 30, 2025, CET1 capital was $202.9 billion, an increase of $1.8 billion from December 31, 2024, primarily due to earnings, partially offset by capital distributions.\"},{\"id\":\"K6\",\"text\":\"BAC net interest income was $15,233 million for the three months ended September 30, 2025, versus $13,967 million in Q3 2024.\",\"tickers\":[\"BAC\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C27\"],\"quote\":\"Net interest income | $15,233 | $13,967 | $44,346 | $41,701\"},{\"id\":\"K7\",\"text\":\"BAC's estimated uninsured deposits were disclosed at December 31, 2024 as $646.2 billion U.S. and $124.9 billion non-U.S., against total deposits of $1.97 trillion.\",\"tickers\":[\"BAC\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"point_in_time\",\"citations\":[\"C43\",\"C44\"],\"quote\":\"and non-U.S. deposits were $646.2 billion and $124.9 billion.\"},{\"id\":\"K8\",\"text\":\"BAC net interest income includes FTE adjustments of $154 million for the third quarter of 2025.\",\"tickers\":[\"BAC\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C30\"],\"quote\":\"Net interest income includes FTE adjustments of $154 million and $147 million for the third quarter of 2025 and 2024.\"},{\"id\":\"K9\",\"text\":\"For October 1, 2024 through September 30, 2025 BAC's minimum CET1 requirements were 10.7% (Standardized) and 10.0% (Advanced).\",\"tickers\":[\"BAC\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"point_in_time\",\"citations\":[\"C31\"],\"quote\":\"For the period from October 1, 2024 through September 30, 2025, the Corporation's minimum CET1 ratio requirements were 10.7 percent under the Standardized approach and 10.0 percent under the Advanced approaches.\"}],\"table\":[{\"dimension\":\"CET1 capital ratio, Standardized, at 2025-09-30 (%)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"14.8%\",\"claim_ids\":[\"K1\"]},{\"column\":\"BAC\",\"text\":\"11.6%\",\"claim_ids\":[\"K4\"]}]},{\"dimension\":\"CET1 capital at 2025-09-30\",\"cells\":[{\"column\":\"JPM\",\"text\":\"$287,297 million\",\"claim_ids\":[\"K1\"]},{\"column\":\"BAC\",\"text\":\"$202.9 billion\",\"claim_ids\":[\"K5\"]}]},{\"dimension\":\"Minimum CET1 requirement, Standardized\",\"cells\":[{\"column\":\"JPM\",\"text\":\"12.3%\",\"claim_ids\":[\"K1\"]},{\"column\":\"BAC\",\"text\":\"10.7% (Oct 1, 2024-Sep 30, 2025)\",\"claim_ids\":[\"K9\"]}]},{\"dimension\":\"Net interest income, Q3 2025 (USD millions)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"$23,966\",\"claim_ids\":[\"K3\"]},{\"column\":\"BAC\",\"text\":\"$15,233 (includes $154mm FTE adjustment)\",\"claim_ids\":[\"K6\",\"K8\"]}]},{\"dimension\":\"Estimated uninsured deposits\",\"cells\":[{\"column\":\"JPM\",\"text\":\"$1,548.1 billion firmwide at 2025-09-30\",\"claim_ids\":[\"K2\"]},{\"column\":\"BAC\",\"text\":\"Q3 2025 not in excerpts; $646.2bn U.S. + $124.9bn non-U.S. at 2024-12-31\",\"claim_ids\":[\"K7\"]}]}],\"not_comparable\":[{\"dimension\":\"Estimated uninsured deposits\",\"tickers\":[\"JPM\",\"BAC\"],\"reason\":\"JPM figure is a firmwide total as of 2025-09-30; the only BAC disclosure in the excerpts is as of 2024-12-31 and split between U.S. and non-U.S. deposits, so periods and presentation bases differ.\"},{\"dimension\":\"Net interest income basis\",\"tickers\":[\"JPM\",\"BAC\"],\"reason\":\"BAC's reported NII includes FTE adjustments ($154 million in Q3 2025); the JPM excerpts do not state an FTE basis, so the two NII figures are not on an identical basis.\"},{\"dimension\":\"CET1 minimum requirement\",\"tickers\":[\"JPM\",\"BAC\"],\"reason\":\"Requirements reflect firm-specific SCB and G-SIB surcharges (JPM 12.3% Standardized; BAC 10.7%), so headroom rather than the ratio level is the comparable measure.\"}],\"gaps\":[\"BAC estimated uninsured deposits as of September 30, 2025 (Q3 2025 10-Q uninsured deposit disclosure) is not in the excerpts.\",\"BAC Advanced-approaches CET1 ratio value at September 30, 2025 and RWA detail are not provided.\",\"No JPM 10-K as of a date on or before 2025-09-30; JPM annual comparatives are FY2025 (December 31, 2025).\"]}",
+   "flags": [
+    {
+     "where": "K1",
+     "kind": "quote_not_found",
+     "detail": "not in C12",
+     "source_string": "CET1 capital | $287,297 | $275,513 ... CET1 capital ratio | 14.8% | 15.7% | 12.3%"
+    },
+    {
+     "where": "K3",
+     "kind": "figure_not_in_chunk",
+     "detail": "2% is in neither the quote nor the cited excerpts",
+     "source_string": null
+    },
+    {
+     "where": "K4",
+     "kind": "approximate_quote",
+     "detail": "the closest passage of C31, not the quote as written",
+     "source_string": "At September 30, 2025, the Corporation's CET1 capital ratio of 11.6 percent under the Standardized approach exceeded its\n| | Bank of America20\nminimum CET1 capital ratio requirement of"
+    },
+    {
+     "where": "K4",
+     "kind": "figure_not_in_chunk",
+     "detail": "11.6% is in neither the quote nor the cited excerpts",
+     "source_string": null
+    },
+    {
+     "where": "K4",
+     "kind": "figure_not_in_chunk",
+     "detail": "10.7% is in neither the quote nor the cited excerpts",
+     "source_string": null
+    },
+    {
+     "where": "K7",
+     "kind": "figure_elsewhere_in_chunk",
+     "detail": "$1.97 trillion is printed in C43 outside the quote, so its column and units were not read",
+     "source_string": null
+    },
+    {
+     "where": "K9",
+     "kind": "figure_not_in_chunk",
+     "detail": "10.7% is in neither the quote nor the cited excerpts",
+     "source_string": null
+    },
+    {
+     "where": "K9",
+     "kind": "figure_not_in_chunk",
+     "detail": "10.0% is in neither the quote nor the cited excerpts",
+     "source_string": null
+    }
+   ],
+   "notes": [
+    {
+     "where": "K1",
+     "kind": "figures_unchecked",
+     "detail": "quote not located, 3 figure(s) unchecked",
+     "source_string": null
+    },
+    {
+     "where": "K3",
+     "kind": "column_other_period",
+     "detail": "$23,405 million sits in the column for 2024-09-30",
+     "source_string": "Three months ended September 30, 2024"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $23,966 million; the unit line 'USD millions, except per share data and ratios' excepts rows it does not name",
+     "source_string": "USD millions, except per share data and ratios"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $23,405 million; the unit line 'USD millions, except per share data and ratios' excepts rows it does not name",
+     "source_string": "USD millions, except per share data and ratios"
+    },
+    {
+     "where": "K6",
+     "kind": "column_other_period",
+     "detail": "$13,967 million sits in the column for 2024-09-30",
+     "source_string": "Three Months Ended September 30 2024"
+    },
+    {
+     "where": "K6",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $15,233 million; the unit line 'USD millions, except per share information' excepts rows it does not name",
+     "source_string": "USD millions, except per share information"
+    },
+    {
+     "where": "K6",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $13,967 million; the unit line 'USD millions, except per share information' excepts rows it does not name",
+     "source_string": "USD millions, except per share information"
+    }
+   ]
+  },
+  {
+   "id": "q05",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 6406,
+   "budget_ok": true,
+   "chunks": 24,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqiXMnbfUXAsvzA8nNH3",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 5,
+   "timing_ms": {
+    "plan_and_retrieve": 1008,
+    "render": 0,
+    "model": 14094,
+    "parse": 0,
+    "check": 18
+   },
+   "total_ms": 15120,
+   "input_tokens": 12944,
+   "output_tokens": 1384,
+   "cost_usd": 0.089465,
+   "checks": {
+    "quotes_located_hit": 3,
+    "quotes_located_n": 5,
+    "figures_in_quote_hit": 9,
+    "figures_in_quote_n": 10,
+    "figures_unchecked": 5,
+    "columns_matched_hit": 2,
+    "columns_matched_n": 2,
+    "columns_unverified": 3,
+    "units_matched_hit": 3,
+    "units_matched_n": 3,
+    "units_unchecked": 6,
+    "flags_count": 5,
+    "notes_count": 11,
+    "unlinked_count": 0
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "Apple's total net sales in fiscal 2023 (53 weeks ended September 30, 2023) were $383,285 million, a 3% or $11.0 billion decrease from $394,328 million in fiscal 2022.",
+      "claim_ids": [
+       "K1",
+       "K2"
+      ]
+     },
+     {
+      "text": "By category, iPhone contributed $200,583 million and Services $85,200 million (up 9%), while Mac fell 27% to $29,357 million.",
+      "claim_ids": [
+       "K3",
+       "K4"
+      ]
+     },
+     {
+      "text": "Geographically, Americas was the largest segment at $162,560 million, with Greater China at $72,559 million; management attributed more than the entire year-over-year decline to weakness in foreign currencies.",
+      "claim_ids": [
+       "K5",
+       "K2"
+      ]
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "Apple's total net sales were $383,285 million in fiscal 2023 versus $394,328 million in fiscal 2022, a 3% decrease.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2023-09-30",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C3",
+       "C10"
+      ],
+      "quote": "Total net sales | $383,285 | (3)% | $394,328 | 8% | $365,817"
+     },
+     {
+      "id": "K2",
+      "text": "Total net sales were $383.3 billion and net income $97.0 billion in 2023; total net sales decreased 3% or $11.0 billion versus 2022, with foreign currency weakness accounting for more than the entire decrease.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2023-09-30",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C1"
+      ],
+      "quote": "The Company's total net sales were $383.3 billion and net income was $97.0 billion during 2023.The Company's total net sales decreased 3% or $11.0 billion during 2023 compared to 2022."
+     },
+     {
+      "id": "K3",
+      "text": "iPhone net sales were $200,583 million and Services $85,200 million in fiscal 2023, with Services up 9%.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2023-09-30",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C5"
+      ],
+      "quote": "iPhone(1) | $200,583 | (2)% | $205,489 | 7% | $191,973 ... Services(2) | 85,200 | 9% | 78,129 | 14% | 68,425"
+     },
+     {
+      "id": "K4",
+      "text": "Mac net sales were $29,357 million in fiscal 2023, down 27% or $10.8 billion from 2022.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2023-09-30",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C5"
+      ],
+      "quote": "Mac(1) | 29,357 | (27)% | 40,177 | 14% | 35,190"
+     },
+     {
+      "id": "K5",
+      "text": "Americas net sales were $162,560 million and Greater China $72,559 million in fiscal 2023.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2023-09-30",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C3"
+      ],
+      "quote": "Americas | $162,560 | (4)% | $169,658 | 11% | $153,306 ... Greater China | 72,559 | (2)% | 74,200 | 9% | 68,366"
+     }
+    ],
+    "table": [
+     {
+      "dimension": "Total net sales, FY2023 (USD millions)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "$383,285 (down 3% from $394,328)",
+        "claim_ids": [
+         "K1"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "iPhone / Services net sales, FY2023 (USD millions)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "$200,583 / $85,200",
+        "claim_ids": [
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Mac net sales, FY2023 (USD millions)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "$29,357 (down 27%)",
+        "claim_ids": [
+         "K4"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Americas / Greater China net sales, FY2023 (USD millions)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "$162,560 / $72,559",
+        "claim_ids": [
+         "K5"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [],
+    "gaps": []
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"Apple's total net sales in fiscal 2023 (53 weeks ended September 30, 2023) were $383,285 million, a 3% or $11.0 billion decrease from $394,328 million in fiscal 2022.\",\"claim_ids\":[\"K1\",\"K2\"]},{\"text\":\"By category, iPhone contributed $200,583 million and Services $85,200 million (up 9%), while Mac fell 27% to $29,357 million.\",\"claim_ids\":[\"K3\",\"K4\"]},{\"text\":\"Geographically, Americas was the largest segment at $162,560 million, with Greater China at $72,559 million; management attributed more than the entire year-over-year decline to weakness in foreign currencies.\",\"claim_ids\":[\"K5\",\"K2\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"Apple's total net sales were $383,285 million in fiscal 2023 versus $394,328 million in fiscal 2022, a 3% decrease.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2023-09-30\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C3\",\"C10\"],\"quote\":\"Total net sales | $383,285 | (3)% | $394,328 | 8% | $365,817\"},{\"id\":\"K2\",\"text\":\"Total net sales were $383.3 billion and net income $97.0 billion in 2023; total net sales decreased 3% or $11.0 billion versus 2022, with foreign currency weakness accounting for more than the entire decrease.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2023-09-30\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C1\"],\"quote\":\"The Company's total net sales were $383.3 billion and net income was $97.0 billion during 2023.The Company's total net sales decreased 3% or $11.0 billion during 2023 compared to 2022.\"},{\"id\":\"K3\",\"text\":\"iPhone net sales were $200,583 million and Services $85,200 million in fiscal 2023, with Services up 9%.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2023-09-30\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C5\"],\"quote\":\"iPhone(1) | $200,583 | (2)% | $205,489 | 7% | $191,973 ... Services(2) | 85,200 | 9% | 78,129 | 14% | 68,425\"},{\"id\":\"K4\",\"text\":\"Mac net sales were $29,357 million in fiscal 2023, down 27% or $10.8 billion from 2022.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2023-09-30\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C5\"],\"quote\":\"Mac(1) | 29,357 | (27)% | 40,177 | 14% | 35,190\"},{\"id\":\"K5\",\"text\":\"Americas net sales were $162,560 million and Greater China $72,559 million in fiscal 2023.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2023-09-30\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C3\"],\"quote\":\"Americas | $162,560 | (4)% | $169,658 | 11% | $153,306 ... Greater China | 72,559 | (2)% | 74,200 | 9% | 68,366\"}],\"table\":[{\"dimension\":\"Total net sales, FY2023 (USD millions)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"$383,285 (down 3% from $394,328)\",\"claim_ids\":[\"K1\"]}]},{\"dimension\":\"iPhone / Services net sales, FY2023 (USD millions)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"$200,583 / $85,200\",\"claim_ids\":[\"K3\"]}]},{\"dimension\":\"Mac net sales, FY2023 (USD millions)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"$29,357 (down 27%)\",\"claim_ids\":[\"K4\"]}]},{\"dimension\":\"Americas / Greater China net sales, FY2023 (USD millions)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"$162,560 / $72,559\",\"claim_ids\":[\"K5\"]}]}],\"not_comparable\":[],\"gaps\":[]}",
+   "flags": [
+    {
+     "where": "K1",
+     "kind": "sign_differs",
+     "detail": "3% is printed (3)% in C3",
+     "source_string": null
+    },
+    {
+     "where": "K3",
+     "kind": "quote_not_found",
+     "detail": "not in C5",
+     "source_string": "iPhone(1) | $200,583 | (2)% | $205,489 | 7% | $191,973 ... Services(2) | 85,200 | 9% | 78,129 | 14% | 68,425"
+    },
+    {
+     "where": "K4",
+     "kind": "sign_differs",
+     "detail": "27% is printed (27)% in C5",
+     "source_string": null
+    },
+    {
+     "where": "K4",
+     "kind": "figure_not_in_chunk",
+     "detail": "$10.8 billion is in neither the quote nor the cited excerpts",
+     "source_string": null
+    },
+    {
+     "where": "K5",
+     "kind": "quote_not_found",
+     "detail": "not in C3",
+     "source_string": "Americas | $162,560 | (4)% | $169,658 | 11% | $153,306 ... Greater China | 72,559 | (2)% | 74,200 | 9% | 68,366"
+    }
+   ],
+   "notes": [
+    {
+     "where": "K1",
+     "kind": "column_unverified",
+     "detail": "$394,328 million: the column carries no period",
+     "source_string": "FY2022"
+    },
+    {
+     "where": "K1",
+     "kind": "column_unverified",
+     "detail": "3%: the column carries no period",
+     "source_string": "Change"
+    },
+    {
+     "where": "K1",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $383,285 million; the excerpt carries no unit line",
+     "source_string": null
+    },
+    {
+     "where": "K1",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $394,328 million; the excerpt carries no unit line",
+     "source_string": null
+    },
+    {
+     "where": "K1",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 3%",
+     "source_string": null
+    },
+    {
+     "where": "K2",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 3%",
+     "source_string": null
+    },
+    {
+     "where": "K3",
+     "kind": "figures_unchecked",
+     "detail": "quote not located, 3 figure(s) unchecked",
+     "source_string": null
+    },
+    {
+     "where": "K4",
+     "kind": "column_unverified",
+     "detail": "27%: the column carries no period",
+     "source_string": "Change"
+    },
+    {
+     "where": "K4",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $29,357 million; the excerpt carries no unit line",
+     "source_string": null
+    },
+    {
+     "where": "K4",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 27%",
+     "source_string": null
+    },
+    {
+     "where": "K5",
+     "kind": "figures_unchecked",
+     "detail": "quote not located, 2 figure(s) unchecked",
+     "source_string": null
+    }
+   ]
+  },
+  {
+   "id": "q06",
+   "tickers_ok": true,
+   "resolved": [
+    "JPM"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 7252,
+   "budget_ok": true,
+   "chunks": 24,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqiYWeBSULNNVbdKaM8o",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 5,
+   "timing_ms": {
+    "plan_and_retrieve": 851,
+    "render": 0,
+    "model": 47261,
+    "parse": 0,
+    "check": 311
+   },
+   "total_ms": 48423,
+   "input_tokens": 15231,
+   "output_tokens": 6084,
+   "cost_usd": 0.2184,
+   "checks": {
+    "quotes_located_hit": 4,
+    "quotes_located_n": 5,
+    "figures_in_quote_hit": 8,
+    "figures_in_quote_n": 8,
+    "figures_unchecked": 3,
+    "columns_matched_hit": 3,
+    "columns_matched_n": 6,
+    "columns_unverified": 0,
+    "units_matched_hit": 3,
+    "units_matched_n": 3,
+    "units_unchecked": 5,
+    "flags_count": 1,
+    "notes_count": 9,
+    "unlinked_count": 0
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "JPMorgan reported net interest income of $23,966 million ($24.0 billion) for the three months ended September 30, 2025, up 2% from $23,405 million a year earlier.",
+      "claim_ids": [
+       "K1",
+       "K2"
+      ]
+     },
+     {
+      "text": "On a managed (fully taxable-equivalent) basis NII was $24,071 million, and NII excluding Markets was $23,391 million, essentially flat versus the prior year.",
+      "claim_ids": [
+       "K3",
+       "K4"
+      ]
+     },
+     {
+      "text": "Management attributed the increase to higher revolving balances in Card Services, higher Markets NII and higher wholesale deposit balances, largely offset by lower rates and deposit margin compression.",
+      "claim_ids": [
+       "K2"
+      ]
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "Reported net interest income was $23,966 million for the quarter ended September 30, 2025, versus $23,405 million in Q3 2024 (+2%).",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "quarter",
+      "citations": [
+       "C7",
+       "C5"
+      ],
+      "quote": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 22025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change"
+     },
+     {
+      "id": "K2",
+      "text": "Q3 2025 NII was $24.0 billion, up 2%, driven by higher revolving balances in Card Services, higher Markets net interest income and higher wholesale deposit balances, predominantly offset by lower rates and deposit margin compression.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "quarter",
+      "citations": [
+       "C6"
+      ],
+      "quote": "Net interest income (\"NII\") was $24.0 billion, up 2%, driven by higher revolving balances in Card Services, higher Markets net interest income, and higher wholesale deposit balances, predominantly offset by the impact of lower rates and deposit margin compression."
+     },
+     {
+      "id": "K3",
+      "text": "Net interest income on a managed (fully taxable-equivalent) basis was $24,071 million in Q3 2025 versus $23,525 million in Q3 2024.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "quarter",
+      "citations": [
+       "C10"
+      ],
+      "quote": "Net interest income - managed basis | $24,071 | $23,525 | 2 | $70,760 | $69,589 | 2"
+     },
+     {
+      "id": "K4",
+      "text": "Net interest income excluding Markets was $23,391 million in Q3 2025, flat versus $23,447 million in Q3 2024.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "quarter",
+      "citations": [
+       "C10"
+      ],
+      "quote": "Net interest income excluding Markets | $23,391 | $23,447 | - | $68,734 | $69,405 | (1)"
+     },
+     {
+      "id": "K5",
+      "text": "Net interest income after provision for credit losses was $20,563 million in Q3 2025 versus $20,294 million in Q3 2024.",
+      "tickers": [
+       "JPM"
+      ],
+      "period_end": "2025-09-30",
+      "period_kind": "quarter",
+      "citations": [
+       "C19"
+      ],
+      "quote": "Net interest income after provision for credit losses | $20,563 | $20,294 | $60,891 | $61,186"
+     }
+    ],
+    "table": [
+     {
+      "dimension": "Net interest income - reported (Q3 2025, USD millions)",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "$23,966 (vs $23,405 in Q3 2024, +2%)",
+        "claim_ids": [
+         "K1"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Net interest income - managed basis (Q3 2025, USD millions)",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "$24,071",
+        "claim_ids": [
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "NII excluding Markets (Q3 2025, USD millions)",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "$23,391 (flat YoY)",
+        "claim_ids": [
+         "K4"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "NII after provision for credit losses (Q3 2025, USD millions)",
+      "cells": [
+       {
+        "column": "JPM",
+        "text": "$20,563",
+        "claim_ids": [
+         "K5"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [],
+    "gaps": []
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"JPMorgan reported net interest income of $23,966 million ($24.0 billion) for the three months ended September 30, 2025, up 2% from $23,405 million a year earlier.\",\"claim_ids\":[\"K1\",\"K2\"]},{\"text\":\"On a managed (fully taxable-equivalent) basis NII was $24,071 million, and NII excluding Markets was $23,391 million, essentially flat versus the prior year.\",\"claim_ids\":[\"K3\",\"K4\"]},{\"text\":\"Management attributed the increase to higher revolving balances in Card Services, higher Markets NII and higher wholesale deposit balances, largely offset by lower rates and deposit margin compression.\",\"claim_ids\":[\"K2\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"Reported net interest income was $23,966 million for the quarter ended September 30, 2025, versus $23,405 million in Q3 2024 (+2%).\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C7\",\"C5\"],\"quote\":\"Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 22025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | Change | 2025 | 2024 | Change\"},{\"id\":\"K2\",\"text\":\"Q3 2025 NII was $24.0 billion, up 2%, driven by higher revolving balances in Card Services, higher Markets net interest income and higher wholesale deposit balances, predominantly offset by lower rates and deposit margin compression.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C6\"],\"quote\":\"Net interest income (\\\"NII\\\") was $24.0 billion, up 2%, driven by higher revolving balances in Card Services, higher Markets net interest income, and higher wholesale deposit balances, predominantly offset by the impact of lower rates and deposit margin compression.\"},{\"id\":\"K3\",\"text\":\"Net interest income on a managed (fully taxable-equivalent) basis was $24,071 million in Q3 2025 versus $23,525 million in Q3 2024.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C10\"],\"quote\":\"Net interest income - managed basis | $24,071 | $23,525 | 2 | $70,760 | $69,589 | 2\"},{\"id\":\"K4\",\"text\":\"Net interest income excluding Markets was $23,391 million in Q3 2025, flat versus $23,447 million in Q3 2024.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C10\"],\"quote\":\"Net interest income excluding Markets | $23,391 | $23,447 | - | $68,734 | $69,405 | (1)\"},{\"id\":\"K5\",\"text\":\"Net interest income after provision for credit losses was $20,563 million in Q3 2025 versus $20,294 million in Q3 2024.\",\"tickers\":[\"JPM\"],\"period_end\":\"2025-09-30\",\"period_kind\":\"quarter\",\"citations\":[\"C19\"],\"quote\":\"Net interest income after provision for credit losses | $20,563 | $20,294 | $60,891 | $61,186\"}],\"table\":[{\"dimension\":\"Net interest income - reported (Q3 2025, USD millions)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"$23,966 (vs $23,405 in Q3 2024, +2%)\",\"claim_ids\":[\"K1\"]}]},{\"dimension\":\"Net interest income - managed basis (Q3 2025, USD millions)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"$24,071\",\"claim_ids\":[\"K3\"]}]},{\"dimension\":\"NII excluding Markets (Q3 2025, USD millions)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"$23,391 (flat YoY)\",\"claim_ids\":[\"K4\"]}]},{\"dimension\":\"NII after provision for credit losses (Q3 2025, USD millions)\",\"cells\":[{\"column\":\"JPM\",\"text\":\"$20,563\",\"claim_ids\":[\"K5\"]}]}],\"not_comparable\":[],\"gaps\":[]}",
+   "flags": [
+    {
+     "where": "K1",
+     "kind": "quote_not_found",
+     "detail": "not in C7, C5",
+     "source_string": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 22025 | 2024 | Change | 2025 | 2024 | Change2025 | 2024 | "
+    }
+   ],
+   "notes": [
+    {
+     "where": "K1",
+     "kind": "figures_unchecked",
+     "detail": "quote not located, 3 figure(s) unchecked",
+     "source_string": null
+    },
+    {
+     "where": "K2",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 2%",
+     "source_string": null
+    },
+    {
+     "where": "K3",
+     "kind": "column_other_period",
+     "detail": "$23,525 million sits in the column for 2024-09-30",
+     "source_string": "Three months ended September 30, 2024"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $24,071 million; the unit line 'USD millions, except rates' excepts rows it does not name",
+     "source_string": "USD millions, except rates"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $23,525 million; the unit line 'USD millions, except rates' excepts rows it does not name",
+     "source_string": "USD millions, except rates"
+    },
+    {
+     "where": "K4",
+     "kind": "column_other_period",
+     "detail": "$23,447 million sits in the column for 2024-09-30",
+     "source_string": "Three months ended September 30, 2024"
+    },
+    {
+     "where": "K4",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $23,391 million; the unit line 'USD millions, except rates' excepts rows it does not name",
+     "source_string": "USD millions, except rates"
+    },
+    {
+     "where": "K4",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $23,447 million; the unit line 'USD millions, except rates' excepts rows it does not name",
+     "source_string": "USD millions, except rates"
+    },
+    {
+     "where": "K5",
+     "kind": "column_other_period",
+     "detail": "$20,294 million sits in the column for 2024-09-30",
+     "source_string": "Three months ended September 30, 2024"
+    }
+   ]
+  },
+  {
+   "id": "q07",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 6784,
+   "budget_ok": true,
+   "chunks": 24,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqicGKaUfpGou555jbXn",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 5,
+   "timing_ms": {
+    "plan_and_retrieve": 1183,
+    "render": 0,
+    "model": 15113,
+    "parse": 0,
+    "check": 13
+   },
+   "total_ms": 16309,
+   "input_tokens": 13984,
+   "output_tokens": 1333,
+   "cost_usd": 0.09339,
+   "checks": {
+    "quotes_located_hit": 4,
+    "quotes_located_n": 5,
+    "figures_in_quote_hit": 6,
+    "figures_in_quote_n": 7,
+    "figures_unchecked": 2,
+    "columns_matched_hit": 2,
+    "columns_matched_n": 3,
+    "columns_unverified": 2,
+    "units_matched_hit": 1,
+    "units_matched_n": 1,
+    "units_unchecked": 5,
+    "flags_count": 4,
+    "notes_count": 8,
+    "unlinked_count": 0
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "Apple used 15,408,095 thousand weighted-average diluted shares (about 15.41 billion) in computing fiscal 2024 diluted EPS of $6.08, down from 15,812,547 thousand in fiscal 2023.",
+      "claim_ids": [
+       "K1",
+       "K2"
+      ]
+     },
+     {
+      "text": "The diluted figure comprises 15,343,783 thousand weighted-average basic shares plus a 64,312 thousand dilutive effect of share-based awards.",
+      "claim_ids": [
+       "K3"
+      ]
+     },
+     {
+      "text": "The year-over-year decline in the share count is consistent with $95.0 billion of common stock repurchased during 2024.",
+      "claim_ids": [
+       "K4"
+      ]
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "Apple's weighted-average diluted shares used in computing EPS for fiscal 2024 were 15,408,095 thousand, with diluted EPS of $6.08.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2024-09-28",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C4"
+      ],
+      "quote": "Diluted | 15,408,095 | 15,812,547 | 16,325,819"
+     },
+     {
+      "id": "K2",
+      "text": "Fiscal 2023 weighted-average diluted shares were 15,812,547 thousand, versus 15,408,095 thousand in fiscal 2024.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2023-09-30",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C9"
+      ],
+      "quote": "Weighted-average diluted shares | 15,408,095 | 15,812,547 | 16,325,819"
+     },
+     {
+      "id": "K3",
+      "text": "For fiscal 2024, weighted-average basic shares were 15,343,783 thousand and the effect of dilutive share-based awards was 64,312 thousand.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2024-09-28",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C9"
+      ],
+      "quote": "Weighted-average basic shares outstanding | 15,343,783 | 15,744,231 | 16,215,963\nEffect of dilutive share-based awards | 64,312 | 68,316 | 109,856"
+     },
+     {
+      "id": "K4",
+      "text": "During fiscal 2024 Apple repurchased $95.0 billion of its common stock.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2024-09-28",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C3"
+      ],
+      "quote": "During 2024, the Company repurchased $95.0 billion of its common stock and paid dividends and dividend equivalents of $15.2 billion."
+     },
+     {
+      "id": "K5",
+      "text": "Fiscal 2024 diluted earnings per share was $6.08 on net income of $93,736 million.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2024-09-28",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C9"
+      ],
+      "quote": "Net income | $93,736 | $96,995 | $99,803 ... Diluted earnings per share | $6.08 | $6.13 | $6.11"
+     }
+    ],
+    "table": [
+     {
+      "dimension": "Weighted-average diluted shares, FY2024 (thousands)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "15,408,095",
+        "claim_ids": [
+         "K1"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Weighted-average basic shares, FY2024 (thousands)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "15,343,783",
+        "claim_ids": [
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Effect of dilutive share-based awards, FY2024 (thousands)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "64,312",
+        "claim_ids": [
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Diluted EPS, FY2024",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "$6.08",
+        "claim_ids": [
+         "K5"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [],
+    "gaps": [
+     "No disclosure of RSUs excluded as antidilutive for fiscal 2024 (only the ~24 million excluded for 2023 is given)."
+    ]
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"Apple used 15,408,095 thousand weighted-average diluted shares (about 15.41 billion) in computing fiscal 2024 diluted EPS of $6.08, down from 15,812,547 thousand in fiscal 2023.\",\"claim_ids\":[\"K1\",\"K2\"]},{\"text\":\"The diluted figure comprises 15,343,783 thousand weighted-average basic shares plus a 64,312 thousand dilutive effect of share-based awards.\",\"claim_ids\":[\"K3\"]},{\"text\":\"The year-over-year decline in the share count is consistent with $95.0 billion of common stock repurchased during 2024.\",\"claim_ids\":[\"K4\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"Apple's weighted-average diluted shares used in computing EPS for fiscal 2024 were 15,408,095 thousand, with diluted EPS of $6.08.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2024-09-28\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C4\"],\"quote\":\"Diluted | 15,408,095 | 15,812,547 | 16,325,819\"},{\"id\":\"K2\",\"text\":\"Fiscal 2023 weighted-average diluted shares were 15,812,547 thousand, versus 15,408,095 thousand in fiscal 2024.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2023-09-30\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C9\"],\"quote\":\"Weighted-average diluted shares | 15,408,095 | 15,812,547 | 16,325,819\"},{\"id\":\"K3\",\"text\":\"For fiscal 2024, weighted-average basic shares were 15,343,783 thousand and the effect of dilutive share-based awards was 64,312 thousand.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2024-09-28\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C9\"],\"quote\":\"Weighted-average basic shares outstanding | 15,343,783 | 15,744,231 | 16,215,963\\nEffect of dilutive share-based awards | 64,312 | 68,316 | 109,856\"},{\"id\":\"K4\",\"text\":\"During fiscal 2024 Apple repurchased $95.0 billion of its common stock.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2024-09-28\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C3\"],\"quote\":\"During 2024, the Company repurchased $95.0 billion of its common stock and paid dividends and dividend equivalents of $15.2 billion.\"},{\"id\":\"K5\",\"text\":\"Fiscal 2024 diluted earnings per share was $6.08 on net income of $93,736 million.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2024-09-28\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C9\"],\"quote\":\"Net income | $93,736 | $96,995 | $99,803 ... Diluted earnings per share | $6.08 | $6.13 | $6.11\"}],\"table\":[{\"dimension\":\"Weighted-average diluted shares, FY2024 (thousands)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"15,408,095\",\"claim_ids\":[\"K1\"]}]},{\"dimension\":\"Weighted-average basic shares, FY2024 (thousands)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"15,343,783\",\"claim_ids\":[\"K3\"]}]},{\"dimension\":\"Effect of dilutive share-based awards, FY2024 (thousands)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"64,312\",\"claim_ids\":[\"K3\"]}]},{\"dimension\":\"Diluted EPS, FY2024\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"$6.08\",\"claim_ids\":[\"K5\"]}]}],\"not_comparable\":[],\"gaps\":[\"No disclosure of RSUs excluded as antidilutive for fiscal 2024 (only the ~24 million excluded for 2023 is given).\"]}",
+   "flags": [
+    {
+     "where": "K1",
+     "kind": "figure_elsewhere_in_chunk",
+     "detail": "$6.08 is printed in C4 outside the quote, so its column and units were not read",
+     "source_string": null
+    },
+    {
+     "where": "K2",
+     "kind": "column_mismatch",
+     "detail": "15,408,095 thousand sits in the column for 2024-09-28; the claim says 2023-09-30",
+     "source_string": "FY2024 (2024-09-28)"
+    },
+    {
+     "where": "K5",
+     "kind": "quote_not_found",
+     "detail": "not in C9",
+     "source_string": "Net income | $93,736 | $96,995 | $99,803 ... Diluted earnings per share | $6.08 | $6.13 | $6.11"
+    },
+    {
+     "where": "summary sentence 1",
+     "kind": "unlinked_figure",
+     "detail": "states 15.41 billion; its claims state 15,408,095 thousand, $6.08, 15,812,547 thousand, 15,408,095 thousand",
+     "source_string": "Apple used 15,408,095 thousand weighted-average diluted shares (about 15.41 billion) in computing fiscal 2024 diluted EPS of $6.08, down from 15,812,547 thousand in fiscal 2023."
+    }
+   ],
+   "notes": [
+    {
+     "where": "K1",
+     "kind": "units_unchecked",
+     "detail": "the claim says thousand for 15,408,095 thousand; the unit line 'USD millions, except number of shares, which are reflected in thousands, and per-share amounts' excepts rows it does not name",
+     "source_string": "USD millions, except number of shares, which are reflected in thousands, and per-share amounts"
+    },
+    {
+     "where": "K2",
+     "kind": "column_unverified",
+     "detail": "15,812,547 thousand: the column carries no period",
+     "source_string": "FY2023"
+    },
+    {
+     "where": "K2",
+     "kind": "units_unchecked",
+     "detail": "the claim says thousand for 15,812,547 thousand; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K2",
+     "kind": "units_unchecked",
+     "detail": "the claim says thousand for 15,408,095 thousand; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K3",
+     "kind": "column_unverified",
+     "detail": "15,343,783 thousand: the claim does not name the row 'Weighted-average basic shares outstanding'",
+     "source_string": "Weighted-average basic shares outstanding"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says thousand for 15,343,783 thousand; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says thousand for 64,312 thousand; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K5",
+     "kind": "figures_unchecked",
+     "detail": "quote not located, 2 figure(s) unchecked",
+     "source_string": null
+    }
+   ]
+  },
+  {
+   "id": "q08",
+   "tickers_ok": true,
+   "resolved": [
+    "BAC"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 8185,
+   "budget_ok": true,
+   "chunks": 24,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqidXCoTAEVQN2UeHHp2",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 5,
+   "timing_ms": {
+    "plan_and_retrieve": 1163,
+    "render": 0,
+    "model": 27744,
+    "parse": 0,
+    "check": 10
+   },
+   "total_ms": 28917,
+   "input_tokens": 12535,
+   "output_tokens": 2593,
+   "cost_usd": 0.117645,
+   "checks": {
+    "quotes_located_hit": 5,
+    "quotes_located_n": 5,
+    "figures_in_quote_hit": 0,
+    "figures_in_quote_n": 0,
+    "figures_unchecked": 0,
+    "columns_matched_hit": 0,
+    "columns_matched_n": 0,
+    "columns_unverified": 0,
+    "units_matched_hit": 0,
+    "units_matched_n": 0,
+    "units_unchecked": 0,
+    "flags_count": 1,
+    "notes_count": 0,
+    "unlinked_count": 1
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "Bank of America's FY2024 10-K groups its material risk factors into categories, beginning with market risk from financial markets, fiscal, monetary and regulatory policies, and economic conditions, with volatility affecting interest rates, currencies, equity and commodity prices.",
+      "claim_ids": [
+       "K1"
+      ]
+     },
+     {
+      "text": "Credit risk is a second pillar: recessionary conditions, elevated rates and higher unemployment could impair consumer and commercial borrowers, with certain sectors such as commercial real estate (particularly office) singled out, and credit concentrations by industry, geography, product, asset class or counterparty could magnify losses.",
+      "claim_ids": [
+       "K2",
+       "K3"
+      ]
+     },
+     {
+      "text": "Geopolitical risk covers political, economic, market, reputational, operational, compliance, legal and regulatory exposures across the jurisdictions in which it operates, including emerging markets.",
+      "claim_ids": [
+       "K4"
+      ]
+     },
+     {
+      "text": "Business operations risk centers on failure or breach of its own or third parties' operations and information systems, including cybersecurity incidents that the company expects to continue with increased frequency and severity.",
+      "claim_ids": [
+       "K5"
+      ]
+     },
+     {
+      "text": "The excerpts are qualitative only and the FY2025 Q3 10-Q refers back to this annual disclosure, so no updated or quantified risk exposures are available.",
+      "claim_ids": []
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "BAC lists market risk first among its material risk factors, stating it may be adversely affected by financial markets, fiscal, monetary and regulatory policies and economic conditions, and that increased market volatility and adverse capital market conditions may increase its market risk.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C1",
+       "C3"
+      ],
+      "quote": "Market We may be adversely affected by the financial markets, fiscal, monetary, and regulatory policies, and economic conditions."
+     },
+     {
+      "id": "K2",
+      "text": "BAC cites credit risk from a recessionary environment or rising unemployment impairing consumer and commercial borrowers, with commercial real estate (particularly office) remaining at risk.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C6"
+      ],
+      "quote": "A recessionary environment and/or a rise in unemployment could adversely impact the ability of our consumer and/or commercial borrowers or counterparties to meet their financial obligations and negatively impact our credit portfolio."
+     },
+     {
+      "id": "K3",
+      "text": "BAC identifies concentrations of credit risk\u2014by industry, geography, product, asset class or counterparty\u2014as a risk factor, including significant concentrations with the financial services industry.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C7",
+       "C8"
+      ],
+      "quote": "Concentrations of credit risk may reside in a particular industry, geography, product, asset class, counterparty or within any pool of exposures with a common risk characteristic."
+     },
+     {
+      "id": "K4",
+      "text": "Under Geopolitical, BAC says it is subject to numerous political, economic, market, reputational, operational, compliance, legal, regulatory and other risks in the jurisdictions where it operates, including emerging markets.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C9"
+      ],
+      "quote": "GeopoliticalWe are subject to numerous political, economic, market, reputational, operational, compliance, legal, regulatory and other risks in the jurisdictions in which we operate.We do business throughout the world, including in emerging markets."
+     },
+     {
+      "id": "K5",
+      "text": "Under Business Operations, BAC flags failure or breach of its or third parties' operations or information systems, and cybersecurity incidents and security breaches that have occurred and are expected to continue with increased frequency and severity.",
+      "tickers": [
+       "BAC"
+      ],
+      "period_end": "2024-12-31",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C11",
+       "C20"
+      ],
+      "quote": "Business OperationsA failure in or breach of our operations or information systems, or those of third parties or the financial services industry, could cause disruptions, adversely impact our businesses, results of operations and financial condition, and cause legal or reputational harm."
+     }
+    ],
+    "table": [
+     {
+      "dimension": "Market risk",
+      "cells": [
+       {
+        "column": "BAC",
+        "text": "Financial markets, fiscal/monetary/regulatory policy and economic conditions; volatility in rates, FX, equity/commodity prices",
+        "claim_ids": [
+         "K1"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Credit risk",
+      "cells": [
+       {
+        "column": "BAC",
+        "text": "Recession/unemployment impairing borrowers; CRE, particularly office, at risk",
+        "claim_ids": [
+         "K2"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Credit concentrations",
+      "cells": [
+       {
+        "column": "BAC",
+        "text": "Industry, geography, product, asset class or counterparty concentrations, incl. financial services industry",
+        "claim_ids": [
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Geopolitical/regulatory",
+      "cells": [
+       {
+        "column": "BAC",
+        "text": "Political, economic, compliance, legal and regulatory risks across jurisdictions, including emerging markets",
+        "claim_ids": [
+         "K4"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Operational/cyber",
+      "cells": [
+       {
+        "column": "BAC",
+        "text": "Failure or breach of own or third-party systems; cyber incidents expected to increase in frequency and severity",
+        "claim_ids": [
+         "K5"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [
+     {
+      "dimension": "Risk factor comparison across peers",
+      "tickers": [
+       "BAC"
+      ],
+      "reason": "Only BAC is in scope, so no cross-company comparison is possible."
+     }
+    ],
+    "gaps": [
+     "No FY2025 Q3 update to the risk factors; the 10-Q points back to the annual report.",
+     "Excerpts contain no quantified risk exposures (e.g., allowance, VaR, unrealized HTM/AFS losses) to size the risks.",
+     "Other risk factors visible only in passing\u2014competition, model risk, data management, and climate/low-carbon transition\u2014are not developed in the cited claims, and capital/liquidity regulatory requirements are not covered in full."
+    ]
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"Bank of America's FY2024 10-K groups its material risk factors into categories, beginning with market risk from financial markets, fiscal, monetary and regulatory policies, and economic conditions, with volatility affecting interest rates, currencies, equity and commodity prices.\",\"claim_ids\":[\"K1\"]},{\"text\":\"Credit risk is a second pillar: recessionary conditions, elevated rates and higher unemployment could impair consumer and commercial borrowers, with certain sectors such as commercial real estate (particularly office) singled out, and credit concentrations by industry, geography, product, asset class or counterparty could magnify losses.\",\"claim_ids\":[\"K2\",\"K3\"]},{\"text\":\"Geopolitical risk covers political, economic, market, reputational, operational, compliance, legal and regulatory exposures across the jurisdictions in which it operates, including emerging markets.\",\"claim_ids\":[\"K4\"]},{\"text\":\"Business operations risk centers on failure or breach of its own or third parties' operations and information systems, including cybersecurity incidents that the company expects to continue with increased frequency and severity.\",\"claim_ids\":[\"K5\"]},{\"text\":\"The excerpts are qualitative only and the FY2025 Q3 10-Q refers back to this annual disclosure, so no updated or quantified risk exposures are available.\",\"claim_ids\":[]}],\"claims\":[{\"id\":\"K1\",\"text\":\"BAC lists market risk first among its material risk factors, stating it may be adversely affected by financial markets, fiscal, monetary and regulatory policies and economic conditions, and that increased market volatility and adverse capital market conditions may increase its market risk.\",\"tickers\":[\"BAC\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C1\",\"C3\"],\"quote\":\"Market We may be adversely affected by the financial markets, fiscal, monetary, and regulatory policies, and economic conditions.\"},{\"id\":\"K2\",\"text\":\"BAC cites credit risk from a recessionary environment or rising unemployment impairing consumer and commercial borrowers, with commercial real estate (particularly office) remaining at risk.\",\"tickers\":[\"BAC\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C6\"],\"quote\":\"A recessionary environment and/or a rise in unemployment could adversely impact the ability of our consumer and/or commercial borrowers or counterparties to meet their financial obligations and negatively impact our credit portfolio.\"},{\"id\":\"K3\",\"text\":\"BAC identifies concentrations of credit risk\u2014by industry, geography, product, asset class or counterparty\u2014as a risk factor, including significant concentrations with the financial services industry.\",\"tickers\":[\"BAC\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C7\",\"C8\"],\"quote\":\"Concentrations of credit risk may reside in a particular industry, geography, product, asset class, counterparty or within any pool of exposures with a common risk characteristic.\"},{\"id\":\"K4\",\"text\":\"Under Geopolitical, BAC says it is subject to numerous political, economic, market, reputational, operational, compliance, legal, regulatory and other risks in the jurisdictions where it operates, including emerging markets.\",\"tickers\":[\"BAC\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C9\"],\"quote\":\"GeopoliticalWe are subject to numerous political, economic, market, reputational, operational, compliance, legal, regulatory and other risks in the jurisdictions in which we operate.We do business throughout the world, including in emerging markets.\"},{\"id\":\"K5\",\"text\":\"Under Business Operations, BAC flags failure or breach of its or third parties' operations or information systems, and cybersecurity incidents and security breaches that have occurred and are expected to continue with increased frequency and severity.\",\"tickers\":[\"BAC\"],\"period_end\":\"2024-12-31\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C11\",\"C20\"],\"quote\":\"Business OperationsA failure in or breach of our operations or information systems, or those of third parties or the financial services industry, could cause disruptions, adversely impact our businesses, results of operations and financial condition, and cause legal or reputational harm.\"}],\"table\":[{\"dimension\":\"Market risk\",\"cells\":[{\"column\":\"BAC\",\"text\":\"Financial markets, fiscal/monetary/regulatory policy and economic conditions; volatility in rates, FX, equity/commodity prices\",\"claim_ids\":[\"K1\"]}]},{\"dimension\":\"Credit risk\",\"cells\":[{\"column\":\"BAC\",\"text\":\"Recession/unemployment impairing borrowers; CRE, particularly office, at risk\",\"claim_ids\":[\"K2\"]}]},{\"dimension\":\"Credit concentrations\",\"cells\":[{\"column\":\"BAC\",\"text\":\"Industry, geography, product, asset class or counterparty concentrations, incl. financial services industry\",\"claim_ids\":[\"K3\"]}]},{\"dimension\":\"Geopolitical/regulatory\",\"cells\":[{\"column\":\"BAC\",\"text\":\"Political, economic, compliance, legal and regulatory risks across jurisdictions, including emerging markets\",\"claim_ids\":[\"K4\"]}]},{\"dimension\":\"Operational/cyber\",\"cells\":[{\"column\":\"BAC\",\"text\":\"Failure or breach of own or third-party systems; cyber incidents expected to increase in frequency and severity\",\"claim_ids\":[\"K5\"]}]}],\"not_comparable\":[{\"dimension\":\"Risk factor comparison across peers\",\"tickers\":[\"BAC\"],\"reason\":\"Only BAC is in scope, so no cross-company comparison is possible.\"}],\"gaps\":[\"No FY2025 Q3 update to the risk factors; the 10-Q points back to the annual report.\",\"Excerpts contain no quantified risk exposures (e.g., allowance, VaR, unrealized HTM/AFS losses) to size the risks.\",\"Other risk factors visible only in passing\u2014competition, model risk, data management, and climate/low-carbon transition\u2014are not developed in the cited claims, and capital/liquidity regulatory requirements are not covered in full.\"]}",
+   "flags": [
+    {
+     "where": "summary sentence 5",
+     "kind": "unlinked_sentence",
+     "detail": "names no claim",
+     "source_string": "The excerpts are qualitative only and the FY2025 Q3 10-Q refers back to this annual disclosure, so no updated or quantified risk exposures are available."
+    }
+   ],
+   "notes": []
+  },
+  {
+   "id": "q09",
+   "tickers_ok": true,
+   "resolved": [
+    "NVDA"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": true,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 7019,
+   "budget_ok": true,
+   "chunks": 24,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqifoBHu7pTwQ8gc3dSf",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 4,
+   "timing_ms": {
+    "plan_and_retrieve": 1435,
+    "render": 0,
+    "model": 26781,
+    "parse": 0,
+    "check": 13
+   },
+   "total_ms": 28229,
+   "input_tokens": 13397,
+   "output_tokens": 2679,
+   "cost_usd": 0.124105,
+   "checks": {
+    "quotes_located_hit": 3,
+    "quotes_located_n": 4,
+    "figures_in_quote_hit": 9,
+    "figures_in_quote_n": 9,
+    "figures_unchecked": 8,
+    "columns_matched_hit": 9,
+    "columns_matched_n": 9,
+    "columns_unverified": 0,
+    "units_matched_hit": 3,
+    "units_matched_n": 3,
+    "units_unchecked": 6,
+    "flags_count": 5,
+    "notes_count": 7,
+    "unlinked_count": 0
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "NVIDIA reports two reportable segments \u2014 Compute & Networking (data center accelerated computing, networking, automotive/robotics platforms, DGX Cloud) and Graphics (GeForce, RTX/Quadro workstation, vGPU, Omniverse) \u2014 and in Q3 FY2026 they generated $50,908M and $6,098M of revenue respectively on $57,006M total.",
+      "claim_ids": [
+       "K1"
+      ]
+     },
+     {
+      "text": "For the first nine months of FY2026 the split was $131,828M Compute & Networking and $15,983M Graphics of $147,811M total, showing roughly 89% of revenue in the Compute & Networking segment.",
+      "claim_ids": [
+       "K2"
+      ]
+     },
+     {
+      "text": "On a full-year basis, FY2025 segment revenue was $116,193M Compute & Networking and $14,304M Graphics, consolidating to $130,497M, with an unallocated \"All Other\" category carrying only expenses (no revenue).",
+      "claim_ids": [
+       "K3"
+      ]
+     },
+     {
+      "text": "NVIDIA supplements segments with an end-market view, which in Q3 FY2026 was Data Center $51,215M (Compute $43,028M, Networking $8,187M), Gaming $4,265M, Professional Visualization $760M, Automotive $592M and OEM and Other $174M.",
+      "claim_ids": [
+       "K4"
+      ]
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "Q3 FY2026 segment revenue: Compute & Networking $50,908M, Graphics $6,098M, total $57,006M (USD millions).",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2025-10-26",
+      "period_kind": "quarter",
+      "citations": [
+       "C6",
+       "C4"
+      ],
+      "quote": "Three Months Ended Oct 26, 2025\nRevenue | $50,908 | $6,098 | $57,006"
+     },
+     {
+      "id": "K2",
+      "text": "First nine months of FY2026 segment revenue: Compute & Networking $131,828M, Graphics $15,983M, total $147,811M (USD millions).",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2025-10-26",
+      "period_kind": "nine_months",
+      "citations": [
+       "C7"
+      ],
+      "quote": "Nine Months Ended Oct 26, 2025\nRevenue | $131,828 | $15,983 | $147,811"
+     },
+     {
+      "id": "K3",
+      "text": "FY2025 (year ended Jan 26, 2025) segment revenue: Compute & Networking $116,193M, Graphics $14,304M, All Other none, consolidated $130,497M (USD millions).",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2025-01-26",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C21"
+      ],
+      "quote": "Year Ended Jan 26, 2025\nRevenue | $116,193 | $14,304 | - | $130,497"
+     },
+     {
+      "id": "K4",
+      "text": "Q3 FY2026 revenue by end market (USD millions): Data Center $51,215 (Compute $43,028, Networking $8,187), Gaming $4,265, Professional Visualization $760, Automotive $592, OEM and Other $174; total $57,006.",
+      "tickers": [
+       "NVDA"
+      ],
+      "period_end": "2025-10-26",
+      "period_kind": "quarter",
+      "citations": [
+       "C14"
+      ],
+      "quote": "Data Center | $51,215 | Compute | 43,028 | Networking | 8,187 | Gaming | 4,265 | Professional Visualization | 760 | Automotive | 592 | OEM and Other | 174 | Total revenue | $57,006"
+     }
+    ],
+    "table": [
+     {
+      "dimension": "Compute & Networking revenue",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "Q3 FY2026: $50,908M; 9M FY2026: $131,828M; FY2025: $116,193M",
+        "claim_ids": [
+         "K1",
+         "K2",
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Graphics revenue",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "Q3 FY2026: $6,098M; 9M FY2026: $15,983M; FY2025: $14,304M",
+        "claim_ids": [
+         "K1",
+         "K2",
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Total revenue",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "Q3 FY2026: $57,006M; 9M FY2026: $147,811M; FY2025: $130,497M",
+        "claim_ids": [
+         "K1",
+         "K2",
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Data Center end market (Q3 FY2026)",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "$51,215M (Compute $43,028M; Networking $8,187M)",
+        "claim_ids": [
+         "K4"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Gaming end market (Q3 FY2026)",
+      "cells": [
+       {
+        "column": "NVDA",
+        "text": "$4,265M",
+        "claim_ids": [
+         "K4"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [
+     {
+      "dimension": "Geographic revenue",
+      "tickers": [
+       "NVDA"
+      ],
+      "reason": "FY2026 10-Q reports geography by customer headquarters location (prior periods recast), while the FY2025 10-K reported it by customer billing location, so the two bases differ."
+     }
+    ],
+    "gaps": [
+     "Excerpts do not provide Q3 FY2025 (three months ended Oct 27, 2024) segment revenue by segment, only the nine-month FY2025 split.",
+     "No segment-level total assets are disclosed; the CODM does not review assets by reportable segment.",
+     "FY2024 and FY2023 segment revenue by segment is not in the excerpts (only end-market revenue for those years)."
+    ]
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"NVIDIA reports two reportable segments \u2014 Compute & Networking (data center accelerated computing, networking, automotive/robotics platforms, DGX Cloud) and Graphics (GeForce, RTX/Quadro workstation, vGPU, Omniverse) \u2014 and in Q3 FY2026 they generated $50,908M and $6,098M of revenue respectively on $57,006M total.\",\"claim_ids\":[\"K1\"]},{\"text\":\"For the first nine months of FY2026 the split was $131,828M Compute & Networking and $15,983M Graphics of $147,811M total, showing roughly 89% of revenue in the Compute & Networking segment.\",\"claim_ids\":[\"K2\"]},{\"text\":\"On a full-year basis, FY2025 segment revenue was $116,193M Compute & Networking and $14,304M Graphics, consolidating to $130,497M, with an unallocated \\\"All Other\\\" category carrying only expenses (no revenue).\",\"claim_ids\":[\"K3\"]},{\"text\":\"NVIDIA supplements segments with an end-market view, which in Q3 FY2026 was Data Center $51,215M (Compute $43,028M, Networking $8,187M), Gaming $4,265M, Professional Visualization $760M, Automotive $592M and OEM and Other $174M.\",\"claim_ids\":[\"K4\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"Q3 FY2026 segment revenue: Compute & Networking $50,908M, Graphics $6,098M, total $57,006M (USD millions).\",\"tickers\":[\"NVDA\"],\"period_end\":\"2025-10-26\",\"period_kind\":\"quarter\",\"citations\":[\"C6\",\"C4\"],\"quote\":\"Three Months Ended Oct 26, 2025\\nRevenue | $50,908 | $6,098 | $57,006\"},{\"id\":\"K2\",\"text\":\"First nine months of FY2026 segment revenue: Compute & Networking $131,828M, Graphics $15,983M, total $147,811M (USD millions).\",\"tickers\":[\"NVDA\"],\"period_end\":\"2025-10-26\",\"period_kind\":\"nine_months\",\"citations\":[\"C7\"],\"quote\":\"Nine Months Ended Oct 26, 2025\\nRevenue | $131,828 | $15,983 | $147,811\"},{\"id\":\"K3\",\"text\":\"FY2025 (year ended Jan 26, 2025) segment revenue: Compute & Networking $116,193M, Graphics $14,304M, All Other none, consolidated $130,497M (USD millions).\",\"tickers\":[\"NVDA\"],\"period_end\":\"2025-01-26\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C21\"],\"quote\":\"Year Ended Jan 26, 2025\\nRevenue | $116,193 | $14,304 | - | $130,497\"},{\"id\":\"K4\",\"text\":\"Q3 FY2026 revenue by end market (USD millions): Data Center $51,215 (Compute $43,028, Networking $8,187), Gaming $4,265, Professional Visualization $760, Automotive $592, OEM and Other $174; total $57,006.\",\"tickers\":[\"NVDA\"],\"period_end\":\"2025-10-26\",\"period_kind\":\"quarter\",\"citations\":[\"C14\"],\"quote\":\"Data Center | $51,215 | Compute | 43,028 | Networking | 8,187 | Gaming | 4,265 | Professional Visualization | 760 | Automotive | 592 | OEM and Other | 174 | Total revenue | $57,006\"}],\"table\":[{\"dimension\":\"Compute & Networking revenue\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"Q3 FY2026: $50,908M; 9M FY2026: $131,828M; FY2025: $116,193M\",\"claim_ids\":[\"K1\",\"K2\",\"K3\"]}]},{\"dimension\":\"Graphics revenue\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"Q3 FY2026: $6,098M; 9M FY2026: $15,983M; FY2025: $14,304M\",\"claim_ids\":[\"K1\",\"K2\",\"K3\"]}]},{\"dimension\":\"Total revenue\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"Q3 FY2026: $57,006M; 9M FY2026: $147,811M; FY2025: $130,497M\",\"claim_ids\":[\"K1\",\"K2\",\"K3\"]}]},{\"dimension\":\"Data Center end market (Q3 FY2026)\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"$51,215M (Compute $43,028M; Networking $8,187M)\",\"claim_ids\":[\"K4\"]}]},{\"dimension\":\"Gaming end market (Q3 FY2026)\",\"cells\":[{\"column\":\"NVDA\",\"text\":\"$4,265M\",\"claim_ids\":[\"K4\"]}]}],\"not_comparable\":[{\"dimension\":\"Geographic revenue\",\"tickers\":[\"NVDA\"],\"reason\":\"FY2026 10-Q reports geography by customer headquarters location (prior periods recast), while the FY2025 10-K reported it by customer billing location, so the two bases differ.\"}],\"gaps\":[\"Excerpts do not provide Q3 FY2025 (three months ended Oct 27, 2024) segment revenue by segment, only the nine-month FY2025 split.\",\"No segment-level total assets are disclosed; the CODM does not review assets by reportable segment.\",\"FY2024 and FY2023 segment revenue by segment is not in the excerpts (only end-market revenue for those years).\"]}",
+   "flags": [
+    {
+     "where": "K4",
+     "kind": "quote_not_found",
+     "detail": "not in C14",
+     "source_string": "Data Center | $51,215 | Compute | 43,028 | Networking | 8,187 | Gaming | 4,265 | Professional Visualization | 760 | Auto"
+    },
+    {
+     "where": "summary sentence 2",
+     "kind": "unlinked_figure",
+     "detail": "states 89%; its claims state $131,828, $15,983, $147,811",
+     "source_string": "For the first nine months of FY2026 the split was $131,828M Compute & Networking and $15,983M Graphics of $147,811M total, showing roughly 89% of revenue in the Compute & Networking segment."
+    },
+    {
+     "where": "gap 1",
+     "kind": "ungrounded_gap",
+     "detail": "names 2024, outside the coverage block",
+     "source_string": "Excerpts do not provide Q3 FY2025 (three months ended Oct 27, 2024) segment revenue by segment, only the nine-month FY2025 split."
+    },
+    {
+     "where": "gap 3",
+     "kind": "ungrounded_gap",
+     "detail": "names 2024, 2023, outside the coverage block",
+     "source_string": "FY2024 and FY2023 segment revenue by segment is not in the excerpts (only end-market revenue for those years)."
+    },
+    {
+     "where": "not comparable 1",
+     "kind": "ungrounded_gap",
+     "detail": "names 2026, outside the coverage block",
+     "source_string": "Geographic revenue: FY2026 10-Q reports geography by customer headquarters location (prior periods recast), while the FY2025 10-K reported it by customer billing location, so the two bases differ."
+    }
+   ],
+   "notes": [
+    {
+     "where": "K1",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for $50,908",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K1",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for $6,098",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K2",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for $131,828",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K2",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for $15,983",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for $116,193",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for $14,304",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K4",
+     "kind": "figures_unchecked",
+     "detail": "quote not located, 8 figure(s) unchecked",
+     "source_string": null
+    }
+   ]
+  },
+  {
+   "id": "q10",
+   "tickers_ok": true,
+   "resolved": [],
+   "items_hit": 0,
+   "items_n": 0,
+   "items_missing": [],
+   "files_hit": 0,
+   "files_n": 0,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "not_covered",
+   "status_ok": true,
+   "abstain_row": true,
+   "tokens": 0,
+   "budget_ok": true,
+   "chunks": 0,
+   "layer": 2,
+   "prompt_version": null,
+   "model": null,
+   "backend": null,
+   "request_id": null,
+   "llm_attempts": 0,
+   "llm_completed": 0,
+   "llm_error": null,
+   "parse_ok": false,
+   "n_claims": 0,
+   "timing_ms": {
+    "plan_and_retrieve": 2
+   },
+   "total_ms": 2,
+   "input_tokens": 0,
+   "output_tokens": 0,
+   "cost_usd": null,
+   "checks": {},
+   "replayed": false,
+   "answer": null,
+   "raw_text": null,
+   "flags": [],
+   "notes": []
+  },
+  {
+   "id": "q11",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL"
+   ],
+   "items_hit": 0,
+   "items_n": 0,
+   "items_missing": [],
+   "files_hit": 0,
+   "files_n": 0,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "period_not_covered",
+   "status_ok": true,
+   "abstain_row": true,
+   "tokens": 0,
+   "budget_ok": true,
+   "chunks": 0,
+   "layer": 2,
+   "prompt_version": null,
+   "model": null,
+   "backend": null,
+   "request_id": null,
+   "llm_attempts": 0,
+   "llm_completed": 0,
+   "llm_error": null,
+   "parse_ok": false,
+   "n_claims": 0,
+   "timing_ms": {
+    "plan_and_retrieve": 1
+   },
+   "total_ms": 1,
+   "input_tokens": 0,
+   "output_tokens": 0,
+   "cost_usd": null,
+   "checks": {},
+   "replayed": false,
+   "answer": null,
+   "raw_text": null,
+   "flags": [],
+   "notes": []
+  },
+  {
+   "id": "q12",
+   "tickers_ok": true,
+   "resolved": [
+    "AAPL"
+   ],
+   "items_hit": 1,
+   "items_n": 1,
+   "items_missing": [],
+   "files_hit": 1,
+   "files_n": 1,
+   "files_missing": [],
+   "substring_hit": null,
+   "substrings_missing": [],
+   "status": "ok",
+   "status_ok": true,
+   "abstain_row": false,
+   "tokens": 7038,
+   "budget_ok": true,
+   "chunks": 24,
+   "layer": 2,
+   "prompt_version": "v2",
+   "model": "claude-opus-5",
+   "backend": "anthropic",
+   "request_id": "req_011CeqihxL1zb1VmjuuiufPb",
+   "llm_attempts": 1,
+   "llm_completed": 1,
+   "llm_error": null,
+   "parse_ok": true,
+   "n_claims": 5,
+   "timing_ms": {
+    "plan_and_retrieve": 1147,
+    "render": 0,
+    "model": 14632,
+    "parse": 0,
+    "check": 14
+   },
+   "total_ms": 15793,
+   "input_tokens": 12188,
+   "output_tokens": 1376,
+   "cost_usd": 0.085485,
+   "checks": {
+    "quotes_located_hit": 5,
+    "quotes_located_n": 5,
+    "figures_in_quote_hit": 7,
+    "figures_in_quote_n": 7,
+    "figures_unchecked": 0,
+    "columns_matched_hit": 3,
+    "columns_matched_n": 5,
+    "columns_unverified": 2,
+    "units_matched_hit": 0,
+    "units_matched_n": 0,
+    "units_unchecked": 7,
+    "flags_count": 0,
+    "notes_count": 11,
+    "unlinked_count": 0
+   },
+   "replayed": false,
+   "answer": {
+    "summary": [
+     {
+      "text": "The excerpts contain no revenue target, goal, or forward guidance for Apple's Services business; Apple's MD&A states only that forward-looking statements are not guarantees and that it assumes no obligation to update them.",
+      "claim_ids": [
+       "K1"
+      ]
+     },
+     {
+      "text": "The filings report historical Services results only: Services net sales of $30,013 million in the quarter ended December 27, 2025 versus $26,340 million a year earlier, and $109,158 million for fiscal 2025 versus $96,169 million in fiscal 2024.",
+      "claim_ids": [
+       "K2",
+       "K3"
+      ]
+     },
+     {
+      "text": "Apple attributes the FY2025 Services increase to higher advertising, App Store and cloud services net sales, and reports Services gross margin of 76.5% in Q1 FY2026, but offers no target for any future period.",
+      "claim_ids": [
+       "K4",
+       "K5"
+      ]
+     }
+    ],
+    "claims": [
+     {
+      "id": "K1",
+      "text": "Apple's Q1 FY2026 MD&A states forward-looking statements are not guarantees of future performance and that the Company assumes no obligation to revise or update them; no Services revenue target is disclosed.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-12-27",
+      "period_kind": "quarter",
+      "citations": [
+       "C2"
+      ],
+      "quote": "Forward-looking statements are not guarantees of future performance and the Company's actual results may differ significantly from the results discussed in the forward-looking statements."
+     },
+     {
+      "id": "K2",
+      "text": "Services net sales were $30,013 million in the quarter ended December 27, 2025, up from $26,340 million in the quarter ended December 28, 2024.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-12-27",
+      "period_kind": "quarter",
+      "citations": [
+       "C3"
+      ],
+      "quote": "Services | 30,013 | 26,340"
+     },
+     {
+      "id": "K3",
+      "text": "Services net sales were $109,158 million in fiscal 2025, versus $96,169 million in fiscal 2024 and $85,200 million in fiscal 2023.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-09-27",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C20"
+      ],
+      "quote": "Services(1) | 109,158 | 96,169 | 85,200"
+     },
+     {
+      "id": "K4",
+      "text": "Apple attributes the fiscal 2025 increase in Services net sales to higher net sales from advertising, the App Store and cloud services.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-09-27",
+      "period_kind": "fiscal_year",
+      "citations": [
+       "C11"
+      ],
+      "quote": "Services net sales increased during 2025 compared to 2024 primarily due to higher net sales from advertising, the App Store and cloud services."
+     },
+     {
+      "id": "K5",
+      "text": "Services gross margin percentage was 76.5% in the quarter ended December 27, 2025, versus 75.0% a year earlier.",
+      "tickers": [
+       "AAPL"
+      ],
+      "period_end": "2025-12-27",
+      "period_kind": "quarter",
+      "citations": [
+       "C6"
+      ],
+      "quote": "Services | 76.5% | 75.0%"
+     }
+    ],
+    "table": [
+     {
+      "dimension": "Services net sales, quarter ended 2025-12-27 (USD millions)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "$30,013 (vs. $26,340 prior-year quarter)",
+        "claim_ids": [
+         "K2"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Services net sales, FY2025 (USD millions)",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "$109,158 (vs. $96,169 in FY2024)",
+        "claim_ids": [
+         "K3"
+        ]
+       }
+      ]
+     },
+     {
+      "dimension": "Stated Services revenue target",
+      "cells": [
+       {
+        "column": "AAPL",
+        "text": "None disclosed in the excerpts",
+        "claim_ids": [
+         "K1"
+        ]
+       }
+      ]
+     }
+    ],
+    "not_comparable": [],
+    "gaps": [
+     "No Services revenue target, guidance figure, or growth objective appears anywhere in the provided 10-Q or 10-K excerpts; the filings disclose only historical Services net sales and gross margin.",
+     "No management commentary on future Services growth expectations beyond generic forward-looking-statement language."
+    ]
+   },
+   "raw_text": "{\"summary\":[{\"text\":\"The excerpts contain no revenue target, goal, or forward guidance for Apple's Services business; Apple's MD&A states only that forward-looking statements are not guarantees and that it assumes no obligation to update them.\",\"claim_ids\":[\"K1\"]},{\"text\":\"The filings report historical Services results only: Services net sales of $30,013 million in the quarter ended December 27, 2025 versus $26,340 million a year earlier, and $109,158 million for fiscal 2025 versus $96,169 million in fiscal 2024.\",\"claim_ids\":[\"K2\",\"K3\"]},{\"text\":\"Apple attributes the FY2025 Services increase to higher advertising, App Store and cloud services net sales, and reports Services gross margin of 76.5% in Q1 FY2026, but offers no target for any future period.\",\"claim_ids\":[\"K4\",\"K5\"]}],\"claims\":[{\"id\":\"K1\",\"text\":\"Apple's Q1 FY2026 MD&A states forward-looking statements are not guarantees of future performance and that the Company assumes no obligation to revise or update them; no Services revenue target is disclosed.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-12-27\",\"period_kind\":\"quarter\",\"citations\":[\"C2\"],\"quote\":\"Forward-looking statements are not guarantees of future performance and the Company's actual results may differ significantly from the results discussed in the forward-looking statements.\"},{\"id\":\"K2\",\"text\":\"Services net sales were $30,013 million in the quarter ended December 27, 2025, up from $26,340 million in the quarter ended December 28, 2024.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-12-27\",\"period_kind\":\"quarter\",\"citations\":[\"C3\"],\"quote\":\"Services | 30,013 | 26,340\"},{\"id\":\"K3\",\"text\":\"Services net sales were $109,158 million in fiscal 2025, versus $96,169 million in fiscal 2024 and $85,200 million in fiscal 2023.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C20\"],\"quote\":\"Services(1) | 109,158 | 96,169 | 85,200\"},{\"id\":\"K4\",\"text\":\"Apple attributes the fiscal 2025 increase in Services net sales to higher net sales from advertising, the App Store and cloud services.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-09-27\",\"period_kind\":\"fiscal_year\",\"citations\":[\"C11\"],\"quote\":\"Services net sales increased during 2025 compared to 2024 primarily due to higher net sales from advertising, the App Store and cloud services.\"},{\"id\":\"K5\",\"text\":\"Services gross margin percentage was 76.5% in the quarter ended December 27, 2025, versus 75.0% a year earlier.\",\"tickers\":[\"AAPL\"],\"period_end\":\"2025-12-27\",\"period_kind\":\"quarter\",\"citations\":[\"C6\"],\"quote\":\"Services | 76.5% | 75.0%\"}],\"table\":[{\"dimension\":\"Services net sales, quarter ended 2025-12-27 (USD millions)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"$30,013 (vs. $26,340 prior-year quarter)\",\"claim_ids\":[\"K2\"]}]},{\"dimension\":\"Services net sales, FY2025 (USD millions)\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"$109,158 (vs. $96,169 in FY2024)\",\"claim_ids\":[\"K3\"]}]},{\"dimension\":\"Stated Services revenue target\",\"cells\":[{\"column\":\"AAPL\",\"text\":\"None disclosed in the excerpts\",\"claim_ids\":[\"K1\"]}]}],\"not_comparable\":[],\"gaps\":[\"No Services revenue target, guidance figure, or growth objective appears anywhere in the provided 10-Q or 10-K excerpts; the filings disclose only historical Services net sales and gross margin.\",\"No management commentary on future Services growth expectations beyond generic forward-looking-statement language.\"]}",
+   "flags": [],
+   "notes": [
+    {
+     "where": "K2",
+     "kind": "column_other_period",
+     "detail": "$26,340 million sits in the column for 2024-12-28",
+     "source_string": "Three Months Ended December 28,2024"
+    },
+    {
+     "where": "K2",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $30,013 million; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K2",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $26,340 million; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K3",
+     "kind": "column_unverified",
+     "detail": "$96,169 million: the column carries no period",
+     "source_string": "FY2024"
+    },
+    {
+     "where": "K3",
+     "kind": "column_unverified",
+     "detail": "$85,200 million: the column carries no period",
+     "source_string": "FY2023"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $109,158 million; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $96,169 million; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K3",
+     "kind": "units_unchecked",
+     "detail": "the claim says million for $85,200 million; the unit line was carried in from an earlier excerpt",
+     "source_string": "USD millions"
+    },
+    {
+     "where": "K5",
+     "kind": "column_other_period",
+     "detail": "75.0% sits in the column for 2024-12-28",
+     "source_string": "Three Months Ended December 28,2024"
+    },
+    {
+     "where": "K5",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 76.5%",
+     "source_string": null
+    },
+    {
+     "where": "K5",
+     "kind": "units_unchecked",
+     "detail": "the claim states no scale word for 75.0%",
+     "source_string": null
+    }
+   ]
+  }
+ ],
+ "summary": {
+  "section_hit": [
+   10,
+   10
+  ],
+  "file_coverage": [
+   15,
+   15
+  ],
+  "passage_hit": [
+   6,
+   6
+  ],
+  "abstain": [
+   2,
+   2
+  ],
+  "status_ok": [
+   12,
+   12
+  ],
+  "budget_ok": [
+   10,
+   10
+  ],
+  "mean_tokens": 11641,
+  "requests": 10,
+  "parse_first_try": [
+   10,
+   10
+  ],
+  "latency_ms_median": 28917,
+  "latency_ms_worst": 62400,
+  "under_30s": [
+   6,
+   10
+  ],
+  "mean_input_tokens": 19324,
+  "mean_output_tokens": 2902,
+  "total_cost_usd": 1.6057,
+  "flags_total": 34,
+  "unlinked_total": 3,
+  "quotes_located": [
+   61,
+   67
+  ],
+  "figures_in_quote": [
+   62,
+   71
+  ],
+  "columns_matched": [
+   23,
+   36
+  ],
+  "units_matched": [
+   21,
+   21
+  ]
+ }
+}

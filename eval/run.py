@@ -32,6 +32,7 @@ against it by accident.
 """
 
 import argparse
+import dataclasses
 import json
 import os
 import statistics
@@ -42,6 +43,7 @@ sys.path.insert(0, os.path.join(ROOT, "service"))
 
 import config  # noqa: E402
 import index as index_module  # noqa: E402
+import llm_client  # noqa: E402
 from ask import ask  # noqa: E402
 from corpus import normalize  # noqa: E402
 
@@ -619,6 +621,148 @@ def grade(path: str) -> None:
     print("ungraded rows: %d" % (len(rows) - len(graded)))
 
 
+def checks_as_numbers(checks) -> dict:
+    """The EvidenceChecks pairs as plain numbers a summary can add up."""
+    if checks is None:
+        return {}
+    d = dataclasses.asdict(checks) if dataclasses.is_dataclass(checks) else dict(checks)
+    out = {}
+    for key, value in d.items():
+        if isinstance(value, (tuple, list)) and len(value) == 2 and all(isinstance(v, int) for v in value):
+            out[key + "_hit"], out[key + "_n"] = value
+        elif isinstance(value, int):
+            out[key] = value
+        elif isinstance(value, list):
+            out[key + "_count"] = len(value)
+    return out
+
+
+def layer2_row(row: dict, payload: dict) -> dict:
+    """Layer 1 scored on the same payload, plus what the one request cost and
+    what the checks established. Nothing here says an answer is right; the
+    rubric is the only measure of that."""
+    score = score_row(row, payload)
+    timing = payload.get("timing_ms") or {}
+    usage = payload.get("usage") or {}
+    answer = payload.get("answer")
+    score.update({
+        "layer": 2,
+        "prompt_version": payload.get("prompt_version"),
+        "model": payload.get("model"),
+        "backend": payload.get("backend"),
+        "request_id": payload.get("request_id"),
+        "llm_attempts": payload.get("llm_attempts", 0),
+        "llm_completed": payload.get("llm_completed", 0),
+        "llm_error": payload.get("llm_error"),
+        "parse_ok": bool(answer is not None and not payload.get("llm_error")),
+        "n_claims": len(getattr(answer, "claims", []) or []) if answer is not None else 0,
+        "timing_ms": timing,
+        "total_ms": sum(v for v in timing.values() if isinstance(v, (int, float))),
+        "input_tokens": usage.get("input_tokens", 0) + usage.get("cache_creation_input_tokens", 0)
+                        + usage.get("cache_read_input_tokens", 0),
+        "output_tokens": usage.get("output_tokens", 0),
+        "cost_usd": payload.get("cost_usd"),
+        "checks": checks_as_numbers(payload.get("checks")),
+        "replayed": bool(payload.get("replayed")),
+        # The reply itself, so the outputs can be reviewed and graded from
+        # this file alone; a results file with only counts in it cannot be
+        # read for whether the answer was any good.
+        "answer": answer.model_dump() if answer is not None and hasattr(answer, "model_dump") else None,
+        "raw_text": payload.get("raw_text"),
+        "flags": [dict(f) for f in getattr(payload.get("checks"), "flags", []) or []],
+        "notes": [dict(n) for n in getattr(payload.get("checks"), "notes", []) or []],
+    })
+    return score
+
+
+def summarize_layer2(scores: list[dict]) -> dict:
+    """Layer-1 summary plus request cost and what the checks established,
+    over the rows that made a request. Latency is reported as median and
+    worst, never a mean, since one slow request is the demo risk."""
+    summary = summarize(scores)
+    called = [s for s in scores if s.get("llm_attempts", 0) > 0]
+    latencies = sorted(s["total_ms"] for s in called)
+    agg = {}
+    for key in ("quotes_located", "figures_in_quote", "columns_matched", "units_matched"):
+        hit = sum(s["checks"].get(key + "_hit", 0) for s in called)
+        n = sum(s["checks"].get(key + "_n", 0) for s in called)
+        agg[key] = (hit, n)
+    summary.update({
+        "requests": len(called),
+        "parse_first_try": (sum(1 for s in called if s["parse_ok"]), len(called)),
+        "latency_ms_median": latencies[len(latencies) // 2] if latencies else 0,
+        "latency_ms_worst": latencies[-1] if latencies else 0,
+        "under_30s": (sum(1 for l in latencies if l <= 30000), len(latencies)),
+        "mean_input_tokens": round(statistics.mean(s["input_tokens"] for s in called)) if called else 0,
+        "mean_output_tokens": round(statistics.mean(s["output_tokens"] for s in called)) if called else 0,
+        "total_cost_usd": round(sum(s["cost_usd"] or 0 for s in called), 4),
+        "flags_total": sum(s["checks"].get("flags_count", 0) for s in called),
+        "unlinked_total": sum(s["checks"].get("unlinked_count", 0) for s in called),
+        **agg,
+    })
+    return summary
+
+
+def layer2_line(summary: dict) -> str:
+    return ("requests %d | parse first try %s | latency median %.1fs worst %.1fs | under 30 s %s | "
+            "quotes located %s | figures in quote %s | columns matched %s | units matched %s | "
+            "flags %d | mean tokens in %d out %d | cost $%.2f" % (
+                summary["requests"], _rate(summary["parse_first_try"]),
+                summary["latency_ms_median"] / 1000, summary["latency_ms_worst"] / 1000,
+                _rate(summary["under_30s"]), _rate(summary["quotes_located"]),
+                _rate(summary["figures_in_quote"]), _rate(summary["columns_matched"]),
+                _rate(summary["units_matched"]), summary["flags_total"],
+                summary["mean_input_tokens"], summary["mean_output_tokens"], summary["total_cost_usd"]))
+
+
+def run_layer2(args) -> None:
+    """One model request per row on the configured backend. Refuses the fake
+    backend unless asked, since a fake run would write a results file that
+    reads like a measurement."""
+    import prompts
+    if config.LLM_MODEL_BACKEND == "fake" and not args.allow_fake:
+        print("refusing a layer-2 run on the fake backend: set LLM_MODEL_BACKEND=anthropic, or pass "
+              "--allow-fake to exercise the harness with stand-in answers")
+        sys.exit(2)
+    rows = read_rows(SETS[args.set])
+    loaded = index_module.load(args.index_dir)
+    companies = index_module.load_registry(config.COMPANIES_FILE)
+    version = prompts.PROMPT_VERSION
+    out = args.out or os.path.join(ROOT, "eval", "results", "%s-%s.json" % (args.set, version))
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    print("layer 2 | set %s | prompt %s | backend %s | model %s | retrieval %s" % (
+        args.set, version, config.LLM_MODEL_BACKEND, config.LLM_MODEL, loaded.effective_mode()[0]))
+    scores = []
+    for row in rows:
+        payload = ask(row["question"], loaded, companies, dry_run=False)
+        score = layer2_row(row, payload)
+        scores.append(score)
+        print("%-4s %-18s %6.1fs  claims %2d  parse %s  checks q%s f%s c%s u%s flags %d  $%.3f" % (
+            score["id"], score["status"], score["total_ms"] / 1000, score["n_claims"],
+            "ok" if score["parse_ok"] else ("n/a" if score["llm_attempts"] == 0 else "FAIL"),
+            _pair(score["checks"], "quotes_located"), _pair(score["checks"], "figures_in_quote"),
+            _pair(score["checks"], "columns_matched"), _pair(score["checks"], "units_matched"),
+            score["checks"].get("flags_count", 0), score["cost_usd"] or 0), flush=True)
+        if args.save_fixtures and payload.get("llm_result") is not None and payload.get("answer") is not None:
+            os.makedirs(args.save_fixtures, exist_ok=True)
+            path = os.path.join(args.save_fixtures, row["id"] + ".json")
+            llm_client.save_fixture(path, row["question"], payload["llm_result"], version)
+            print("     fixture saved: %s" % path)
+    summary = summarize_layer2(scores)
+    print()
+    print(summary_line(summary))
+    print(layer2_line(summary))
+    with open(out, "w") as fh:
+        json.dump({"set": args.set, "index_dir": args.index_dir, "layer": 2, "prompt_version": version,
+                   "backend": config.LLM_MODEL_BACKEND, "model": config.LLM_MODEL,
+                   "mode": loaded.effective_mode()[0], "rows": scores, "summary": summary}, fh, indent=1)
+    print("wrote", out)
+
+
+def _pair(checks: dict, key: str) -> str:
+    return "%d/%d" % (checks.get(key + "_hit", 0), checks.get(key + "_n", 0))
+
+
 def main(argv: list[str]) -> None:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--retrieval-only", action="store_true", help="layer 1: no model request")
@@ -627,6 +771,10 @@ def main(argv: list[str]) -> None:
     parser.add_argument("--out", default=None)
     parser.add_argument("--ablate", action="store_true", help="bm25 / dense / hybrid / hybrid without pinning")
     parser.add_argument("--final", action="store_true", help="allow the held-out set (one final run)")
+    parser.add_argument("--save-fixtures", default=None, metavar="DIR",
+                        help="layer 2: store each parsed reply so the fake backend can replay it")
+    parser.add_argument("--allow-fake", action="store_true",
+                        help="layer 2: permit the fake backend (harness check only, not a measurement)")
     parser.add_argument("--report", nargs=2, metavar=("BEFORE", "AFTER"),
                         help="print the change between two saved result files")
     parser.add_argument("--grade", metavar="RESULTS",
@@ -652,8 +800,8 @@ def main(argv: list[str]) -> None:
               "tuning set.")
         sys.exit(2)
     if not args.retrieval_only:
-        print("only --retrieval-only is implemented in this milestone; the model request arrives in milestone 4")
-        sys.exit(2)
+        run_layer2(args)
+        return
 
     rows = read_rows(SETS[args.set])
     loaded = index_module.load(args.index_dir)
@@ -678,14 +826,14 @@ def main(argv: list[str]) -> None:
         print("wrote", out)
         return
 
-    scores = run_set(rows, loaded, companies, "hybrid", True)
+    scores = run_set(rows, loaded, companies, None, True)
     summary = summarize(scores)
     print(table(scores))
     print()
     print(summary_line(summary))
     with open(out, "w") as fh:
-        json.dump({"set": args.set, "index_dir": args.index_dir, "mode": "hybrid", "pin": True,
-                   "rows": scores, "summary": summary}, fh, indent=1)
+        json.dump({"set": args.set, "index_dir": args.index_dir, "mode": loaded.effective_mode()[0],
+                   "pin": True, "rows": scores, "summary": summary}, fh, indent=1)
     print("wrote", out)
 
 
