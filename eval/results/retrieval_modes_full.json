@@ -1,0 +1,132 @@
+{
+  "what": "Retrieval-mode comparison over the full 64,612-chunk index, 12-row tuning set.",
+  "index": {
+    "chunks": 64612,
+    "files": 246,
+    "tickers": 54
+  },
+  "dense_model": {
+    "candidate": "minilm-512",
+    "model_id": "sentence-transformers/all-MiniLM-L6-v2",
+    "dimension": 384,
+    "window": 512,
+    "vector_bytes": 99244160
+  },
+  "note": "Hit-rate measures are identical in all three modes, so they cannot separate them. The rank of the first chunk holding the correct passage does. Ten of the twelve rows carry gold; the other two are refusals and are scored on status alone.",
+  "modes": {
+    "bm25": {
+      "summary": {
+        "section_hit": [
+          10,
+          10
+        ],
+        "file_coverage": [
+          15,
+          15
+        ],
+        "passage_hit": [
+          6,
+          6
+        ],
+        "abstain": [
+          2,
+          2
+        ],
+        "status_ok": [
+          12,
+          12
+        ],
+        "budget_ok": [
+          10,
+          10
+        ],
+        "mean_tokens": 11733
+      },
+      "rank_search": {
+        "n": 10,
+        "mrr": 0.501,
+        "median": 2.0,
+        "mean": 5.2,
+        "worst": 20,
+        "first_place": 3
+      },
+      "seconds": 0.9
+    },
+    "dense": {
+      "summary": {
+        "section_hit": [
+          10,
+          10
+        ],
+        "file_coverage": [
+          15,
+          15
+        ],
+        "passage_hit": [
+          5,
+          6
+        ],
+        "abstain": [
+          2,
+          2
+        ],
+        "status_ok": [
+          12,
+          12
+        ],
+        "budget_ok": [
+          10,
+          10
+        ],
+        "mean_tokens": 10436
+      },
+      "rank_search": {
+        "n": 10,
+        "mrr": 0.671,
+        "median": 1.0,
+        "mean": 3.5,
+        "worst": 12,
+        "first_place": 6
+      },
+      "seconds": 2.7
+    },
+    "hybrid": {
+      "summary": {
+        "section_hit": [
+          10,
+          10
+        ],
+        "file_coverage": [
+          15,
+          15
+        ],
+        "passage_hit": [
+          6,
+          6
+        ],
+        "abstain": [
+          2,
+          2
+        ],
+        "status_ok": [
+          12,
+          12
+        ],
+        "budget_ok": [
+          10,
+          10
+        ],
+        "mean_tokens": 11184
+      },
+      "rank_search": {
+        "n": 10,
+        "mrr": 0.606,
+        "median": 1.5,
+        "mean": 4.7,
+        "worst": 19,
+        "first_place": 5
+      },
+      "seconds": 0.9
+    }
+  }
+}

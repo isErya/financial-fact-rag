@@ -139,10 +139,22 @@ async def lifespan(app: FastAPI):
     state.companies = index_module.load_registry(config.COMPANIES_FILE)
     state.urls = filing_urls(config.CORPUS_ZIP)
     state.fixture_dates = load_fixture_dates(config.FIXTURES_DIR)
+    # The query encoder takes about 19 s to load and is otherwise loaded
+    # lazily on the first dense query, which would put that on the clock of
+    # the first question someone asks. Loading it here also runs the check
+    # that it matches the stored vectors, so a mismatched index fails at
+    # startup rather than on a question. A failure is recorded and the
+    # process still serves the page, /health and the lexical path.
+    state.encoder_error = None
+    if state.index is not None and getattr(state.index, "dense", None) is not None:
+        try:
+            state.index.dense_scores("warm up the query encoder")
+        except Exception as exc:  # noqa: BLE001 - reported, never raised at startup
+            state.encoder_error = str(exc)
     yield
 
 
-app = FastAPI(title="filing desk", lifespan=lifespan)
+app = FastAPI(title="financial facts", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
@@ -185,6 +197,13 @@ def health(request: Request) -> dict:
         "index_built_at": record.get("built_at"),
         "index_error": request.app.state.index_error,
         "dense": bool(loaded is not None and loaded.dense is not None),
+        "search_mode": config.SEARCH_MODE,
+        "search_mode_effective": loaded.effective_mode()[0] if loaded else None,
+        # None unless the index cannot serve the configured mode.
+        "search_mode_note": loaded.effective_mode()[1] if loaded else None,
+        "embed_model": config.EMBED_MODEL,
+        # None when the encoder loaded and matched the stored vectors.
+        "encoder_error": getattr(request.app.state, "encoder_error", None),
         "backend": config.LLM_MODEL_BACKEND,
         "model": config.LLM_MODEL,
         "llm_ready": llm_ready(),

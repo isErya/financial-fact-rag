@@ -1,0 +1,421 @@
+{
+  "what": "Retrieval-mode and embedding-model comparison over the full 64,612-chunk index on a 48-row question set built to discriminate: every row carries a literal substring from the filing, so gold sets are small. Rows a retriever never reached count as zero reciprocal rank, so every candidate is scored over the same denominator.",
+  "set": "eliza-study/bigset.jsonl (48 rows after a two-auditor review dropped 12 of 60 authored)",
+  "categories": {
+    "all": 48,
+    "paraphrase": 10,
+    "trap": 6,
+    "literal": 32
+  },
+  "lexical_baseline": {
+    "all": {
+      "n": 48,
+      "mrr": 0.321,
+      "never_found": 7,
+      "median_rank_when_found": 4,
+      "worst_rank_when_found": 49,
+      "first_place": 9
+    },
+    "paraphrase": {
+      "n": 10,
+      "mrr": 0.019,
+      "never_found": 6,
+      "median_rank_when_found": 31.0,
+      "worst_rank_when_found": 49,
+      "first_place": 0
+    },
+    "trap": {
+      "n": 6,
+      "mrr": 0.291,
+      "never_found": 0,
+      "median_rank_when_found": 8.0,
+      "worst_rank_when_found": 21,
+      "first_place": 1
+    },
+    "literal": {
+      "n": 32,
+      "mrr": 0.422,
+      "never_found": 1,
+      "median_rank_when_found": 3,
+      "worst_rank_when_found": 41,
+      "first_place": 8
+    }
+  },
+  "candidates": {
+    "minilm-256": {
+      "model_id": "sentence-transformers/all-MiniLM-L6-v2",
+      "dimension": 384,
+      "window": 256,
+      "vector_mb": 99,
+      "query_ms_cpu_median": 81.7,
+      "dense": {
+        "all": {
+          "n": 48,
+          "mrr": 0.402,
+          "never_found": 0,
+          "median_rank_when_found": 5.0,
+          "worst_rank_when_found": 55,
+          "first_place": 13
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.46,
+          "never_found": 0,
+          "median_rank_when_found": 5.0,
+          "worst_rank_when_found": 35,
+          "first_place": 4
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.371,
+          "never_found": 0,
+          "median_rank_when_found": 6.0,
+          "worst_rank_when_found": 20,
+          "first_place": 1
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.39,
+          "never_found": 0,
+          "median_rank_when_found": 4.5,
+          "worst_rank_when_found": 55,
+          "first_place": 8
+        }
+      },
+      "hybrid": {
+        "all": {
+          "n": 48,
+          "mrr": 0.377,
+          "never_found": 1,
+          "median_rank_when_found": 5,
+          "worst_rank_when_found": 50,
+          "first_place": 11
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.1,
+          "never_found": 0,
+          "median_rank_when_found": 17.0,
+          "worst_rank_when_found": 50,
+          "first_place": 0
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.49,
+          "never_found": 0,
+          "median_rank_when_found": 3.5,
+          "worst_rank_when_found": 10,
+          "first_place": 2
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.442,
+          "never_found": 1,
+          "median_rank_when_found": 3,
+          "worst_rank_when_found": 39,
+          "first_place": 9
+        }
+      }
+    },
+    "minilm-512": {
+      "model_id": "sentence-transformers/all-MiniLM-L6-v2",
+      "dimension": 384,
+      "window": 512,
+      "vector_mb": 99,
+      "query_ms_cpu_median": 71.5,
+      "dense": {
+        "all": {
+          "n": 48,
+          "mrr": 0.34,
+          "never_found": 2,
+          "median_rank_when_found": 5.5,
+          "worst_rank_when_found": 43,
+          "first_place": 10
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.475,
+          "never_found": 0,
+          "median_rank_when_found": 4.5,
+          "worst_rank_when_found": 29,
+          "first_place": 4
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.313,
+          "never_found": 0,
+          "median_rank_when_found": 8.0,
+          "worst_rank_when_found": 17,
+          "first_place": 1
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.304,
+          "never_found": 2,
+          "median_rank_when_found": 5.0,
+          "worst_rank_when_found": 43,
+          "first_place": 5
+        }
+      },
+      "hybrid": {
+        "all": {
+          "n": 48,
+          "mrr": 0.366,
+          "never_found": 0,
+          "median_rank_when_found": 4.5,
+          "worst_rank_when_found": 58,
+          "first_place": 10
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.131,
+          "never_found": 0,
+          "median_rank_when_found": 17.5,
+          "worst_rank_when_found": 42,
+          "first_place": 0
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.51,
+          "never_found": 0,
+          "median_rank_when_found": 3.0,
+          "worst_rank_when_found": 7,
+          "first_place": 2
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.413,
+          "never_found": 0,
+          "median_rank_when_found": 4.0,
+          "worst_rank_when_found": 58,
+          "first_place": 8
+        }
+      }
+    },
+    "bge-base-512": {
+      "model_id": "BAAI/bge-base-en-v1.5",
+      "dimension": 768,
+      "window": 512,
+      "vector_mb": 198,
+      "query_ms_cpu_median": 148.8,
+      "dense": {
+        "all": {
+          "n": 48,
+          "mrr": 0.439,
+          "never_found": 0,
+          "median_rank_when_found": 4.0,
+          "worst_rank_when_found": 31,
+          "first_place": 15
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.7,
+          "never_found": 0,
+          "median_rank_when_found": 1.0,
+          "worst_rank_when_found": 20,
+          "first_place": 6
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.312,
+          "never_found": 0,
+          "median_rank_when_found": 3.5,
+          "worst_rank_when_found": 8,
+          "first_place": 0
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.381,
+          "never_found": 0,
+          "median_rank_when_found": 5.0,
+          "worst_rank_when_found": 31,
+          "first_place": 9
+        }
+      },
+      "hybrid": {
+        "all": {
+          "n": 48,
+          "mrr": 0.396,
+          "never_found": 0,
+          "median_rank_when_found": 5.0,
+          "worst_rank_when_found": 43,
+          "first_place": 14
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.186,
+          "never_found": 0,
+          "median_rank_when_found": 12.0,
+          "worst_rank_when_found": 28,
+          "first_place": 1
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.449,
+          "never_found": 0,
+          "median_rank_when_found": 4.0,
+          "worst_rank_when_found": 13,
+          "first_place": 2
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.452,
+          "never_found": 0,
+          "median_rank_when_found": 4.0,
+          "worst_rank_when_found": 43,
+          "first_place": 11
+        }
+      }
+    },
+    "gte-modernbert-8192": {
+      "model_id": "Alibaba-NLP/gte-modernbert-base",
+      "dimension": 768,
+      "window": 8192,
+      "vector_mb": 198,
+      "query_ms_cpu_median": 142.4,
+      "dense": {
+        "all": {
+          "n": 48,
+          "mrr": 0.468,
+          "never_found": 0,
+          "median_rank_when_found": 3.0,
+          "worst_rank_when_found": 54,
+          "first_place": 14
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.582,
+          "never_found": 0,
+          "median_rank_when_found": 2.0,
+          "worst_rank_when_found": 11,
+          "first_place": 4
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.597,
+          "never_found": 0,
+          "median_rank_when_found": 2.0,
+          "worst_rank_when_found": 4,
+          "first_place": 2
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.408,
+          "never_found": 0,
+          "median_rank_when_found": 4.0,
+          "worst_rank_when_found": 54,
+          "first_place": 8
+        }
+      },
+      "hybrid": {
+        "all": {
+          "n": 48,
+          "mrr": 0.376,
+          "never_found": 0,
+          "median_rank_when_found": 4.0,
+          "worst_rank_when_found": 55,
+          "first_place": 9
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.201,
+          "never_found": 0,
+          "median_rank_when_found": 12.5,
+          "worst_rank_when_found": 35,
+          "first_place": 1
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.389,
+          "never_found": 0,
+          "median_rank_when_found": 4.0,
+          "worst_rank_when_found": 18,
+          "first_place": 1
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.429,
+          "never_found": 0,
+          "median_rank_when_found": 3.0,
+          "worst_rank_when_found": 55,
+          "first_place": 7
+        }
+      }
+    },
+    "qwen3-0.6b-1024": {
+      "model_id": "Qwen/Qwen3-Embedding-0.6B",
+      "dimension": 1024,
+      "window": 1024,
+      "vector_mb": 265,
+      "query_ms_cpu_median": 593.1,
+      "dense": {
+        "all": {
+          "n": 48,
+          "mrr": 0.655,
+          "never_found": 0,
+          "median_rank_when_found": 2.0,
+          "worst_rank_when_found": 20,
+          "first_place": 23
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.538,
+          "never_found": 0,
+          "median_rank_when_found": 2.5,
+          "worst_rank_when_found": 12,
+          "first_place": 4
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.917,
+          "never_found": 0,
+          "median_rank_when_found": 1.0,
+          "worst_rank_when_found": 2,
+          "first_place": 5
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.642,
+          "never_found": 0,
+          "median_rank_when_found": 2.0,
+          "worst_rank_when_found": 20,
+          "first_place": 14
+        }
+      },
+      "hybrid": {
+        "all": {
+          "n": 48,
+          "mrr": 0.436,
+          "never_found": 0,
+          "median_rank_when_found": 3.0,
+          "worst_rank_when_found": 45,
+          "first_place": 12
+        },
+        "paraphrase": {
+          "n": 10,
+          "mrr": 0.183,
+          "never_found": 0,
+          "median_rank_when_found": 13.0,
+          "worst_rank_when_found": 35,
+          "first_place": 1
+        },
+        "trap": {
+          "n": 6,
+          "mrr": 0.371,
+          "never_found": 0,
+          "median_rank_when_found": 4.0,
+          "worst_rank_when_found": 20,
+          "first_place": 1
+        },
+        "literal": {
+          "n": 32,
+          "mrr": 0.527,
+          "never_found": 0,
+          "median_rank_when_found": 2.0,
+          "worst_rank_when_found": 45,
+          "first_place": 10
+        }
+      }
+    }
+  }
+}

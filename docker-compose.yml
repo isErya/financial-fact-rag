@@ -20,12 +20,18 @@ x-shared-env: &shared-env
   COMPANIES_FILE: /app/service/companies.yaml
   FIXTURES_DIR: /app/eval/fixtures
   INDEX_DIR: /index
-  # DENSE=1 embeds every chunk at build time (tens of minutes on a laptop
-  # CPU for the full corpus); the default index is lexical only.
-  DENSE: ${DENSE:-0}
+  # Dense retrieval is the default. Building the vectors needs an NVIDIA GPU:
+  # 77 s for the full corpus on an RTX 5080 against about 9 hours on a laptop
+  # CPU. Set DENSE=0 for a lexical-only index that builds in about two minutes
+  # anywhere; the answers still cite their sources, they are just retrieved by
+  # keyword. See "Requirements" in the README.
+  DENSE: ${DENSE:-1}
+  # Dense alone, not fused with the lexical ranking. Fusing measured worse on
+  # questions phrased in the reader's own words; eval/notes.md carries the run.
+  SEARCH_MODE: ${SEARCH_MODE:-dense}
   # The embedding model baked into the image at build time. Changing this
   # at run time needs a rebuild, since the runtime never downloads.
-  EMBED_MODEL: ${EMBED_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+  EMBED_MODEL: ${EMBED_MODEL:-BAAI/bge-base-en-v1.5}
   FASTEMBED_CACHE_PATH: /app/models
   # "fake" answers from stored fixtures or a stand-in reply and needs no
   # key; "anthropic" is the one API backend and reads ANTHROPIC_API_KEY.
@@ -40,16 +46,28 @@ services:
   # source changed. That failure is silent: the stack comes up healthy and
   # serves whatever code was compiled in last time. With this set, a plain
   # `up` rebuilds when the source changed and cache-hits when it did not.
+  # Builds the index on the GPU. Needs the NVIDIA container toolkit on the
+  # host; measured at 77 s for the full corpus on an RTX 5080. It refuses
+  # to start a CPU build rather than silently taking nine hours.
   indexer:
     build:
       context: .
-      target: runtime
+      target: indexer
     pull_policy: build
-    command: python index.py build
-    environment: *shared-env
+    environment:
+      <<: *shared-env
+      EMBED_DEVICE: cuda
+      EMBED_WORKERS: "1"
     volumes:
       - index_data:/index
     restart: "no"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
   web:
     build:
@@ -89,6 +107,17 @@ services:
       context: .
       target: test
     pull_policy: build
+    environment:
+      <<: *shared-env
+      EMBED_DEVICE: cuda
+      EMBED_WORKERS: "1"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
 
 volumes:
   index_data:

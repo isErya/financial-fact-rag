@@ -3,163 +3,442 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>filing desk</title>
+<title>financial facts</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="/static/tokens.css">
 <link rel="stylesheet" href="/static/bauhaus.css">
+<link rel="preload" as="font" type="font/woff2" href="/static/fonts/Montserrat-800.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/static/fonts/Montserrat-400.woff2" crossorigin>
 <style>
-/* Page-local rules on top of the Bauhaus system. Everything model- or
+/* Page-local rules on top of the Bauhaus system. tokens.css and bauhaus.css
+   are house files and are never edited from here. Everything model- or
    filing-derived on this page is inserted with textContent by app.js. */
-/* Before any question is asked the page is shorter than most viewports;
-   the footer sits at the bottom edge so the cream below it is not read as
-   a missing band. */
-body.bh { min-height: 100vh; display: flex; flex-direction: column; }
-body.bh > .bh-footer { margin-top: auto; }
-.fd-lede { max-width: 720px; margin: 14px 0 22px; font-size: 17px; }
-.fd-ask .bh-textarea { background: var(--bh-card-on-paper); color: var(--bh-ink); min-height: 96px; resize: vertical; }
-.fd-ask .bh-callout, .bh-band--ink .bh-card { color: var(--bh-ink); }
-.fd-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; margin-top: 14px; }
-.fd-chips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
-.fd-chips .bh-btn { font-size: 11px; padding: 10px 14px; text-transform: none; letter-spacing: 0.02em; text-align: left; }
-.fd-stack > * + * { margin-top: 16px; }
-.fd-banner { margin: 0 0 18px; }
-.fd-status { font: 600 var(--bh-size-label) / 1 var(--bh-label); letter-spacing: var(--bh-track-label); text-transform: uppercase; margin-top: 14px; min-height: 14px; }
-.fd-band-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; }
-.fd-band-head .bh-h2 { margin-bottom: 18px; }
-.fd-scope-line { margin: 0 0 18px; }
-.fd-companies { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
-.fd-company { background: var(--bh-card-on-paper); padding: 18px 20px; }
-.fd-company-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.fd-company-name { font: 800 18px / 1.1 var(--bh-display); letter-spacing: -0.02em; text-transform: lowercase; }
-.fd-remove { margin-left: auto; font-size: 11px; padding: 8px 12px; }
-.fd-filings { list-style: none; padding: 0; margin: 12px 0 0; font-size: var(--bh-size-small); }
-.fd-filings li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid var(--bh-hairline); }
-.fd-sections { margin-top: 18px; font-size: var(--bh-size-small); }
-.fd-notes { margin: 12px 0 0; padding-left: 18px; font-size: var(--bh-size-small); color: var(--bh-muted); }
-.fd-pre { white-space: pre-wrap; font-family: var(--bh-mono); font-size: 13px; line-height: 1.55; margin: 8px 0 0; }
-.fd-sentence { margin: 0 0 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 17px; }
+
+/* The three house faces are bundled as same-origin subsets rather than
+   assumed present: Montserrat, Jost and JetBrains Mono are installed on the
+   machine this was built on and on almost no client laptop, and without
+   these files the whole page falls back to Arial with a synthesized bold.
+   font-display: block because a flash of Arial on a projector is worse than
+   waiting 100 ms for a 10 KB same-origin file. */
+@font-face { font-family: "Montserrat"; src: url("/static/fonts/Montserrat-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+@font-face { font-family: "Montserrat"; src: url("/static/fonts/Montserrat-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "Montserrat"; src: url("/static/fonts/Montserrat-800.woff2") format("woff2"); font-weight: 800; font-style: normal; font-display: block; }
+@font-face { font-family: "Jost"; src: url("/static/fonts/Jost-600.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: block; }
+@font-face { font-family: "JetBrains Mono"; src: url("/static/fonts/JetBrainsMono-400.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: block; }
+
+/* border-box makes --bh-max: 1280px actually mean 1280px and stops the
+   textarea's own padding pushing it past the column it sits in.
+   The body margin reset removes the cream frame that otherwise runs around
+   every full-bleed navy band. */
+*, *::before, *::after { box-sizing: border-box; }
+body.bh { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+img, svg { max-width: 100%; }
+
+:root {
+  /* type scale: one step per role, no clamp except the masthead */
+  --fd-masthead: clamp(46px, 6vw, 84px);
+  --fd-title: 34px;
+  --fd-entity: 23px;
+  --fd-standfirst: 21px;
+  --fd-read: 17px;
+  --fd-body: 15px;
+  --fd-small: 13px;
+  --fd-micro: 12px;
+  --fd-label: 11px;
+
+  /* measures, stated in px, targeting 58-71 characters at Montserrat's
+     0.509em average advance */
+  --fd-col-w: 640px;
+  --fd-measure-21: 620px;
+  --fd-measure-17: 600px;
+  --fd-measure-15: 540px;
+  --fd-measure-13: 460px;
+
+  --fd-rail-w: 176px;
+  --fd-gutter: 40px;
+
+  /* Every margin, padding, gap and row-gap on this page is one of these
+     eight values. Nothing else, so the page keeps one repeating interval. */
+  --fd-1: 8px; --fd-2: 16px; --fd-3: 24px; --fd-4: 32px;
+  --fd-5: 40px; --fd-6: 56px; --fd-7: 80px; --fd-8: 120px;
+
+  /* Measured against the cream #f0e8d8: 11.81:1, 3.29:1 and 3.60:1. The
+     item separator is deliberately not a hairline; the house hairline
+     measures 1.52:1 and disappears on a projector. */
+  --fd-rule-hard: 2px solid var(--bh-ink);
+  --fd-rule-soft: 1px solid rgba(21, 42, 73, 0.55);
+  --fd-rule-ink: 2px solid rgba(240, 232, 216, 0.45);
+}
+
+/* --- the document grid ------------------------------------------------- */
+/* Two tracks that carry the page: a 176px margin for every label, numeral
+   and raw value, and a 640px measure that carries only prose. The third
+   track is empty on reading rows and is claimed by .fd-wide for tables. */
+.fd-grid { display: grid; grid-template-columns: var(--fd-rail-w) minmax(0, var(--fd-col-w)) minmax(0, 1fr); column-gap: var(--fd-gutter); align-items: start; }
+.fd-grid > .fd-rail { grid-column: 1; }
+.fd-grid > .fd-col { grid-column: 2; }
+.fd-grid > .fd-wide { grid-column: 2 / 4; }
+.fd-grid > .fd-side { grid-column: 3; }
+.fd-grid + .fd-grid { margin-top: var(--fd-5); }
+.fd-grid + .fd-ledger, .fd-grid + .fd-claims { margin-top: var(--fd-3); }
+.fd-ledger + .fd-grid, .fd-claims + .fd-grid { margin-top: var(--fd-5); }
+
+/* 3px lines the rail's 11px caps up with the first line of 15px body text
+   beside it. */
+.fd-rail { padding-top: 3px; }
+.fd-label { display: block; font: 600 var(--fd-label)/1.45 var(--bh-label); letter-spacing: var(--bh-track-label); text-transform: uppercase; color: var(--bh-ink); margin: 0 0 var(--fd-1); }
+.fd-label--muted { color: var(--bh-muted); }
+/* Every raw code, enum, array, multiplier, timing and id on the page lands
+   here: 12px mono in the margin, nothing deleted. */
+.fd-record { font: 400 var(--fd-micro)/1.6 var(--bh-mono); color: var(--bh-muted); margin: var(--fd-1) 0 0; word-break: break-word; }
+
+/* --- section seams ------------------------------------------------------ */
+/* Sections 02-05 are all cream, so the seam is a rule and a hanging numeral
+   rather than a change of fill. */
+.fd-rule { border: 0; border-top: var(--fd-rule-hard); margin: 0 0 var(--fd-4); }
+.fd-rule--ink { border-top: var(--fd-rule-ink); }/* Applied alongside .bh-h2 so the house family, weight, tracking, lowercase
+   and red dot all come from the system; only the clamp is replaced. */
+.fd-sec-title { font-size: var(--fd-title) !important; line-height: 1.0; margin: 0 0 var(--fd-4); }
+
+.bh-band { padding: var(--fd-7) 0 0; }
+#method-band { padding-bottom: var(--fd-7); }
+#sources-band, #answer-band, #scope-band, #method-band { background: var(--bh-paper); color: var(--bh-ink); }
+
+/* A callout at the house card fill measures 1.13:1 against cream and is not
+   visible; the bar and the spacing carry the separation instead. */
+.bh-callout { background: transparent; border-left: 6px solid var(--bh-ink); padding: 0 0 0 var(--fd-3); }
+.bh-callout--warn { border-left-color: var(--bh-ink); }
+.bh-callout--alert { border-left-color: var(--bh-accent); }
+
+/* --- state 1: the cover ------------------------------------------------- */
+/* Surplus viewport height becomes cover margin instead of an orphan cream
+   stripe above the footer, so the navy sheet always reaches the footer. */
+.fd-cover { display: flex; flex-direction: column; flex: 1 0 auto; padding: var(--fd-5) 0 var(--fd-4); }
+.fd-cover-inner { display: flex; flex-direction: column; justify-content: space-between; flex: 1 0 auto; gap: var(--fd-4); }
+.fd-cover .fd-rule, .fd-cover .fd-sec-title { margin-bottom: var(--fd-3); }
+.fd-wordmark { font-size: var(--fd-masthead) !important; margin: 0 0 var(--fd-2); }
+.fd-cover .fd-label { color: var(--bh-paper); }
+.fd-cover #foot-index, .fd-cover #foot-model { font: 400 var(--fd-small)/1.6 var(--bh-body); color: var(--bh-muted-on-ink); }
+.fd-lede { font: 400 var(--fd-standfirst)/1.5 var(--bh-body); max-width: var(--fd-measure-21); margin: 0 0 var(--fd-2); color: var(--bh-paper); }
+.fd-banner { margin: var(--fd-3) 0 0; max-width: var(--fd-measure-17); }
+.fd-cover .bh-callout { border-left-color: var(--bh-paper); color: var(--bh-paper); }
+.fd-cover .bh-callout--alert { border-left-color: var(--bh-accent); }
+.fd-cover .fd-record { color: var(--bh-muted-on-ink); }
+
+#cover-stats { display: flex; flex-direction: column; gap: var(--fd-2); }
+.fd-stats--record { display: flex; flex-wrap: wrap; gap: 0 var(--fd-6); margin: var(--fd-2) 0 var(--fd-4); }
+.fd-cover .bh-stat-value { color: var(--bh-paper); }
+.fd-cover .bh-stat-label { color: var(--bh-muted-on-ink); }
+.bh-stat-value { font-variant-numeric: tabular-nums; }
+
+/* Four ruled rows with a hanging numeral, so the panel's entry point reads
+   as four choices and not as one underlined paragraph. */
+.fd-examples { list-style: none; padding: 0; margin: 0 0 var(--fd-3); }
+.fd-examples li { border-top: var(--fd-rule-ink); }
+.fd-examples li:last-child { border-bottom: var(--fd-rule-ink); }
+.fd-example { all: unset; cursor: pointer; display: block; padding: var(--fd-1) 0; width: 100%; max-width: var(--fd-measure-17); font: 400 var(--fd-read)/1.45 var(--bh-body); color: var(--bh-paper); }
+.fd-example:hover > span { text-decoration: underline; text-decoration-color: var(--bh-accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.fd-example:focus-visible { outline: 2px solid var(--bh-accent); outline-offset: 2px; }
+
+.fd-question { max-width: var(--fd-col-w); min-height: 96px; resize: vertical; background: var(--bh-card-on-paper); color: var(--bh-ink); margin: var(--fd-1) 0 var(--fd-2); }
+.fd-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--fd-3); margin: 0; }
+/* The status sits beside the button rather than reserving an empty strip
+   under it, and collapses when there is nothing to say. */
+.fd-status { display: flex; align-items: center; gap: var(--fd-1); font: 600 var(--fd-small)/1.4 var(--bh-label); letter-spacing: 0.06em; color: var(--bh-muted-on-ink); }
+.fd-status:empty { display: none; }
+.fd-status::before { content: ""; width: 10px; height: 10px; flex: none; background: var(--bh-paper); }
+
+/* Rest and hover are both 11.81:1; the hover shift is a red rule under the
+   button, never red behind the label. The explicit disabled:hover rule
+   closes the system's own guard, which a page-level hover otherwise wins. */
+.fd-cover .bh-btn { background: var(--bh-paper); color: var(--bh-ink); border-bottom: 4px solid transparent; padding: var(--fd-2) var(--fd-3); }
+.fd-cover .bh-btn:hover { background: var(--bh-card-on-paper); color: var(--bh-ink); border-bottom-color: var(--bh-accent); }
+.fd-cover .bh-btn:disabled { opacity: 1; background: rgba(240, 232, 216, 0.55); color: var(--bh-ink); cursor: not-allowed; }
+.fd-cover .bh-btn:disabled:hover { background: rgba(240, 232, 216, 0.55); border-bottom-color: transparent; }
+
+/* --- state 2: filings read ---------------------------------------------- */
+.fd-standfirst { font: 600 var(--fd-standfirst)/1.5 var(--bh-body); max-width: var(--fd-measure-21); margin: 0 0 var(--fd-5); }
+/* A break in comparability is the one fact a CFO would stop the meeting
+   over, so it is set above the ledger at reading size with a red bar. */
+.fd-caution { font: 600 var(--fd-read)/1.5 var(--bh-body); max-width: var(--fd-measure-17); margin: 0 0 var(--fd-4); border-left: 6px solid var(--bh-accent); padding-left: var(--fd-3); }
+.fd-note { font: 400 var(--fd-small)/1.6 var(--bh-body); max-width: var(--fd-measure-13); color: rgba(21, 42, 73, 0.8); margin: 0; }
+.fd-note-read { font: 400 var(--fd-read)/1.55 var(--bh-body); max-width: var(--fd-measure-17); margin: 0; }
+.fd-progress { font: 600 var(--fd-small)/1.4 var(--bh-label); letter-spacing: 0.06em; color: var(--bh-accent-text); margin-top: var(--fd-2); }
+.fd-progress:empty { display: none; }
+
+/* One card per company. The tracks are capped rather than free so a single
+   company does not stretch across 1280px of empty fill, and a fifth card
+   starts a new row instead of being orphaned mid-row. */
+.fd-ledger { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--fd-3); align-items: start; }
+/* Capped so one company does not stretch a card across the whole
+   measure; the track still flexes so three or five pack evenly. */
+.fd-company { background: var(--bh-card-on-paper); padding: var(--fd-3) var(--fd-3) var(--fd-4); max-width: 420px; }
+.fd-company-rail { display: flex; flex-wrap: wrap; gap: var(--fd-1); align-items: center; margin-bottom: var(--fd-2); }
+/* A registrant name is filing-derived data, not display copy, so the house
+   lowercase rule does not reach it. Do not add text-transform here. */
+.fd-entity { font: 800 var(--fd-entity)/1.15 var(--bh-display); letter-spacing: -0.02em; text-transform: none; margin: 0 0 var(--fd-2); }
+.fd-filings { list-style: none; padding: 0; margin: 0; max-width: 760px; }
+.fd-filing-row { padding: var(--fd-2) 0; border-top: var(--fd-rule-soft); }
+.fd-filing-row:first-child { border-top: 0; }
+.fd-filing-label { font: 400 var(--fd-body)/1.5 var(--bh-body); }
+.fd-filing-label strong { font-weight: 600; }
+.fd-filing-reason { font: 400 var(--fd-small)/1.5 var(--bh-body); color: rgba(21, 42, 73, 0.8); max-width: var(--fd-measure-13); }
+.fd-bucket-group { margin-top: var(--fd-3); }
+.fd-bucket-group:first-of-type { margin-top: var(--fd-2); }
+
+/* --- state 6: the refusals ---------------------------------------------- */
+.fd-refusal { font: 600 24px/1.35 var(--bh-body); max-width: var(--fd-measure-21); margin: 0 0 var(--fd-3); border-left: 6px solid var(--bh-accent); padding-left: var(--fd-3); }
+.fd-refusal-detail { font: 400 var(--fd-read)/1.55 var(--bh-body); max-width: var(--fd-measure-17); margin: 0 0 var(--fd-5); }
+.fd-coverage { display: grid; grid-template-columns: repeat(auto-fill, minmax(272px, 1fr)); gap: 0 var(--fd-gutter); border-top: var(--fd-rule-hard); }
+.fd-coverage-cell { padding: var(--fd-2) 0; border-bottom: var(--fd-rule-soft); }
+.fd-coverage-name { font: 400 var(--fd-body)/1.4 var(--bh-body); }
+.fd-coverage-name strong { font-weight: 600; }
+.fd-coverage-span { font: 400 var(--fd-micro)/1.5 var(--bh-body); color: var(--bh-muted); margin-top: 2px; }
+.fd-periods { display: flex; flex-wrap: wrap; gap: var(--fd-1); margin-top: var(--fd-2); }
+
+/* --- state 3: the brief -------------------------------------------------- */
+.fd-sentence { font: 400 var(--fd-read)/1.55 var(--bh-body); max-width: var(--fd-measure-17); margin: 0 0 var(--fd-3); }
+.fd-sentence:first-child { font-size: var(--fd-standfirst); font-weight: 600; max-width: var(--fd-measure-21); }
 .fd-sentence.fd-dim { color: var(--bh-muted); }
-.fd-chip { all: unset; cursor: pointer; display: inline-block; font: 600 11px / 1 var(--bh-label); letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 9px; background: rgba(21, 42, 73, 0.1); color: var(--bh-ink); }
-.fd-chip:hover { background: var(--bh-ink); color: var(--bh-paper); }
+/* Every figure in the brief is 600 with tabular numerals, in a sentence, in
+   a cell and in a finding, so a figure is the same object everywhere. */
+.fd-fig { font-weight: 600; font-variant-numeric: tabular-nums; }
+.fd-list { margin: 0; padding-left: var(--fd-3); font-size: var(--fd-read); max-width: var(--fd-measure-17); }
+.fd-list li + li { margin-top: var(--fd-1); }
+.fd-h3 { font: 600 var(--fd-label)/1.45 var(--bh-label); letter-spacing: var(--bh-track-label); text-transform: uppercase; margin: 0 0 var(--fd-1); }
+
+/* The 2px right edge tells the reader the table continues before they read
+   anything; the table is width:100% so the edge is always flush to it. */
+.fd-table-wrap { overflow-x: auto; margin: 0 0 var(--fd-5); border-right: 2px solid var(--bh-ink); }
+.fd-table { width: 100%; border-collapse: collapse; font-size: var(--fd-read); }
+.fd-table th { font: 600 var(--fd-small)/1.3 var(--bh-label); letter-spacing: 0.02em; text-transform: none; text-align: left; background: var(--bh-ink); color: var(--bh-paper); padding: var(--fd-2); vertical-align: bottom; }
+.fd-table th .fd-th-sub { display: block; font: 400 var(--fd-label)/1.4 var(--bh-body); letter-spacing: 0; color: var(--bh-muted-on-ink); margin-top: 4px; }
+.fd-table td { padding: var(--fd-2); border-bottom: var(--fd-rule-soft); vertical-align: top; }
+.fd-table th[scope="row"] { background: transparent; color: var(--bh-ink); font: 600 var(--fd-read)/1.4 var(--bh-body); text-transform: none; letter-spacing: 0; padding-left: 0; }
+.fd-table .fd-row-meta { display: block; font: 400 var(--fd-micro)/1.5 var(--bh-body); color: rgba(21, 42, 73, 0.8); margin-top: 4px; }
+.fd-table .fd-row-meta--break { color: var(--bh-ink); font-weight: 600; }
+.fd-table th[scope="row"].fd-row-break { border-left: 4px solid var(--bh-accent); padding-left: var(--fd-2); }
+.fd-table td.bh-num { font-family: var(--bh-body); font-weight: 600; font-variant-numeric: tabular-nums; text-align: left; font-size: var(--fd-read); }
+.fd-table tr:hover td { background: transparent; }
+/* On a row whose periods or units disagree, each cell states its own, so
+   the reader can see which company is the odd one out. */
+.fd-cell-meta { display: block; font: 400 var(--fd-micro)/1.5 var(--bh-body); color: rgba(21, 42, 73, 0.8); margin-top: 4px; font-weight: 400; }
+
+/* The claims list carries its own copy of the two-track grid so each
+   finding's row id lands in the same 176px margin as every other label on
+   the page, instead of a second margin indented inside the measure. */
+.fd-claims { list-style: none; padding: 0; margin: 0; border-top: var(--fd-rule-hard); }
+.fd-claim { display: grid; grid-template-columns: var(--fd-rail-w) minmax(0, var(--fd-col-w)) minmax(0, 1fr); column-gap: var(--fd-gutter); align-items: start; padding: var(--fd-4) 0; border-bottom: var(--fd-rule-soft); border-left: 4px solid transparent; margin-left: -4px; scroll-margin-top: 64px; }
+.fd-claim--break { border-left-color: var(--bh-accent); }
+.fd-claim-text { font: 400 var(--fd-read)/1.55 var(--bh-body); max-width: var(--fd-measure-17); margin: 0 0 var(--fd-1); }
+.fd-claim-meta { font: 600 var(--fd-micro)/1.5 var(--bh-body); color: rgba(21, 42, 73, 0.8); margin: 0 0 var(--fd-2); }
+.fd-claim-quote { font: 400 var(--fd-body)/1.6 var(--bh-body); max-width: var(--fd-measure-15); margin: 0 0 var(--fd-2); border-left: 2px solid var(--bh-ink); padding-left: var(--fd-2); }
+.fd-badges { display: flex; flex-wrap: wrap; gap: var(--fd-1); }
+
+/* A navy pill is the only solid fill among the tinted status badges, so
+   "this one is a link" is carried by the fill and not by hope. 26px tall
+   clears the 24px target minimum on its own. */
+.fd-chip { all: unset; cursor: pointer; display: inline-block; font: 600 var(--fd-micro)/1 var(--bh-label); letter-spacing: 0.08em; text-transform: uppercase; padding: 7px 12px; background: var(--bh-ink); color: var(--bh-paper); border-bottom: 3px solid transparent; vertical-align: baseline; }
+.fd-chip:hover { border-bottom-color: var(--bh-accent); }
 .fd-chip:focus-visible { outline: 2px solid var(--bh-accent); outline-offset: 2px; }
-.bh-band--ink .fd-chip { background: rgba(240, 232, 216, 0.16); color: var(--bh-paper); }
-.bh-band--ink .fd-chip:hover { background: var(--bh-paper); color: var(--bh-ink); }
-.bh .bh-badge { background: rgba(21, 42, 73, 0.08); }
-.bh .bh-badge--solid { background: var(--bh-ink); }
-.bh .bh-badge--warn { background: rgba(21, 42, 73, 0.2); }
-/* Red badge text sits on a red tint and always carries its wording. */
-.bh .bh-badge--alert { background: rgba(226, 66, 41, 0.12); color: var(--bh-accent-text); }
-.bh-band--ink .bh-badge { background: rgba(240, 232, 216, 0.16); color: var(--bh-paper); }
-.bh-band--ink .bh-badge--solid { background: var(--bh-paper); color: var(--bh-ink); }
-/* Source cards are cream inside the navy band, so their badges take the
-   on-cream colors again; the on-navy tint would leave cream text on cream. */
-.bh-band--ink .bh-card .bh-badge { background: rgba(21, 42, 73, 0.1); color: var(--bh-ink); }
-.bh-band--ink .bh-card .bh-badge--solid { background: var(--bh-ink); color: var(--bh-paper); }
-.bh-band--ink .bh-card .bh-badge--warn { background: rgba(21, 42, 73, 0.2); color: var(--bh-ink); }
-.bh-band--ink .bh-card .bh-badge--alert { background: rgba(226, 66, 41, 0.12); color: var(--bh-accent-text); }
-.fd-table-wrap { overflow-x: auto; margin: 8px 0 18px; }
-.fd-table-wrap td .fd-chip { margin-left: 8px; }
-.fd-cell { cursor: pointer; }
-.fd-claims { list-style: none; padding: 0; margin: 0; }
-.fd-claim { padding: 14px 0; border-top: 1px solid var(--bh-hairline); }
-.fd-claim-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 6px; }
-.fd-claim-text { margin: 0 0 8px; }
-.fd-claim-quote { margin: 0 0 8px; font-size: var(--bh-size-small); color: var(--bh-muted); }
-.fd-badges { display: flex; flex-wrap: wrap; gap: 6px; }
-.fd-details { margin-top: 20px; }
-.fd-details h3 { margin: 22px 0 8px; }
-.fd-stat { font-family: var(--bh-mono); font-size: 13px; line-height: 1.6; }
-.fd-meter-line { display: flex; align-items: center; gap: 12px; margin: 8px 0 14px; font-size: var(--bh-size-small); }
-.fd-meter-line .bh-meter { flex: 1; }
-.fd-request pre { max-height: 360px; overflow: auto; white-space: pre-wrap; }
-.fd-group { margin-top: 28px; }
-.fd-group .bh-h3 { margin-bottom: 12px; }
-.fd-cards { display: grid; gap: 14px; }
-.fd-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; font-size: var(--bh-size-small); }
-.fd-card-head .bh-link { margin-left: auto; }
-.fd-card-meta { font-size: var(--bh-size-small); color: var(--bh-muted); margin-bottom: 8px; }
-.fd-source-text { white-space: pre-wrap; word-break: break-word; margin: 0; max-height: 420px; overflow: auto; }
-/* Highlights inside the navy text block: a cream fill for the quote, a
-   cream underline for the matched column. Never red, which is an accent. */
+.fd-table td .fd-chip { margin-left: var(--fd-1); }
+
+/* Three levels of check, none under 4.5:1, and the failure is the loudest.
+   Red appears only as the 4px bar, never behind the words. */
+.fd-check { display: inline-block; font: 600 var(--fd-label)/1.3 var(--bh-label); letter-spacing: 0.06em; text-transform: none; padding: 5px 10px; }
+.fd-check--ok { background: rgba(21, 42, 73, 0.08); color: var(--bh-ink); }
+.fd-check--note { background: rgba(21, 42, 73, 0.22); color: var(--bh-ink); }
+.fd-check--flag { background: var(--bh-ink); color: var(--bh-paper); font-size: var(--fd-micro); border-left: 4px solid var(--bh-accent); padding-left: var(--fd-1); }
+
+/* --- state 5: the excerpts ---------------------------------------------- */
+.fd-source-group { margin-top: var(--fd-6); }
+.fd-source-group > .fd-rule { margin-bottom: var(--fd-3); }
+.fd-source-entity { font: 800 var(--fd-entity)/1.15 var(--bh-display); letter-spacing: -0.02em; text-transform: none; margin: 0 0 var(--fd-3); display: flex; align-items: center; gap: var(--fd-2); }
+.fd-source { display: grid; grid-template-columns: var(--fd-rail-w) minmax(0, 1fr); column-gap: var(--fd-gutter); padding: var(--fd-4) 0; border-top: var(--fd-rule-soft); border-left: 6px solid transparent; margin-left: -6px; scroll-margin-top: 64px; }
+.fd-source-rail { font: 400 var(--fd-small)/1.6 var(--bh-body); color: rgba(21, 42, 73, 0.8); }
+.fd-source-cid { display: inline-block; font: 600 var(--fd-micro)/1 var(--bh-label); letter-spacing: 0.08em; background: var(--bh-ink); color: var(--bh-paper); padding: 5px 9px; margin-bottom: var(--fd-1); }
+.fd-source-tag { display: block; font: 600 var(--fd-label)/1.5 var(--bh-label); letter-spacing: var(--bh-track-label); text-transform: uppercase; color: var(--bh-muted); }
+.fd-source-line { display: block; margin-top: var(--fd-1); }
+.fd-source-text { font: 400 var(--fd-body)/1.62 var(--bh-body); color: var(--bh-ink); background: transparent; max-width: var(--fd-measure-15); white-space: pre-wrap; margin: 0; padding: 0; max-height: none; overflow: visible; }
+/* A table excerpt keeps its columns aligned, so it stays mono and scrolls
+   sideways inside its own row rather than rewrapping into nonsense. */
+.fd-source-text--table { font-family: var(--bh-mono); font-size: var(--fd-small); line-height: 1.6; white-space: pre; max-width: 100%; overflow-x: auto; }
+.fd-source-facts { display: flex; flex-wrap: wrap; gap: var(--fd-1); margin-top: var(--fd-2); }
+/* The quoted passage inverts: a solid navy block with cream text inside a
+   cream page, 11.81:1 against everything around it. The matched column
+   stays a line rather than a fill, so the two never read as one mark. */
 .fd-source-text mark { color: inherit; background: transparent; }
-.fd-source-text mark.fd-quote { background: rgba(240, 232, 216, 0.3); }
-.fd-source-text mark.fd-col { box-shadow: inset 0 -2px 0 var(--bh-paper); }
-.fd-legend { font-size: var(--bh-size-label); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--bh-label); font-weight: 600; margin-top: 6px; color: var(--bh-muted); }
-.fd-flash { animation: fd-flash 1.4s var(--bh-ease) 1; }
-@keyframes fd-flash { 0% { box-shadow: 0 0 0 6px var(--bh-accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
-.fd-foot { display: flex; flex-wrap: wrap; gap: 18px; }
-@media (max-width: 720px) { .fd-sentence { font-size: 16px; } }
+.fd-source-text mark.fd-quote { background: var(--bh-ink); color: var(--bh-paper); padding: 2px 0; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.fd-source-text mark.fd-col { text-decoration: underline; text-decoration-color: var(--bh-accent); text-decoration-thickness: 3px; text-underline-offset: 3px; }
+.fd-cited-mark { display: block; font: 600 var(--fd-label)/1.4 var(--bh-label); letter-spacing: var(--bh-track-label); color: var(--bh-ink); margin-bottom: var(--fd-1); }
+/* The landed excerpt keeps its marker instead of flashing for 1.4 s: a
+   panel watching a projector needs longer than that to refocus, and the
+   animation does not run at all under prefers-reduced-motion. */
+.fd-source.fd-current { border-left-color: var(--bh-accent); }
+.fd-source.fd-current .fd-source-rail::before { content: "CITED HERE"; display: block; font: 600 var(--fd-label)/1.4 var(--bh-label); letter-spacing: var(--bh-track-label); color: var(--bh-accent-text); margin-bottom: var(--fd-1); }
+
+/* --- section 05: working papers ----------------------------------------- */
+.fd-meter { height: 14px; background: transparent; border-bottom: 2px solid var(--bh-ink); max-width: var(--fd-col-w); margin: var(--fd-2) 0; }
+.fd-meter > span { display: block; height: 12px; background: var(--bh-ink); }
+/* Bounded rather than run to full height: uncapped it adds roughly 11,000px
+   to a page whose length is already the navigation problem. tabindex makes
+   the overflow reachable without a mouse. */
+.fd-request pre { max-height: 60vh; overflow: auto; white-space: pre-wrap; font-size: var(--fd-small); }
+.fd-request pre:focus-visible { outline: 2px solid var(--bh-accent); outline-offset: 2px; }
+
+.bh-footer { padding: var(--fd-5) 0; }
+.fd-colophon { display: flex; flex-wrap: wrap; gap: var(--fd-4); font: 400 var(--fd-micro)/1.6 var(--bh-body); color: var(--bh-muted-on-ink); }
+
+/* --- responsive ---------------------------------------------------------- */
+@media (min-width: 1081px) {
+  /* On a tall row the rail label stays beside the content it labels rather
+     than scrolling off the top of a 3,000px excerpt. */
+  .fd-grid > .fd-rail, .fd-source-rail { position: sticky; top: var(--fd-4); }
+}
+@media (max-width: 1080px) {
+  .fd-grid { grid-template-columns: minmax(0, 1fr); row-gap: var(--fd-2); }
+  .fd-grid > .fd-rail, .fd-grid > .fd-col, .fd-grid > .fd-wide, .fd-grid > .fd-side { grid-column: 1; }
+  .fd-company, .fd-source, .fd-claim { grid-template-columns: minmax(0, 1fr); row-gap: var(--fd-2); }
+  /* Collapsed, the rail becomes a wrapping caption strip above its content,
+     so the machinery is never the first thing read. */
+  .fd-rail, .fd-company-rail { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--fd-1) var(--fd-2); }
+  #cover-stats { flex-direction: row; flex-wrap: wrap; gap: var(--fd-3) var(--fd-5); }
+}
+@media (max-width: 720px) {
+  :root { --fd-title: 28px; --fd-standfirst: 19px; --fd-read: 16px; }
+  .fd-filing-row { grid-template-columns: minmax(0, 1fr); row-gap: 4px; }
+  .fd-table-wrap + .fd-scroll-note { display: block; }
+}
+@media (max-width: 420px) {
+  .fd-coverage { grid-template-columns: 1fr; }
+}
+.fd-scroll-note { display: none; font: 400 var(--fd-micro)/1.5 var(--bh-body); color: var(--bh-muted); margin: calc(-1 * var(--fd-3)) 0 var(--fd-4); }
 </style>
 </head>
 <body class="bh">
 
-<section class="bh-band bh-band--ink fd-ask" id="ask-band">
-  <div class="bh-container">
-    <div class="bh-wordmark">filing desk<span class="bh-dot">.</span></div>
-    <p class="fd-lede">Ask a question about 54 companies' 10-K and 10-Q filings. One model request per answer; every figure links to its source.</p>
-    <div id="index-banner" class="bh-callout bh-callout--alert fd-banner" hidden>
-      <span class="bh-eyebrow">index missing</span>
-      <span id="index-banner-text"></span>
+<section class="bh-band bh-band--ink fd-cover" id="ask-band" aria-labelledby="cover-title">
+  <div class="bh-container fd-cover-inner">
+
+    <header class="fd-masthead">
+      <h1 class="bh-hero fd-wordmark" id="cover-title">financial facts<span class="bh-dot">.</span></h1>
+      <hr class="fd-rule fd-rule--ink">
+      <div class="fd-grid">
+        <div class="fd-rail">
+          <div id="foot-index">loading</div>
+          <div id="foot-model"></div>
+        </div>
+        <div class="fd-col">
+          <p class="fd-lede">Ask a question about the SEC 10-K and 10-Q filings of 54 US public companies. Every figure in the answer links to the passage it came from.</p>
+          <div id="index-banner" class="bh-callout bh-callout--alert fd-banner" hidden>
+            <span class="fd-label">index missing</span>
+            <span id="index-banner-text"></span>
+          </div>
+          <div id="key-banner" class="bh-callout fd-banner" hidden>
+            <span class="fd-label">answer step disabled</span>
+            No API key is configured. The filings read and the excerpts still work; no model request will be made.
+          </div>
+          <div id="replay-banner" class="bh-callout fd-banner" hidden>
+            <span class="fd-label">replayed</span>
+            <span id="replay-banner-text"></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="fd-section-cover">
+      <hr class="fd-rule fd-rule--ink">
+      <div class="fd-grid">
+        <div class="fd-rail">
+        </div>
+        <div class="fd-col">
+          <h2 class="bh-h2 fd-sec-title">the question<span class="bh-dot">.</span></h2>
+          <ul id="examples" class="fd-examples"></ul>
+          <label class="fd-label" for="question">or type your own</label>
+          <textarea id="question" class="bh-textarea fd-question" rows="3" placeholder="Name at least one of the 54 companies. Ctrl+Enter asks."></textarea>
+          <div class="fd-row">
+            <button id="ask" class="bh-btn" type="button">ask</button>
+            <div id="status" class="fd-status" aria-live="polite"></div>
+          </div>
+        </div>
+        <div class="fd-side">
+          <div id="cover-stats"></div>
+        </div>
+      </div>
     </div>
-    <div id="key-banner" class="bh-callout bh-callout--warn fd-banner" hidden>
-      <span class="bh-eyebrow">no api key</span>
-      No API key configured; the interpreted scope and sources still work, the answer step is disabled.
-    </div>
-    <div id="replay-banner" class="bh-callout fd-banner" hidden>
-      <span class="bh-eyebrow">replayed</span>
-      <span id="replay-banner-text"></span>
-    </div>
-    <label class="bh-eyebrow" for="question">question</label>
-    <textarea id="question" class="bh-textarea" rows="3" placeholder="Name at least one company; the corpus holds 54. Ctrl+Enter asks."></textarea>
-    <div class="fd-row">
-      <button id="ask" class="bh-btn" type="button">ask</button>
-      <div id="chips" class="fd-chips"></div>
-    </div>
-    <div id="status" class="fd-status" aria-live="polite"></div>
+
   </div>
 </section>
 
-<section class="bh-band" id="scope-band" hidden>
+
+<section class="bh-band fd-section" id="scope-band" aria-labelledby="scope-title" hidden>
   <div class="bh-container">
-    <span class="bh-eyebrow">what will be read</span>
-    <div class="fd-band-head">
-      <h2 class="bh-h2">interpreted scope<span class="bh-dot">.</span></h2>
-      <div id="progress" class="fd-status" aria-live="polite"></div>
+    <hr class="fd-rule">
+    <div class="fd-grid">
+      <div class="fd-rail">
+        <div id="progress" class="fd-progress" aria-live="off"></div>
+      </div>
+      <div class="fd-col">
+        <h2 class="bh-h2 fd-sec-title" id="scope-title"><span id="scope-title-text">filings read</span><span class="bh-dot">.</span></h2>
+      </div>
     </div>
-    <div id="scope" class="fd-stack"></div>
+    <div id="scope"></div>
   </div>
 </section>
 
-<section class="bh-band" id="answer-band" hidden>
+<section class="bh-band fd-section" id="answer-band" aria-labelledby="answer-title" hidden>
   <div class="bh-container">
-    <span class="bh-eyebrow">answer</span>
-    <h2 class="bh-h2">answer<span class="bh-dot">.</span></h2>
-    <div id="answer" class="fd-stack"></div>
-    <div class="fd-details">
-      <button id="details-toggle" class="bh-btn bh-btn--ghost" type="button" aria-expanded="false" aria-controls="details">details</button>
-      <div id="details" hidden></div>
+    <hr class="fd-rule">
+    <div class="fd-grid">
+      <div class="fd-rail">
+      </div>
+      <div class="fd-col">
+        <h2 class="bh-h2 fd-sec-title" id="answer-title">the brief<span class="bh-dot">.</span></h2>
+      </div>
     </div>
+    <div id="answer"></div>
   </div>
 </section>
 
-<section class="bh-band bh-band--ink" id="sources-band" hidden>
+<section class="bh-band fd-section" id="sources-band" aria-labelledby="sources-title" hidden>
   <div class="bh-container">
-    <span class="bh-eyebrow">sources</span>
-    <h2 class="bh-h2">sources<span class="bh-dot">.</span></h2>
-    <p class="bh-muted">Every excerpt the model reads, in the order it reads them. Highlighted text is a quoted passage; an underlined cell is the column a figure was matched to.</p>
+    <hr class="fd-rule">
+    <div class="fd-grid">
+      <div class="fd-rail">
+      </div>
+      <div class="fd-col">
+        <h2 class="bh-h2 fd-sec-title" id="sources-title">the excerpts<span class="bh-dot">.</span></h2>
+        <p class="fd-note">A passage set in reverse is one the model quoted. A red underline marks the table column a figure was read from. Cited excerpts come first.</p>
+      </div>
+    </div>
     <div id="sources"></div>
   </div>
 </section>
 
+<section class="bh-band fd-section" id="method-band" aria-labelledby="method-title" hidden>
+  <div class="bh-container">
+    <hr class="fd-rule">
+    <div class="fd-grid">
+      <div class="fd-rail">
+      </div>
+      <div class="fd-col">
+        <h2 class="bh-h2 fd-sec-title" id="method-title">working papers<span class="bh-dot">.</span></h2>
+        <p class="fd-note">Everything the system did, in full. Raw values sit in the margin.</p>
+      </div>
+    </div>
+    <div id="details"></div>
+  </div>
+</section>
+
 <footer class="bh-footer">
-  <div class="fd-foot">
-    <span id="foot-index">index: loading</span>
-    <span id="foot-model"></span>
-    <a class="bh-link" href="/health">/health</a>
-    <a class="bh-link" href="/coverage">/coverage</a>
+  <div class="bh-container fd-colophon">
+    <span>financial facts</span>
+    <span>SEC 10-K and 10-Q filings</span>
+    <span class="bh-mono">GET /health</span>
+    <span class="bh-mono">GET /coverage</span>
   </div>
 </footer>
 
-<script src="/static/app.js"></script>
+<script src="/static/app.js?v=20260908f"></script>
 </body>
 </html>

@@ -14,21 +14,38 @@ CORPUS_ZIP = os.environ.get("CORPUS_ZIP", "data/edgar_corpus.zip")
 INDEX_DIR = os.environ.get("INDEX_DIR", "index")
 COMPANIES_FILE = os.environ.get("COMPANIES_FILE", "service/companies.yaml")
 
-# Retrieval settings. DENSE is off by default because a full-corpus dense
-# build takes tens of minutes on a laptop; `index.py build --dense 1` turns
-# it on for one build. The model is fastembed's fp32 MiniLM-L6: 384
-# dimensions, six layers, about 17 chunks per second per process here.
-DENSE = os.environ.get("DENSE", "0")
-EMBED_MODEL = os.environ.get("EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-# The model's tokenizer file truncates at 128 tokens; 256 keeps a table
-# chunk's caption, unit line and header rows ahead of the cut. The header
-# line is embedded first for the same reason.
-EMBED_MAX_TOKENS = 256
+# Retrieval settings. Dense retrieval is the default: measured over the full
+# index on a 48-question set, lexical search never reached the correct passage
+# at all in 7 of them, and on questions phrased in the reader's own words
+# rather than the filing's it reached it in 4 of 10. Those numbers are in
+# eval/notes.md. SEARCH_MODE "dense" is not a fusion: reciprocal rank fusion
+# with the lexical ranking measured worse on exactly those questions, because
+# it averages in a ranking that is close to random there.
+DENSE = os.environ.get("DENSE", "1")
+SEARCH_MODE = os.environ.get("SEARCH_MODE", "dense")
+EMBED_MODEL = os.environ.get("EMBED_MODEL", "BAAI/bge-base-en-v1.5")
+# BGE is asymmetric: the query carries an instruction and the passage does
+# not. The library does not add this, so the query path must, or query and
+# passage vectors come from two different distributions and retrieval
+# degrades with nothing in the logs to say so.
+EMBED_QUERY_PREFIX = os.environ.get(
+    "EMBED_QUERY_PREFIX", "Represent this sentence for searching relevant passages: ")
+# "cpu" or "cuda". The dense build is the only heavy embedding work, and on
+# CPU it takes about nine hours for this corpus against under two minutes on
+# a GPU, so the indexer-gpu service sets this to cuda. Query embedding at
+# request time is 130 ms on CPU and stays there.
+EMBED_DEVICE = os.environ.get("EMBED_DEVICE", "cpu")
+# The model reads 512 tokens. A table chunk's caption, unit line and header
+# rows sit ahead of that cut, and the header line is embedded first.
+EMBED_MAX_TOKENS = 512
 # Sequences per ONNX call. A 256-sequence batch at 512 tokens allocated
 # 9 GB on this host; never raise this above 64.
 EMBED_BATCH = 32
 # Embedding processes; each loads its own copy of the model.
-EMBED_WORKERS = max(1, min(4, (os.cpu_count() or 4) // 4))
+# Overridable because the GPU build wants exactly one: each worker loads its
+# own copy of the model, which on a single GPU is four copies competing for
+# the same device.
+EMBED_WORKERS = int(os.environ.get("EMBED_WORKERS", max(1, min(4, (os.cpu_count() or 4) // 4))))
 # fastembed's model cache. The repo checkout ships the model files here so a
 # dense build never downloads anything.
 FASTEMBED_CACHE = os.environ.get(

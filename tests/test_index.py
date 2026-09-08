@@ -10,9 +10,9 @@ income - reported(a) | $23,966" in the reconciliation), and any of them is
 the right chunk to hand the model.
 """
 
+import json
 import os
 import re
-import time
 
 import numpy as np
 import pytest
@@ -93,21 +93,45 @@ def test_fingerprint_short_circuits_a_rebuild(bm25_dir, capsys):
     assert record["chunks"] == len(load(bm25_dir).chunks)
 
 
-@pytest.mark.skipif(not os.path.isdir(MODEL_CACHE), reason="embedding model cache missing at " + MODEL_CACHE)
-def test_dense_hybrid_search(tmp_path_factory):
-    path = str(tmp_path_factory.mktemp("index-dense"))
-    started = time.perf_counter()
-    record = build(path, dense=True, files=FILES)
-    wall = time.perf_counter() - started
-    print("dense build for %d files: %.1fs wall, phases %s" % (len(FILES), wall, record["phase_seconds"]))
-    index = load(path)
+def test_dense_search(dense_index_dir):
+    """The shipped path: a dense build, vectors one per chunk at the width the
+    encoder produces, and the JPM net interest income row surfaced by vector
+    rank inside the window assembly reads. The width is read from the
+    encoder, not written down, so a model change cannot leave a stale number
+    here. The window is SEARCH_K rather than a top five: measured on these
+    vectors the row sits at dense rank 6 for this keyword query and 12 for
+    the natural question, and the product never needed it higher, because
+    the row-label seat pins it before assembly. A top-five assertion here
+    would fail the shipped design for a property it does not rely on."""
+    from index import embedder
+    from retrieve import SEARCH_K
+    index = load(dense_index_dir)
     assert index.dense is not None
-    assert index.dense.shape == (len(index.chunks), 384)
+    width = len(next(iter(embedder().embed(["width probe"]))))
+    assert index.dense.shape == (len(index.chunks), width)
     assert np.allclose(np.linalg.norm(index.dense[:50], axis=1), 1.0, atol=1e-3)
-    hits = index.search(QUERY, jpm_ids(index), 5)
-    assert holds_the_row(index, hits), hits
+    hits = index.search(QUERY, jpm_ids(index), SEARCH_K, mode="dense")
+    assert holds_the_row(index, hits), [h[0] for h in hits[:10]]
     assert all(dense_rank is not None for _c, _b, dense_rank, _r in hits)
+    record = json.load(open(os.path.join(dense_index_dir, "fingerprint.json")))
     assert "dense" in record["phase_seconds"]
+
+
+def test_configured_mode_degrades_loudly_on_a_lexical_index(bm25_dir):
+    """DENSE=0 is the documented way to run without a GPU. An index built that
+    way must serve, must serve lexical, and must say so rather than raising
+    or pretending."""
+    index = load(bm25_dir)
+    assert index.dense is None
+    mode, note = index.effective_mode()
+    assert mode == "bm25"
+    assert note and "no vectors" in note
+    hits = index.search(QUERY, jpm_ids(index), 5)
+    assert hits and all(dense_rank is None for _c, _b, dense_rank, _r in hits)
+    # An explicit request is a different matter: an ablation that asks for
+    # dense must not be handed bm25.
+    with pytest.raises(RuntimeError):
+        index.search(QUERY, jpm_ids(index), 5, mode="dense")
 
 
 def test_model_cache_path_follows_fastembed_source():

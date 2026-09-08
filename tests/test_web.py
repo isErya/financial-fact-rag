@@ -45,7 +45,7 @@ def test_page_and_static_files_are_served(client):
     page = client.get("/")
     assert page.status_code == 200
     assert "text/html" in page.headers["content-type"]
-    assert "filing desk" in page.text
+    assert "financial facts" in page.text
     assert 'class="bh"' in page.text
     script = client.get("/static/app.js")
     assert script.status_code == 200

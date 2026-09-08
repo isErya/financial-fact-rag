@@ -47,7 +47,7 @@ class Prepared:
     budget: dict | None
 
 
-def prepare(question: str, index, companies: dict, mode: str = "hybrid", pin: bool = True) -> Prepared:
+def prepare(question: str, index, companies: dict, mode: str | None = None, pin: bool = True) -> Prepared:
     """The plan, and the context when the plan allows one. `mode` and
     `pin` exist for the retrieval ablation and keep their defaults
     everywhere else."""
@@ -150,7 +150,7 @@ def cost_usd(usage: dict, model: str) -> float | None:
 
 
 def ask(question: str, index, companies: dict, model=None, dry_run: bool = False,
-        mode: str = "hybrid", pin: bool = True) -> dict:
+        mode: str | None = None, pin: bool = True) -> dict:
     """One request, top to bottom: scope and retrieval, then either the
     payload that describes them or the model step over them."""
     started = time.monotonic()

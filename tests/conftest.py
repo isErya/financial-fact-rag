@@ -68,6 +68,25 @@ def tuning_index(tuning_index_dir):
     return load(tuning_index_dir)
 
 
+# The one filing the dense tests share. It carries the JPMorgan net interest
+# income row (23,966 beside 70,448), which is what both dense tests look for,
+# and at 692 chunks it is the largest dense build the suite can afford on a
+# CPU: BGE base embeds about two chunks a second there, so this is roughly
+# six minutes once, and every dense test reads the same build.
+DENSE_FILES = ["JPM_10Q_2025Q3_2025-11-04_full.txt"]
+
+
+@pytest.fixture(scope="session")
+def dense_index_dir(tmp_path_factory):
+    if not os.path.isdir(MODEL_CACHE):
+        pytest.skip("embedding model cache missing at " + MODEL_CACHE)
+    if config.EMBED_DEVICE != "cuda":
+        pytest.skip("dense builds run on the GPU only; EMBED_DEVICE is %s" % config.EMBED_DEVICE)
+    path = str(tmp_path_factory.mktemp("index-dense-jpm"))
+    build(path, dense=True, files=DENSE_FILES)
+    return path
+
+
 @pytest.fixture(scope="session")
 def registry():
     return load_registry(os.path.join(ROOT, config.COMPANIES_FILE))

@@ -42,11 +42,26 @@ WORKDIR /app/service
 USER filing
 CMD ["uvicorn", "web:app", "--host", "0.0.0.0", "--port", "8000"]
 
-# Test image, never deployed. The same base plus pytest and the suite;
-# pytest.ini puts service/ on the import path, so it runs from /app, where
-# the config defaults (data/, service/companies.yaml, eval/) resolve.
+# GPU image: the indexer and the tests. onnxruntime-gpu 1.29 is built
+# against CUDA 13 and ships the runtime, cuDNN, cuFFT and cuRAND as pip
+# extras, so no CUDA base image is needed; the CPU onnxruntime fastembed
+# pulled in is removed first so the two builds cannot shadow each other.
+# The web service stays on `runtime`: it embeds one query per question on
+# CPU in about 130 ms and must run on a laptop without a GPU.
+FROM base AS gpu
+RUN pip uninstall -y onnxruntime \
+    && pip install --no-cache-dir "onnxruntime-gpu[cuda,cudnn]==1.29.0"
+
+FROM gpu AS indexer
+WORKDIR /app/service
+USER filing
+CMD ["python", "index.py", "build"]
+
+# Test image, never deployed. The GPU image plus pytest and the suite, so
+# the dense tests run on the device; pytest.ini puts service/ on the import
+# path, so it runs from /app, where the config defaults resolve.
 #   docker compose run --rm tests
-FROM base AS test
+FROM gpu AS test
 COPY tests/requirements.txt ./tests/requirements.txt
 RUN pip install --no-cache-dir -r tests/requirements.txt
 COPY tests/ ./tests/

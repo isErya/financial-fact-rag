@@ -130,14 +130,10 @@ def test_no_pin_mode_drops_the_pinned_lead(tuning_index, registry):
     assert not any(r["pinned"] for r in unpinned["context"])
 
 
-@pytest.mark.skipif(not os.path.isdir(MODEL_CACHE), reason="embedding model cache missing at " + MODEL_CACHE)
-def test_dense_mode_on_a_dense_index(tmp_path_factory, registry):
-    # One filing keeps the dense build under a minute; the quarter bucket
-    # then has no 10-K baseline, which the assertion does not need.
-    files = ["JPM_10Q_2025Q3_2025-11-04_full.txt"]
-    path = str(tmp_path_factory.mktemp("index-dense-small"))
-    build(path, dense=True, files=files)
-    index = load(path)
+def test_dense_mode_on_a_dense_index(dense_index_dir, registry):
+    # The session's one dense build; the quarter bucket then has no 10-K
+    # baseline, which the assertion does not need.
+    index = load(dense_index_dir)
     payload = dry_run("What was JPMorgan's net interest income for the third quarter of 2025?",
                       index, registry, mode="dense")
     assert "23,966" in payload["rendered"]

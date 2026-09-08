@@ -172,7 +172,7 @@ def row_label_seats(bucket: dict, metrics: list[str], index, ranges: dict) -> li
 
 
 def retrieve(plan: Plan, index, sub_queries: list[str] | None = None,
-             mode: str = "hybrid", pin: bool = True) -> Context:
+             mode: str | None = None, pin: bool = True) -> Context:
     """Candidates per quota, then assemble. `mode` and `pin` exist for the
     retrieval ablation; the product path uses the defaults. With `pin`
     off, neither the section leads nor the row-label seats are placed."""

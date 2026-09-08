@@ -377,8 +377,28 @@ def embedder(threads: int | None = None):
     """
     from fastembed import TextEmbedding
 
+    # EMBED_DEVICE=cuda asks onnxruntime for its CUDA provider, which exists
+    # only in the GPU image (onnxruntime-gpu) on a host that exposes a GPU to
+    # the container. Anywhere else fastembed raises rather than quietly
+    # running on CPU, which is the right failure: a nine-hour build that
+    # was meant to take two minutes should not start silently.
+    cuda = config.EMBED_DEVICE == "cuda"
+    if cuda:
+        # The CUDA 13 runtime and cuDNN arrive as pip packages beside
+        # onnxruntime-gpu; this puts them on the loader path so the CUDA
+        # provider is available when the session below is created.
+        import onnxruntime
+        onnxruntime.preload_dlls()
     model = TextEmbedding(config.EMBED_MODEL, cache_dir=config.FASTEMBED_CACHE,
-                          local_files_only=True, threads=threads)
+                          local_files_only=True, threads=threads, cuda=cuda)
+    try:
+        providers = model.model.model.get_providers()
+    except AttributeError:
+        providers = ["unknown"]
+    if cuda and not any("CUDA" in p for p in providers):
+        raise RuntimeError("EMBED_DEVICE=cuda but onnxruntime gave %s; the GPU is not reaching the "
+                           "container" % providers)
+    embedder.providers = providers
     tokenizer = model.model.tokenizer
     tokenizer.enable_truncation(max_length=config.EMBED_MAX_TOKENS)
     padding = dict(tokenizer.padding or {})
@@ -571,6 +591,7 @@ class Index:
         self.bm25 = bm25
         self.dense = dense
         self._model = None
+        self._score_cache: dict[str, np.ndarray] = {}
 
     def bm25_scores(self, query: str) -> np.ndarray:
         tokens = tokenize_query(query)
@@ -580,22 +601,91 @@ class Index:
         return self.bm25.get_scores(tokens)
 
     def dense_scores(self, query: str) -> np.ndarray:
+        """Cosine of `query` against every chunk, cached per query string.
+
+        One question runs this once per quota per sub-query, ten times for a
+        five-company question, and every call is identical work: the same
+        encoder pass and the same pass over all 198 MB of vectors. Caching by
+        query text took a five-company question from 7.1 s to under a second.
+        The cache is small and per process, since a web worker only ever holds
+        the handful of sub-queries belonging to the question in flight.
+        """
+        hit = self._score_cache.get(query)
+        if hit is not None:
+            return hit
+        scores = self._dense_scores_uncached(query)
+        if len(self._score_cache) >= 8:
+            self._score_cache.pop(next(iter(self._score_cache)))
+        self._score_cache[query] = scores
+        return scores
+
+    def _dense_scores_uncached(self, query: str) -> np.ndarray:
         if self.dense is None:
             raise RuntimeError("index was built without dense vectors")
         if self._model is None:
             # Lazy so a web process that never sees a dense query starts fast.
             self._model = embedder()
-        vector = np.asarray(list(self._model.query_embed(query))[0], dtype=np.float32)
+            self._check_encoder_matches_vectors()
+        # query_embed does not add the model's query instruction, so this
+        # does. embed() rather than query_embed() because the prefix has to
+        # be inside the encoded text, not alongside it.
+        text = config.EMBED_QUERY_PREFIX + query
+        vector = np.asarray(list(self._model.embed([text]))[0], dtype=np.float32)
         vector /= max(float(np.linalg.norm(vector)), 1e-12)
         return np.asarray(self.dense @ vector)
 
+    def _check_encoder_matches_vectors(self, positions: tuple = (0, 1, 5000, 30000)) -> None:
+        """Re-embed a few stored chunks and compare against their rows.
+
+        The vectors are built once, on a GPU, and served here by a different
+        library on CPU. Pooling, normalisation, truncation length, quantisation
+        and the model revision can all differ between the two without raising
+        anything, and the only symptom is worse retrieval. This turns that
+        silent failure into a loud one at first use.
+        """
+        usable = [p for p in positions if p < len(self.chunks) and p < self.dense.shape[0]]
+        if not usable:
+            return
+        texts = [index_text(self.chunks[p]) for p in usable]
+        fresh = np.asarray(list(self._model.embed(texts)), dtype=np.float32)
+        fresh /= np.maximum(np.linalg.norm(fresh, axis=1, keepdims=True), 1e-12)
+        stored = np.asarray(self.dense[usable], dtype=np.float32)
+        stored /= np.maximum(np.linalg.norm(stored, axis=1, keepdims=True), 1e-12)
+        worst = float(np.min(np.sum(fresh * stored, axis=1)))
+        if worst < 0.99:
+            raise RuntimeError(
+                "the encoder serving queries does not match the stored vectors "
+                "(worst cosine %.4f over chunks %s). The index was built with a "
+                "different model, window or library than %s is loading now; "
+                "rebuild the index or set EMBED_MODEL to the one that built it."
+                % (worst, usable, config.EMBED_MODEL))
+
+    def effective_mode(self, requested: str | None = None) -> tuple[str, str | None]:
+        """The mode a search will run, and why it differs from the configured
+        one when it does.
+
+        An explicit request is honoured as asked, so an ablation that asks for
+        dense on a lexical index fails rather than quietly measuring bm25.
+        The configured default is different: DENSE=0 is a documented way to
+        run without a GPU, and an index built that way must still serve.
+        It serves lexical, and says so on /health instead of in a log line.
+        """
+        if requested is not None:
+            return requested, None
+        mode = config.SEARCH_MODE
+        if mode in ("dense", "hybrid") and self.dense is None:
+            return "bm25", ("SEARCH_MODE is %s but this index holds no vectors (built with DENSE=0); "
+                            "serving lexical retrieval" % mode)
+        return mode, None
+
     def search(self, query: str, ids: np.ndarray, k: int,
-               mode: str = "hybrid") -> list[tuple[str, int, int | None, float]]:
+               mode: str | None = None) -> list[tuple[str, int, int | None, float]]:
         """Top k of `ids` by reciprocal rank fusion of the BM25 and dense
         rankings computed within `ids`. Each hit is (chunk_id, bm25_rank,
         dense_rank or None, rrf). `mode` is "hybrid" (both rankings when
         the index has dense vectors), "bm25" or "dense"; the last two exist
         for the retrieval ablation and each fuses a single ranking."""
+        mode, _note = self.effective_mode(mode)
         if mode not in ("hybrid", "bm25", "dense"):
             raise ValueError("unknown search mode %r" % mode)
         ids = np.asarray(ids, dtype=np.int64)
