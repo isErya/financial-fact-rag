@@ -46,8 +46,9 @@ EMBED_BATCH = 32
 # own copy of the model, which on a single GPU is four copies competing for
 # the same device.
 EMBED_WORKERS = int(os.environ.get("EMBED_WORKERS", max(1, min(4, (os.cpu_count() or 4) // 4))))
-# fastembed's model cache. The repo checkout ships the model files here so a
-# dense build never downloads anything.
+# fastembed's model cache. The Dockerfile downloads the model here at image
+# build time, so the containers never reach the network; a checkout does not
+# carry the files (.fastembed/ is gitignored).
 FASTEMBED_CACHE = os.environ.get(
     "FASTEMBED_CACHE_PATH",
     os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".fastembed"))

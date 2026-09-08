@@ -68,8 +68,8 @@ A first start builds the image (`python:3.12-slim`, the service requirements, an
 model baked in at build time so the containers never reach the network; the web image is 1.42 GB
 on this machine, of which the model is 209 MB, and the indexer and test images are 5.2 GB because
 they carry the CUDA 13 runtime and cuDNN as pip packages) and then runs the indexer once. The indexer's own phase times from the build in
-this repo's `index/fingerprint.json`: parse 57.4 s, chunk 24.3 s, write 12.0 s, BM25 17.4 s, so
-about two minutes of indexing before the page can answer. Every later `up` compares the corpus
+this repo's `index/fingerprint.json`, built on an RTX 5080: parse 17.9 s, chunk 6.6 s, write 3.1 s,
+BM25 4.3 s, dense 77.0 s, so under two minutes of indexing before the page can answer. Every later `up` compares the corpus
 fingerprint with the one in the volume, prints `index up to date` and exits in a second.
 
 The embedding model is BGE base (`BAAI/bge-base-en-v1.5`, 768 dimensions), chosen from five
@@ -89,12 +89,14 @@ docker compose logs indexer           # "index up to date", or the phase line fr
 curl -s localhost:8804/health | python3 -m json.tool
 ```
 
-`/health` on the stack as it ships:
+`/health` on the stack as it ships, with a key configured:
 
 ```json
-{"chunks": 64612, "files": 246, "tickers": 54, "index_fingerprint": "31087bf0...",
- "index_built_at": "2026-09-08T00:05:51", "index_error": null, "dense": false,
- "backend": "fake", "model": "claude-opus-5", "llm_ready": true,
+{"chunks": 64612, "files": 246, "tickers": 54, "index_fingerprint": "2cf3859c...",
+ "index_built_at": "2026-09-08T08:31:02", "index_error": null, "dense": true,
+ "search_mode": "dense", "search_mode_effective": "dense", "search_mode_note": null,
+ "embed_model": "BAAI/bge-base-en-v1.5", "encoder_error": null,
+ "backend": "anthropic", "model": "claude-opus-5", "llm_ready": true,
  "api_key_env": "ANTHROPIC_API_KEY", "prices_checked": "2026-09-07"}
 ```
 
