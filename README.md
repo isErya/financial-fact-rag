@@ -50,7 +50,7 @@ is lexical. Every other part of the system behaves the same way, and `/health` r
 retrieval mode is actually being served, so a lexical index is never mistaken for a dense one.
 
 ```bash
-git clone https://github.com/isErya/financial-sourcing-rag.git && cd financial-sourcing-rag
+git clone https://github.com/isErya/financial-fact-rag.git && cd financial-fact-rag
 cp .env.example .env      # paste the key into ANTHROPIC_API_KEY, set LLM_MODEL_BACKEND=anthropic
 docker compose up --build
 ```
