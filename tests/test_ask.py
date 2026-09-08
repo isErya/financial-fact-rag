@@ -15,7 +15,7 @@ from conftest import ROOT
 from index import load
 from llm_client import FakeModel, RequestBudgetExceeded, save_fixture
 from models import Answer, EvidenceChecks, LLMResult
-from test_resolver import NII_CHUNK, load_fixture
+from test_resolver import NII, load_fixture
 from test_retrieve import FULL_INDEX_BUILT, FULL_INDEX_DIR
 
 Q01 = "What are the primary risk factors facing Apple, Tesla, and JPMorgan, and how do they compare?"
@@ -47,8 +47,8 @@ def test_full_ask_on_q01_makes_one_request(tuning_index, registry, fake):
     assert set(payload["timing_ms"]) == {"plan_and_retrieve", "render", "model", "parse", "check"}
     assert "<question>\n%s\n</question>" % Q01 in payload["prompt"]["user"]
     assert "private equity" in payload["prompt"]["system"]
-    # The canned claim quotes the first words of C1, so the quote is found.
-    assert payload["checks"].quotes_found == (1, 1)
+    # The canned claim quotes the first words of C1, so the quote is located.
+    assert payload["checks"].quotes_located == (1, 1)
 
 
 def test_a_second_generate_inside_one_ask_raises(tuning_index, registry, fake):
@@ -140,10 +140,10 @@ def test_q06_fixture_binds_on_the_full_index(registry):
     index = load(FULL_INDEX_DIR)
     prepared = prepare(Q06, index, registry)
     cid_of = {c.chunk_id: cid for cid, c in zip(prepared.context.cids, prepared.context.chunks)}
-    assert NII_CHUNK in cid_of
+    assert NII in cid_of
     answer = load_fixture("q06_answer.json", cid_of)
     import resolver
     checks = resolver.check(answer, prepared.context, dict(zip(prepared.context.cids, prepared.context.chunks)),
                             prepared.plan, set(registry["companies"]))
-    assert not [f for f in checks.flags if f["claim_id"] == "K1"]
-    assert checks.columns_matched == (2, 3)
+    assert not [f for f in checks.flags if f["where"] == "K1"]
+    assert checks.columns_matched == (1, 2)

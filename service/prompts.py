@@ -40,6 +40,35 @@ PROMPTS = {
             "Answer in the required structure."
         ),
     },
+    # CANDIDATE, not yet an iteration: PROMPT_VERSION still points at v1 and
+    # nothing in docs/PROMPT-LOG.md claims this version until it has been run
+    # against the tuning set and the numbers written down by hand.
+    #
+    # Why it exists: v1 sets no shape, and measured on the panel's own example
+    # question (three companies compared on risk) it produced 32 claims and
+    # 37,555 output tokens in 278 seconds on the mid-tier model. A demo cannot
+    # wait four and a half minutes, and output length is what costs the time.
+    # v2 changes one thing, the shape of the answer, and leaves every grounding
+    # rule of v1 untouched so the two are comparable.
+    "v2": {
+        "system": (
+            "You are an analyst supporting a private equity deal team. Answer the question using "
+            "only the excerpts. Cite excerpt ids. Return the required structure.\n\n" + SCHEMA_HINT +
+            "\n\nKeep the answer short enough to read on one screen. Write at most four claims "
+            "per company and at most twelve in total, choosing the ones that carry the figures and "
+            "the disclosures the question asks about. Write at most one summary sentence per "
+            "company plus one closing sentence. Give the table at most five rows. Say less rather "
+            "than repeating a figure that is already in the table. None of this loosens the rules "
+            "above: a shorter answer still cites, still quotes, still names the period and the "
+            "units, and still records what the excerpts do not support."
+        ),
+        "user": (
+            "<coverage>\n{coverage}\n</coverage>\n\n"
+            "<question>\n{question}\n</question>\n\n"
+            "<excerpts>\n{excerpts}\n</excerpts>\n\n"
+            "Answer in the required structure."
+        ),
+    },
 }
 
 

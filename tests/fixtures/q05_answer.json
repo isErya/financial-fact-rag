@@ -1,5 +1,5 @@
 {
- "_about": "Hand-written Answer for q05 (Apple FY2023 net sales) read from the FY2024 10-K, whose net sales table shows 383,285 in the middle column under a bare-year header (FY2023, no parsed date). K1 names period_end 2023-09-30 and matches the column by fiscal year; K2 names 2024-09-28 and does not. Citations of the form chunk:<chunk_id> are bound to C-ids by the test.",
+ "_about": "Hand-written Answer for q05 (Apple FY2023 net sales) read from the FY2024 10-K, whose MD&A net sales table shows 383,285 in a middle column the chunker labelled FY2023 with no date. K1 names period_end 2023-09-30 and K2 names 2024-09-28; a column that carries no period settles neither, so both are column_unverified rather than one matched and one flagged. Citations of the form chunk:<chunk_id> are bound to C-ids by the test.",
  "summary": [
   {"text": "Apple's total net sales were $383,285 million in fiscal 2023.", "claim_ids": ["K1"]}
  ],

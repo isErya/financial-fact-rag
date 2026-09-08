@@ -176,15 +176,26 @@ class LLMResult:
 
 @dataclass
 class EvidenceChecks:
-    """How many of the answer's citations and figures checked out."""
+    """What the resolver established about one Answer.
 
-    quotes_found: tuple[int, int]
+    Every pair is matched / checkable, with the count of items the check
+    could not run on beside it rather than folded into the denominator, so
+    a reader can never mistake an unchecked item for a passing one. `flags`
+    are disagreements and `notes` are the facts a reader needs beside them
+    (which column a comparative figure sits in, why a scale was not read);
+    both carry {where, kind, detail, source_string}.
+    """
+
+    quotes_located: tuple[int, int]
     figures_in_quote: tuple[int, int]
+    figures_unchecked: int
     columns_matched: tuple[int, int]
     columns_unverified: int
-    units_declared: tuple[int, int]
+    units_matched: tuple[int, int]
+    units_unchecked: int
     flags: list[dict]
-    unlinked_sentences: list[str]
+    notes: list[dict]
+    unlinked: list[str]
 
 
 # Model-facing answer schema. All fields are required; lists may be empty.

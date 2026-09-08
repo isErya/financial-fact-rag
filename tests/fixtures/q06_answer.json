@@ -1,5 +1,5 @@
 {
- "_about": "Hand-written Answer for q06 (JPM Q3 2025 net interest income). Citations of the form chunk:<chunk_id> are bound to the live context's C-ids by the test, since C-ids are assigned at retrieval time. K1 quotes the real row and cites the right chunk; K2 states the nine-month figure as if quarterly; K3 restates 23,966 million as $24.0 billion; K4 cites an unknown id; K5 states a figure that is nowhere.",
+ "_about": "Hand-written Answer for q06 (JPM Q3 2025 net interest income). Citations of the form chunk:<chunk_id> are bound to the live context's C-ids by the test, since C-ids are assigned at retrieval time. K1 quotes the real row and cites the right chunk; K2 states the nine-month figure as if quarterly; K3 restates 23,966 million as $24.0 billion, which the excerpt does not print and whose unit line excepts rows it does not name, so no scale is established to convert through; K4 cites an unknown id; K5 states a figure that is nowhere.",
  "summary": [
   {"text": "JPMorgan reported net interest income of $23,966 million for the third quarter of 2025.", "claim_ids": ["K1"]},
   {"text": "Nine-month net interest income was $70,448 million.", "claim_ids": ["K2"]}

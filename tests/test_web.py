@@ -112,7 +112,7 @@ def test_full_run_returns_the_answer_and_checks(client):
     assert body["llm_attempts"] == 1 and body["llm_completed"] == 1
     assert body["backend"] == "fake" and body["replayed"] is False
     assert body["answer"]["claims"] and body["answer"]["summary"]
-    assert "flags" in body["checks"] and "quotes_found" in body["checks"]
+    assert "flags" in body["checks"] and "quotes_located" in body["checks"]
     assert body["prompt"]["system"] and Q01 in body["prompt"]["user"]
     assert body["sources"] and body["budget"]["input_tokens_actual"] is not None
     assert body.get("llm_result") is None

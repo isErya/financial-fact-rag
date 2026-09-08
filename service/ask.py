@@ -76,8 +76,8 @@ def model_step(prepared: Prepared, model=None, question: str = "", companies: di
     """One model request over the prepared context, parsed and checked.
 
     `model` defaults to the backend the environment names; `companies` is
-    the registry, whose tickers and company names the gap check knows; `timing_ms` carries
-    the stages that ran before this one.
+    the registry, whose tickers the gap check knows; `timing_ms` carries the
+    stages that ran before this one.
     """
     plan, context = prepared.plan, prepared.context
     model = model or llm_client.from_env()
@@ -109,10 +109,8 @@ def model_step(prepared: Prepared, model=None, question: str = "", companies: di
     started = time.monotonic()
     checks = None
     if answer is not None:
-        registry = (companies or {}).get("companies", {})
-        known = set(registry) if companies else None
-        names = {t: e.get("name", "") for t, e in registry.items()} if companies else None
-        checks = resolver.check(answer, context, chunks_by_cid, plan, known, names)
+        known = set((companies or {}).get("companies", {})) if companies else None
+        checks = resolver.check(answer, context, chunks_by_cid, plan, known)
     timing["check"] = _ms(started)
 
     budget = dict(prepared.budget)
@@ -227,9 +225,27 @@ def describe(payload: dict) -> str:
     return "\n".join(out)
 
 
+def describe_checks(checks) -> list[str]:
+    """The evidence-check counts, then the flags and the notes. Every pair
+    reads matched / checkable with the count of items the check could not run
+    on beside it, never folded in: an unchecked item is never a pass."""
+    lines = ["evidence checks: quotes located %d/%d | figures in quote %d/%d, unchecked %d | "
+             "columns matched %d/%d, unverified %d | units matched %d/%d, unchecked %d" % (
+                 *checks.quotes_located, *checks.figures_in_quote, checks.figures_unchecked,
+                 *checks.columns_matched, checks.columns_unverified,
+                 *checks.units_matched, checks.units_unchecked)]
+    for name, rows in (("flagged", checks.flags), ("unchecked and noted", checks.notes)):
+        if not rows:
+            lines.append("  %s: (none)" % name)
+        for row in rows:
+            source = " [source: %s]" % row["source_string"] if row["source_string"] else ""
+            lines.append("  - %s %s: %s%s" % (row["kind"], row["where"], row["detail"], source))
+    return lines
+
+
 def describe_answer(payload: dict) -> str:
     """The answer as the reader sees it: summary, table, what is not
-    comparable, gaps, then the evidence-check counts and flags."""
+    comparable, gaps, then the evidence-check counts, flags and notes."""
     out = []
     out.append("answer: prompt %s | %s %s | %d attempt(s), %d completed | replayed: %s%s" % (
         payload["prompt_version"], payload["backend"], payload["model"], payload["llm_attempts"],
@@ -260,7 +276,7 @@ def describe_answer(payload: dict) -> str:
         out.append("gaps:" if answer.gaps else "gaps: (none)")
         for gap in answer.gaps:
             out.append("  - %s" % gap)
-        out.extend(resolver.describe(payload["checks"]))
+        out.extend(describe_checks(payload["checks"]))
     usage = payload["usage"]
     cost = payload["cost_usd"]
     price = config.PRICES.get(payload["model"], {})

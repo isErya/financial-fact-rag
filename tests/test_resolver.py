@@ -1,10 +1,14 @@
-"""The evidence checks over real chunks of the tuning-set index.
+"""The evidence checks over the chunks the tuning questions really retrieve.
 
-The q06 fixture cites the JPMorgan Q3 2025 summary income statement by
-chunk id; the test binds that id to whatever C-id retrieval gave it, so
-the fixture stays hand-written while the numbering stays retrieval's. The
-q05 fixture is checked over a one-chunk context built by hand from the
-FY2024 10-K, because the q05 question itself retrieves the FY2023 10-K.
+Every case here is built from real excerpts: `retrieved` runs ask.prepare()
+for q04, q05, q06, q07 and q09, and each test pulls the chunk it needs out of
+the context that question produced, so a table's columns, unit line and row
+text are the ones the pipeline puts in front of the model rather than a
+hand-made fixture that cannot go stale.
+
+The block after the positive cases is one test per attack an adversarial
+reviewer landed on the previous resolver: each is named for the defect it
+would be, and asserts the outcome the contract requires.
 """
 
 import dataclasses
@@ -19,578 +23,533 @@ from conftest import ROOT
 from models import Answer, Chunk, Column, Context
 
 FIXTURES = os.path.join(ROOT, "tests", "fixtures")
-Q06 = "What was JPMorgan's net interest income for the third quarter of 2025?"
-NII_CHUNK = "55e0c02f62d5d7dc"
-APPLE_FY2024_NET_SALES_CHUNK = "cffc6bfbcc7ea05f"
-UNINSURED_CHUNK = "cf75f0872077d7af"
+QUESTIONS = {
+    "q04": ("Prepare a Q3 2025 bank-disclosure brief for a PE portfolio CFO. Compare JPMorgan and Bank of "
+            "America on CET1 ratio, estimated uninsured deposits, and third-quarter net interest income. "
+            "State the reporting period and units, cite each figure, and flag disclosures that are not "
+            "comparable."),
+    "q05": "What were Apple's total net sales in fiscal 2023?",
+    "q06": "What was JPMorgan's net interest income for the third quarter of 2025?",
+    "q07": "How many diluted shares did Apple use in computing earnings per share in fiscal 2024?",
+    "q09": "How does NVIDIA break down its revenue by segment?",
+}
+
+# Chunk ids, with the question whose context carries them.
+NII = "55e0c02f62d5d7dc"          # q06: JPM Q3 2025 summary income statement, "except" unit line
+CAPITAL = "1ae8975b3361a7c4"      # q04: JPM Note 20 capital table, Standardized/Advanced x Co./Bank
+UNINSURED = "cf75f0872077d7af"    # q04: JPM prose, uninsured deposits, non-breaking spaces
+BAC_PROSE = "f1593455cf409bc3"    # q04: BAC prose, "$606.8 billion and $116.6 billion"
+APPLE_OPS = "328dc22e456d59fb"    # q07: FY2024 statement of operations, shares excepted into thousands
+APPLE_EPS = "e72876a1e7dfffdc"    # q07: FY2024 EPS table, unit line inherited from an earlier excerpt
+APPLE_2023 = "3204ddb0ccb5f6f2"   # q05: FY2023 MD&A segments, FY2022 and FY2021 columns carry no date
+NVDA_2025 = "6d74cb8a253b7b93"    # q09: FY2025 segment table, clean "USD millions" unit line, seq 308
+NVDA_2024 = "575bbdcb04aa0ac3"    # q09: the same table for the prior year, seq 309
+# The q05 fixture reads the FY2023 figure out of the FY2024 10-K, which the
+# q05 question itself does not retrieve; it is loaded from the index.
+APPLE_MDA_2024 = "cffc6bfbcc7ea05f"
+
 NII_ROW = "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2"
+CET1_ROW = "CET1 capital ratio | 14.8% | 15.7% | 14.9% | 16.8%"
+ROTCE_ROW = "Return on tangible common equity | 20 | 19 | 21 | 23"
+DILUTED_ROW = "Diluted | 15,408,095 | 15,812,547 | 16,325,819"
+APPLE_SALES_ROW = "Total net sales | 391,035 | 383,285 | 394,328"
+APPLE_2023_ROW = "Total net sales | $383,285 | (3)% | $394,328 | 8% | $365,817"
+NVDA_ROW = "Revenue | $116,193 | $14,304 | - | $130,497"
+NVDA_2024_ROW = "Revenue | $47,405 | $13,517 | - | $60,922"
+
+
+@pytest.fixture(scope="session")
+def retrieved(tuning_index, registry):
+    """Each tuning question's Prepared, so the chunks below are the ones
+    retrieval really seated."""
+    out = {}
+    for key, question in QUESTIONS.items():
+        prepared = prepare(question, tuning_index, registry)
+        assert prepared.context is not None, key
+        out[key] = prepared
+    return out
+
+
+def chunk_from(retrieved, key: str, chunk_id: str) -> Chunk:
+    by_id = {c.chunk_id: c for c in retrieved[key].context.chunks}
+    assert chunk_id in by_id, "%s did not retrieve %s" % (key, chunk_id)
+    return by_id[chunk_id]
+
+
+def one_chunk(chunk: Chunk, coverage: str = "") -> tuple[Context, dict]:
+    context = Context(chunks=[chunk], n_tokens=chunk.n_tokens, cids=["C1"], coverage=coverage)
+    return context, {"C1": chunk}
+
+
+def claim(text: str, quote: str, period_end: str = "2025-09-30", kind: str = "quarter", ticker: str = "JPM",
+          cid: str = "C1", claim_id: str = "K1") -> dict:
+    return {"id": claim_id, "text": text, "tickers": [ticker], "period_end": period_end,
+            "period_kind": kind, "citations": [cid], "quote": quote}
+
+
+def answer_of(*claims: dict, summary=None, table=None, gaps=None, not_comparable=None) -> Answer:
+    return Answer.model_validate({
+        "summary": summary if summary is not None else [{"text": "s", "claim_ids": [c["id"] for c in claims]}],
+        "claims": list(claims), "table": table or [], "not_comparable": not_comparable or [],
+        "gaps": gaps or []})
 
 
 def load_fixture(name: str, cid_of: dict[str, str]) -> Answer:
     with open(os.path.join(FIXTURES, name)) as fh:
         data = json.load(fh)
-    for claim in data["claims"]:
-        claim["citations"] = [cid_of[c[6:]] if c.startswith("chunk:") else c for c in claim["citations"]]
+    for claim_data in data["claims"]:
+        claim_data["citations"] = [cid_of[c[6:]] if c.startswith("chunk:") else c
+                                   for c in claim_data["citations"]]
     return Answer.model_validate(data)
 
 
-def flags_by_claim(checks) -> dict[str, set[str]]:
-    out: dict[str, set[str]] = {}
-    for f in checks.flags:
-        out.setdefault(f["claim_id"], set()).add(f["kind"])
-    return out
+def flags(checks) -> list[str]:
+    return [f["kind"] for f in checks.flags]
 
 
-def one_chunk_context(chunk: Chunk, coverage: str = "") -> tuple[Context, dict]:
-    context = Context(chunks=[chunk], n_tokens=chunk.n_tokens, cids=["C1"], coverage=coverage)
-    return context, {"C1": chunk}
+def notes(checks) -> list[str]:
+    return [n["kind"] for n in checks.notes]
 
 
-def claim(cid: str, text: str, quote: str, period_end: str = "2025-09-30", kind: str = "quarter",
-          ticker: str = "JPM", cid_id: str = "K1") -> dict:
-    return {"id": cid_id, "text": text, "tickers": [ticker], "period_end": period_end,
-            "period_kind": kind, "citations": [cid], "quote": quote}
+def detail(checks, kind: str) -> str:
+    return next(r["detail"] for r in list(checks.flags) + list(checks.notes) if r["kind"] == kind)
 
 
-def answer_of(*claims: dict, gaps: list[str] | None = None, summary: list | None = None) -> Answer:
-    return Answer.model_validate({
-        "summary": summary if summary is not None else [{"text": "s", "claim_ids": [c["id"] for c in claims]}],
-        "claims": list(claims), "table": [], "not_comparable": [], "gaps": gaps or []})
+# ---------------------------------------------------------------------------
+# The outcomes that must stay right.
+# ---------------------------------------------------------------------------
 
 
-def test_q06_fixture_claims_yield_their_flags(tuning_index, registry):
-    prepared = prepare(Q06, tuning_index, registry)
-    cid_of = {c.chunk_id: cid for cid, c in zip(prepared.context.cids, prepared.context.chunks)}
-    assert NII_CHUNK in cid_of
-    answer = load_fixture("q06_answer.json", cid_of)
-    checks = resolver.check(answer, prepared.context, dict(zip(prepared.context.cids, prepared.context.chunks)),
-                            prepared.plan, set(registry["companies"]))
-    by_claim = flags_by_claim(checks)
-    assert by_claim.get("K1", set()) == set()
-    assert by_claim["K2"] == {"duration_mismatch"}
-    assert by_claim["K3"] == {"unit_converted"}
-    assert by_claim["K4"] == {"citation_unknown"}
-    assert by_claim["K5"] == {"figure_not_in_chunk"}
-    # K4 has no excerpt to check against, so its quote counts as not found
-    # and its figure as not in the quote; K5's figure is nowhere.
-    assert checks.quotes_found == (4, 5)
-    assert checks.figures_in_quote == (3, 5)
-    # K1 and K3 land in the three-month column; K2 reached a parsed column
-    # and mismatched; K4 and K5 never reached a column.
-    assert checks.columns_matched == (2, 3)
-    assert checks.columns_unverified == 0
-    assert checks.units_declared == (4, 4)
-    converted = next(f for f in checks.flags if f["kind"] == "unit_converted")
-    assert converted["source_string"] == "23,966" and "million to billion" in converted["detail"]
+def test_the_jpm_quarterly_row_matches_its_quote_figure_and_column(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    checks = resolver.check(answer_of(claim(
+        "JPMorgan's net interest income was $23,966 million for the three months ended September 30, 2025.",
+        NII_ROW)), context, by_cid)
+    assert flags(checks) == []
+    assert checks.quotes_located == (1, 1) and checks.figures_in_quote == (1, 1)
+    assert checks.columns_matched == (1, 1) and checks.columns_unverified == 0
+    # The filer's unit line excepts per-share data and ratios, so no scale is
+    # established for any row of this table and the scale word goes unchecked.
+    assert checks.units_matched == (0, 0) and checks.units_unchecked == 1
+    assert notes(checks) == ["units_unchecked"]
 
 
-def test_q05_fixture_middle_column_matches_fy2023_only(tuning_index):
-    chunk = tuning_index.by_id[APPLE_FY2024_NET_SALES_CHUNK]
-    assert chunk.column_source == "parsed"
-    context, by_cid = one_chunk_context(chunk, "AAPL Apple Inc: 10-K FY2024")
-    answer = load_fixture("q05_answer.json", {APPLE_FY2024_NET_SALES_CHUNK: "C1"})
-    checks = resolver.check(answer, context, by_cid)
-    by_claim = flags_by_claim(checks)
-    assert by_claim.get("K1", set()) == set()
-    assert by_claim["K2"] == {"column_mismatch"}
-    assert checks.columns_matched == (1, 2)
-    mismatch = next(f for f in checks.flags if f["kind"] == "column_mismatch")
-    assert mismatch["source_string"] == "FY2023"
+def test_the_nvidia_segment_row_matches_all_four_checks(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q09", NVDA_2025))
+    checks = resolver.check(answer_of(claim(
+        "NVIDIA's Compute & Networking revenue was $116,193 million in fiscal 2025.", NVDA_ROW,
+        period_end="2025-01-26", kind="fiscal_year", ticker="NVDA")), context, by_cid)
+    assert flags(checks) == [] and notes(checks) == []
+    assert checks.quotes_located == (1, 1) and checks.figures_in_quote == (1, 1)
+    assert checks.columns_matched == (1, 1) and checks.units_matched == (1, 1)
+    assert checks.figures_unchecked == 0 and checks.units_unchecked == 0
 
 
-def test_uninsured_deposit_sentence_with_nbsp_is_found_in_source(tuning_index):
-    chunk = tuning_index.by_id[UNINSURED_CHUNK]
+def test_a_restatement_in_billions_is_reported_as_a_unit_conversion(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q09", NVDA_2025))
+    checks = resolver.check(answer_of(claim(
+        "NVIDIA's Consolidated revenue was $130.5 billion in fiscal 2025.", NVDA_ROW,
+        period_end="2025-01-26", kind="fiscal_year", ticker="NVDA")), context, by_cid)
+    assert flags(checks) == [] and notes(checks) == ["unit_converted"]
+    assert checks.units_matched == (1, 1)
+    assert "$130,497 in millions reads as $130.5 billion" in detail(checks, "unit_converted")
+
+
+def test_the_uninsured_deposit_sentence_with_a_non_breaking_space_is_located(retrieved):
+    chunk = chunk_from(retrieved, "q04", UNINSURED)
     assert chunk.kind == "prose"
-    context, by_cid = one_chunk_context(chunk)
-    quote = ("At September\u00a030, 2025 and December\u00a031, 2024, Firmwide estimated uninsured deposits "
-             "were $1,548.1 billion and $1,414.0 billion, respectively")
-    answer = answer_of(claim("C1", "JPMorgan's estimated uninsured deposits were $1,548.1 billion at "
-                             "September 30, 2025.", quote, kind="point_in_time"))
-    checks = resolver.check(answer, context, by_cid)
-    assert checks.quotes_found == (1, 1)
-    assert checks.figures_in_quote == (1, 1)
-    # A figure found in prose gets no column check and no column flag.
+    context, by_cid = one_chunk(chunk)
+    # The source prints non-breaking spaces inside these dates; the quote
+    # carries them and still has to locate.
+    quote = ("At September\u00a030, 2025 and December\u00a031, 2024, Firmwide estimated uninsured "
+             "deposits were $1,548.1 billion and $1,414.0 billion, respectively")
+    checks = resolver.check(answer_of(claim(
+        "JPMorgan's estimated uninsured deposits were $1,548.1 billion at September 30, 2025.", quote,
+        kind="point_in_time")), context, by_cid)
+    assert flags(checks) == [] and notes(checks) == []
+    assert checks.quotes_located == (1, 1) and checks.figures_in_quote == (1, 1)
+    # Prose carries no column, so the column check neither matches nor runs.
     assert checks.columns_matched == (0, 0) and checks.columns_unverified == 0
-    assert checks.flags == []
+    # The scale word beside the number in the source is the source's own.
+    assert checks.units_matched == (1, 1)
 
 
-def test_curly_quote_and_dash_variant_still_matches(tuning_index):
-    chunk = tuning_index.by_id[UNINSURED_CHUNK]
-    context, by_cid = one_chunk_context(chunk)
-    # A curly apostrophe and an en dash, written as escapes so the file
-    # itself stays ASCII.
+def test_a_curly_apostrophe_and_an_en_dash_still_match(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q04", UNINSURED))
+    # Written as escapes so this file stays ASCII.
     quote = ("Refer to the Firm\u2019s Consolidated Balance Sheets Analysis and the Business Segment & "
              "Corporate Results on pages 15\u201316")
-    answer = answer_of(claim("C1", "The filing points to its balance sheet analysis.", quote, kind="point_in_time"))
-    checks = resolver.check(answer, context, by_cid)
-    assert checks.quotes_found == (1, 1)
-    assert checks.flags == []
+    checks = resolver.check(answer_of(claim("The filing points to its balance sheet analysis.", quote,
+                                            kind="point_in_time")), context, by_cid)
+    assert checks.quotes_located == (1, 1) and flags(checks) == []
 
 
-def forty_row_chunk() -> Chunk:
-    """A synthetic 40-row income statement with JPMorgan's column layout;
-    the net interest income row sits deep in the table."""
-    columns = [
-        Column(0, "Three months ended September 30, 2025", "2025-09-30", "three_months"),
-        Column(1, "Three months ended September 30, 2024", "2024-09-30", "three_months"),
-        Column(2, "Change", None, None),
-        Column(3, "Nine months ended September 30, 2025", "2025-09-30", "nine_months"),
-        Column(4, "Nine months ended September 30, 2024", "2024-09-30", "nine_months"),
-        Column(5, "Change", None, None),
-    ]
-    lines = ["(in millions) | Three months ended September 30, | Nine months ended September 30,",
-             "2025 | 2024 | Change | 2025 | 2024 | Change"]
-    for n in range(40):
-        if n == 36:
-            lines.append(NII_ROW)
-            continue
-        base = 1000 + n * 7
-        lines.append("Line item %d | %d | %d | 3 | %d | %d | 4" % (n + 1, base, base + 1, base + 2, base + 3))
-    text = "\n".join(lines)
-    return Chunk(chunk_id="synthetic40", file="JPM_10Q_2025Q3_2025-11-04_full.txt", cik="0000019617",
-                 ticker="JPM", company="JPMorgan Chase & Co", form="10-Q", part="I", item="I.2",
-                 item_title="Management's Discussion and Analysis", note_title=None, kind="table",
-                 period_end="2025-09-30", fiscal_year=2025, fiscal_quarter=3, fiscal_label="FY2025 Q3",
-                 filing_date="2025-11-04", seq=999, char_start=0, char_end=len(text), units="USD millions",
-                 units_source="declared", columns=columns, column_source="parsed",
-                 header="JPMorgan Chase & Co (JPM, CIK 19617) | 10-Q FY2025 Q3", text=text, n_tokens=900)
+def test_a_comparative_sentence_reports_the_other_column_without_flagging_it(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    checks = resolver.check(answer_of(claim(
+        "Net interest income was $23,966 million, up from $23,405 million a year earlier.", NII_ROW)),
+        context, by_cid)
+    assert flags(checks) == []
+    assert checks.figures_in_quote == (2, 2) and checks.columns_matched == (1, 2)
+    assert "$23,405 million sits in the column for 2024-09-30" == detail(checks, "column_other_period")
 
 
-def test_forty_row_table_finds_the_three_and_nine_month_columns():
-    chunk = forty_row_chunk()
-    context, by_cid = one_chunk_context(chunk)
-    answer = answer_of(
-        claim("C1", "Net interest income was $23,966 million for the quarter.", NII_ROW, cid_id="K1"),
-        claim("C1", "Net interest income was $70,448 million for the nine months.", NII_ROW, kind="nine_months",
-              cid_id="K2"))
-    checks = resolver.check(answer, context, by_cid)
-    assert checks.quotes_found == (2, 2)
-    assert checks.columns_matched == (2, 2)
-    assert checks.flags == []
+def test_a_quote_across_a_chunk_boundary_is_located(retrieved):
+    here = chunk_from(retrieved, "q09", NVDA_2025)
+    after = chunk_from(retrieved, "q09", NVDA_2024)
+    assert after.seq == here.seq + 1 and after.file == here.file
+    context = Context(chunks=[here, after], n_tokens=here.n_tokens, cids=["C1", "C2"])
+    quote = here.text[-40:] + "\n" + after.text[:40]
+    checks = resolver.check(answer_of(claim("NVIDIA reported segment results for both years.", quote,
+                                            period_end="2025-01-26", kind="fiscal_year", ticker="NVDA")),
+                            context, {"C1": here, "C2": after})
+    assert checks.quotes_located == (1, 1) and flags(checks) == []
 
 
-def test_column_unverified_for_ambiguous_rows_and_untrusted_column_sources(tuning_index):
-    chunk = tuning_index.by_id[NII_CHUNK]
-    row = "Book value per share | $124.96 | $115.15 | 9 | $124.96 | $115.15 | 9"
-    # 124.96 fills two columns of its row, so no single column can be named.
-    context, by_cid = one_chunk_context(chunk)
-    checks = resolver.check(answer_of(claim("C1", "Book value per share was $124.96.", row)), context, by_cid)
-    assert [f["kind"] for f in checks.flags] == ["column_unverified"]
-    assert checks.columns_matched == (0, 0) and checks.columns_unverified == 1
-    # The chunker's display-only labels and a missing header both give the
-    # same verdict: the figure is real, its column is not read.
-    for source in ("unverified_shape", None):
-        untrusted = dataclasses.replace(chunk, column_source=source)
-        context, by_cid = one_chunk_context(untrusted)
-        checks = resolver.check(answer_of(claim("C1", "Net interest income was $23,966 million.", NII_ROW)),
-                                context, by_cid)
-        assert [f["kind"] for f in checks.flags] == ["column_unverified"], source
-        assert checks.quotes_found == (1, 1) and checks.figures_in_quote == (1, 1)
-        assert checks.columns_matched == (0, 0)
-
-
-def test_figure_absent_from_quote_but_present_in_chunk(tuning_index):
-    chunk = tuning_index.by_id[NII_CHUNK]
-    context, by_cid = one_chunk_context(chunk)
-    answer = answer_of(claim("C1", "Net income was $14,393 million for the quarter.", NII_ROW))
-    checks = resolver.check(answer, context, by_cid)
-    kinds = [f["kind"] for f in checks.flags]
-    assert kinds == ["figure_not_in_quote"]
-    assert checks.figures_in_quote == (0, 1)
-    # The figure was located in the chunk, so its column is still read.
-    assert checks.columns_matched == (1, 1)
-
-
-def test_approximate_quote_reports_the_closest_passage(tuning_index):
-    chunk = tuning_index.by_id[UNINSURED_CHUNK]
-    context, by_cid = one_chunk_context(chunk)
-    quote = ("Firmwide estimated uninsured deposits were $1,548.1 billion and $1,414.0 billion, respectively, "
-             "primarily reflecting wholesale operating deposits at the Firm")
-    answer = answer_of(claim("C1", "Uninsured deposits were $1,548.1 billion.", quote, kind="point_in_time"))
-    checks = resolver.check(answer, context, by_cid)
-    assert checks.quotes_found == (0, 1)
-    flag = next(f for f in checks.flags if f["kind"] == "approximate_quote")
-    assert "wholesale operating deposits" in flag["source_string"]
-
-
-def test_quote_not_found_and_too_long(tuning_index):
-    chunk = tuning_index.by_id[NII_CHUNK]
-    context, by_cid = one_chunk_context(chunk)
-    answer = answer_of(claim("C1", "Net interest income rose.", "word " * 45))
-    kinds = {f["kind"] for f in resolver.check(answer, context, by_cid).flags}
-    assert kinds == {"quote_too_long", "quote_not_found"}
-
-
-def test_units_mismatch_when_the_claim_states_the_wrong_scale(tuning_index):
-    chunk = tuning_index.by_id[NII_CHUNK]
-    context, by_cid = one_chunk_context(chunk)
-    answer = answer_of(claim("C1", "Net interest income was $23,966 billion.", NII_ROW))
-    kinds = [f["kind"] for f in resolver.check(answer, context, by_cid).flags]
-    assert kinds == ["units_mismatch"]
-
-
-def test_unlinked_sentences_and_ungrounded_gaps(tuning_index, registry):
-    chunk = tuning_index.by_id[NII_CHUNK]
-    coverage = "JPM JPMorgan Chase & Co: 10-Q FY2025 Q3 (quarter ended 2025-09-30, filed 2025-11-04)"
-    context, by_cid = one_chunk_context(chunk, coverage)
-    answer = answer_of(
-        claim("C1", "Net interest income was $23,966 million.", NII_ROW),
-        summary=[{"text": "backed", "claim_ids": ["K1"]}, {"text": "orphan", "claim_ids": []},
-                 {"text": "phantom", "claim_ids": ["K9"]}],
-        gaps=["The excerpts hold no 2019 figures.", "No Bank of America (BAC) excerpt is present.",
-              "The excerpts do not state a target."])
-    checks = resolver.check(answer, context, by_cid, None, set(registry["companies"]))
-    assert checks.unlinked_sentences == ["orphan", "phantom"]
-    ungrounded = [f["source_string"] for f in checks.flags if f["kind"] == "ungrounded_gap"]
-    assert ungrounded == ["The excerpts hold no 2019 figures.", "No Bank of America (BAC) excerpt is present."]
-
-
-def test_ticker_outside_the_plan_is_flagged(tuning_index, registry):
-    prepared = prepare(Q06, tuning_index, registry)
+def test_the_q06_fixture_reports_one_outcome_per_claim(retrieved, registry):
+    prepared = retrieved["q06"]
+    cid_of = {c.chunk_id: cid for cid, c in zip(prepared.context.cids, prepared.context.chunks)}
+    assert NII in cid_of
+    answer = load_fixture("q06_answer.json", cid_of)
     by_cid = dict(zip(prepared.context.cids, prepared.context.chunks))
-    cid = next(c for c, chunk in by_cid.items() if chunk.chunk_id == NII_CHUNK)
-    answer = answer_of(claim(cid, "Net interest income was $23,966 million.", NII_ROW, ticker="BAC"))
-    checks = resolver.check(answer, prepared.context, by_cid, prepared.plan)
-    assert [f["kind"] for f in checks.flags] == ["ticker_out_of_scope"]
+    checks = resolver.check(answer, prepared.context, by_cid, prepared.plan, set(registry["companies"]))
+    by_claim = {}
+    for row in checks.flags:
+        by_claim.setdefault(row["where"], set()).add(row["kind"])
+    assert by_claim.get("K1", set()) == set()
+    assert by_claim["K2"] == {"duration_mismatch"}
+    # K3 restates 23,966 as $24.0 billion, and the unit line excepts rows it
+    # does not name, so no scale is established to convert through.
+    assert by_claim["K3"] == {"figure_not_in_chunk"}
+    assert by_claim["K4"] == {"citation_unknown", "quote_not_found"}
+    assert by_claim["K5"] == {"figure_not_in_chunk"}
+    assert checks.quotes_located == (4, 5)
+    assert checks.figures_in_quote == (2, 4) and checks.figures_unchecked == 1
+    assert checks.columns_matched == (1, 2) and checks.columns_unverified == 0
+    assert checks.units_matched == (0, 0) and checks.units_unchecked == 2
+
+
+def test_the_q05_fixture_reads_a_column_that_carries_no_period(tuning_index):
+    chunk = tuning_index.by_id[APPLE_MDA_2024]
+    assert chunk.column_source == "parsed" and chunk.columns[2].label == "FY2023"
+    assert chunk.columns[2].period_end is None
+    context, by_cid = one_chunk(chunk, "AAPL Apple Inc: 10-K FY2024")
+    answer = load_fixture("q05_answer.json", {APPLE_MDA_2024: "C1"})
+    checks = resolver.check(answer, context, by_cid)
+    # Both claims read the same undated middle column, so neither the fiscal
+    # 2023 reading nor the fiscal 2024 reading is matched or contradicted.
+    assert flags(checks) == []
+    assert checks.columns_matched == (0, 0) and checks.columns_unverified == 2
+    assert detail(checks, "column_unverified") == "$383,285 million: the column carries no period"
 
 
 @pytest.mark.parametrize("text, expected", [
     ("Net interest income was $23,966 million in 2025, up 2% from 23,405.", ["$23,966 million", "2%", "23,405"]),
     ("At September 30, 2025 the ratio was 14.8% across 3 segments.", ["14.8%"]),
     ("Revenue was $130.5 billion (C12, K3) for the year ended 2025-01-26.", ["$130.5 billion"]),
+    ("Per Note 27 and excerpt 13, in a 52-week year income was $23,966 million.", ["$23,966 million"]),
+    ("As of 9/30/2025 (30 September 2025) deposits were $2.5 trillion, the 3rd rise.", ["$2.5 trillion"]),
+    ("Net sales fell (3)% in FY2023 and 2% in Q4 2024.", ["(3)%", "2%"]),
 ])
-def test_figures_in_claim_text(text, expected):
+def test_dates_counts_and_ids_are_not_claim_figures(text, expected):
     assert [f.text for f in resolver.figures_in(text)] == expected
 
 
+def test_a_column_date_matches_a_month_end_the_filer_closed_early():
+    column = Column(0, "Three Months Ended Oct 26, 2025", "2025-10-26", "three_months")
+    assert resolver.period_agrees(column, "2025-10-31") is True
+    assert resolver.period_agrees(column, "2025-10-26") is True
+    # A claim date that is not a month end has to be the column's own date.
+    assert resolver.period_agrees(column, "2025-10-30") is False
+    assert resolver.period_agrees(Column(0, "x", None, None), "2025-10-31") is False
+
+
 # ---------------------------------------------------------------------------
-# Regression cases from the milestone 4 audit: every false green and false
-# red the breaker found, plus the right outcomes that must stay right.
+# One test per attack the reviewer landed, named for the defect.
 # ---------------------------------------------------------------------------
 
-CAPITAL_CHUNK = "1ae8975b3361a7c4"      # JPM Note 20 capital table: Standardized/Advanced x Co./Bank
-DEPOSITS_CHUNK = "5d193f80d41dec3f"     # JPM deposits table, USD billions
-BAC_PROSE_CHUNK = "f1593455cf409bc3"    # BAC 10-K prose with "$606.8 billion and $116.6 billion"
-APPLE_FY2023_SEGMENTS_CHUNK = "3204ddb0ccb5f6f2"   # FY2023 10-K: FY2022 and FY2021 are label-only columns
-APPLE_FY2024_OPERATIONS_CHUNK = "328dc22e456d59fb"  # FY2024 10-K statement of operations, shares in thousands
-CET1_ROW = "CET1 capital ratio | 14.8% | 15.7% | 14.9% | 16.8%"
-DILUTED_ROW = "Diluted | 15,408,095 | 15,812,547 | 16,325,819"
 
-
-def kinds(checks) -> list[str]:
-    return [f["kind"] for f in checks.flags]
-
-
-def segment_chunk(seq: int, period_end: str, rows: str) -> Chunk:
-    """A segment table in NVIDIA's Note 13 layout: three columns for one
-    period, labelled by segment."""
-    columns = [Column(0, "Compute & Networking Three Months Ended %s" % period_end, period_end, "three_months"),
-               Column(1, "Graphics Three Months Ended %s" % period_end, period_end, "three_months"),
-               Column(2, "Total Three Months Ended %s" % period_end, period_end, "three_months")]
-    text = "Compute & Networking | Graphics | Total\n(In millions)\nThree Months Ended %s\n%s" % (period_end, rows)
-    return Chunk(chunk_id="segments-%d" % seq, file="NVDA_10Q_2026Q3_2025-11-19_full.txt", cik="0001045810",
-                 ticker="NVDA", company="NVIDIA Corporation", form="10-Q", part="I", item="I.1",
-                 item_title="Financial Statements", note_title="Note 13 - Segment Information", kind="table",
-                 period_end="2025-10-26", fiscal_year=2026, fiscal_quarter=3, fiscal_label="FY2026 Q3",
-                 filing_date="2025-11-19", seq=seq, char_start=0, char_end=len(text), units="USD millions",
-                 units_source="declared", columns=columns, column_source="parsed",
-                 header="NVIDIA Corporation (NVDA, CIK 1045810) | 10-Q FY2026 Q3", text=text, n_tokens=80)
-
-
-SEGMENTS_2025 = segment_chunk(66, "2025-10-26", "Revenue | $50,908 | $6,098 | $57,006\n"
-                                                "Other segment items (1) | 15,187 | 3,552 | 18,739\n"
-                                                "Operating income (loss) | $35,721 | $2,546 | $38,267")
-SEGMENTS_2024 = segment_chunk(67, "2024-10-27", "Revenue | $31,036 | $4,046 | $35,082\n"
-                                                "Other segment items (1) | 8,955 | 2,544 | 11,499\n"
-                                                "Operating income (loss) | $22,081 | $1,502 | $23,583")
-REVENUE_ROW = "Revenue | $50,908 | $6,098 | $57,006"
-
-
-def nvda_claim(text: str, quote: str, cid: str = "C1", period_end: str = "2025-10-26", cid_id: str = "K1") -> dict:
-    return claim(cid, text, quote, period_end=period_end, ticker="NVDA", cid_id=cid_id)
-
-
-def test_figures_are_credited_only_against_located_text(tuning_index):
-    # An invented row carrying an invented number: the quote is nowhere,
-    # so the figure is checked against the chunk, where it is not.
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
+def test_a_figure_only_in_the_models_quote_string_is_not_counted(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
     invented = "Net interest income | 99,999 | 23,405 | 2 | 70,448 | 69,233 | 2"
-    checks = resolver.check(answer_of(claim("C1", "Net interest income was $99,999 million.", invented)), context, by_cid)
-    assert kinds(checks) == ["quote_not_found", "figure_not_in_chunk"]
-    assert checks.figures_in_quote == (0, 1) and checks.columns_matched == (0, 0)
-    # A real sentence with one digit changed: the closest passage is the
-    # chunk's own text, which holds 606.8, so 616.8 is nowhere.
-    context, by_cid = one_chunk_context(tuning_index.by_id[BAC_PROSE_CHUNK])
-    doctored = ("At December 31, 2023, the Corporation's deposits totaled $1.92 trillion, of which total estimated "
-                "uninsured U.S. and non-U.S. deposits were $616.8 billion and $116.6 billion.")
-    checks = resolver.check(answer_of(claim("C1", "Uninsured U.S. deposits were $616.8 billion.", doctored,
-                                            period_end="2023-12-31", kind="point_in_time", ticker="BAC")),
+    checks = resolver.check(answer_of(claim("Net interest income was $99,999 million.", invented)),
                             context, by_cid)
-    assert kinds(checks) == ["approximate_quote", "figure_not_in_chunk"]
+    assert flags(checks) == ["quote_not_found"] and notes(checks) == ["figures_unchecked"]
+    assert checks.figures_in_quote == (0, 0) and checks.figures_unchecked == 1
+    assert checks.columns_matched == (0, 0)
+
+
+def test_a_figure_the_source_prints_only_outside_the_quote_is_not_a_quote_match(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    checks = resolver.check(answer_of(claim("Net income was $14,393 million for the quarter.", NII_ROW)),
+                            context, by_cid)
+    assert flags(checks) == ["figure_elsewhere_in_chunk"]
     assert checks.figures_in_quote == (0, 1)
+    # Nothing downstream of the failed figure check is credited.
+    assert checks.columns_matched == (0, 0) and checks.columns_unverified == 0
 
 
-def test_source_number_types_are_compared(tuning_index):
-    # A ratio cell is never a dollar amount.
-    context, by_cid = one_chunk_context(tuning_index.by_id[CAPITAL_CHUNK])
-    checks = resolver.check(answer_of(claim("C1", "CET1 capital was $14.8 million.", CET1_ROW, kind="point_in_time")),
-                            context, by_cid)
-    assert kinds(checks) == ["figure_not_in_chunk"]
+def test_a_dollar_claim_against_a_percent_cell_is_not_a_figure_or_a_column_match(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q04", CAPITAL))
+    checks = resolver.check(answer_of(claim("CET1 capital was $14.8 million.", CET1_ROW,
+                                            kind="point_in_time")), context, by_cid)
+    assert flags(checks) == ["figure_not_in_chunk"]
     assert checks.figures_in_quote == (0, 1) and checks.columns_matched == (0, 0)
-    # A bare cell in a money column is never a percentage.
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
-    checks = resolver.check(answer_of(claim("C1", "Net interest income was 23,966%.", NII_ROW)), context, by_cid)
-    assert kinds(checks) == ["figure_type_mismatch"]
-    assert checks.columns_matched == (0, 1)
-    # A change column holds percentages, so "$2.0 million" cannot come from
-    # its "2".
-    checks = resolver.check(answer_of(claim("C1", "Net interest income rose $2.0 million.", NII_ROW)), context, by_cid)
-    assert kinds(checks) == ["figure_not_in_chunk"]
-    # A percent claim against the change column stays what it was: found,
-    # and unverified because 2 fills two columns.
-    checks = resolver.check(answer_of(claim("C1", "Net interest income grew 2% year over year.", NII_ROW)),
-                            context, by_cid)
-    assert kinds(checks) == ["column_unverified"] and checks.figures_in_quote == (1, 1)
 
 
-def test_years_days_and_ids_in_the_source_are_never_figures(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
+def test_a_year_a_day_a_cik_or_a_footnote_marker_is_not_a_figure_match(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
     header_row = ("Three months ended September 30, | Nine months ended September 30,\n"
                   "2025 | 2024 | Change | 2025 | 2024 | Change")
     for text, quote in [
         ("Net interest income was $2,025 million.", header_row),
-        ("Net interest income was $19,617 million.", "JPMorgan Chase & Co (JPM, CIK 19617)"),
         ("Net interest income was $2,024 million.", NII_ROW),
-        ("Net interest income was $2.0 billion.", NII_ROW),
+        ("Net interest income was $19,617 million.", "JPMorgan Chase & Co (JPM, CIK 19617)"),
+        # "2" is printed in the change cells; "$2.0 million" is not those digits.
+        ("Net interest income rose $2.0 million.", NII_ROW),
     ]:
-        checks = resolver.check(answer_of(claim("C1", text, quote)), context, by_cid)
-        assert kinds(checks) == ["figure_not_in_chunk"], text
+        checks = resolver.check(answer_of(claim(text, quote)), context, by_cid)
+        assert flags(checks) == ["figure_not_in_chunk"], text
         assert checks.figures_in_quote == (0, 1), text
-    context, by_cid = one_chunk_context(tuning_index.by_id[DEPOSITS_CHUNK])
-    checks = resolver.check(answer_of(claim("C1", "Deposits rose $30 million.",
-                                            "as of September 30, 2025 and December 31, 2024", kind="point_in_time")),
+    context, by_cid = one_chunk(chunk_from(retrieved, "q09", NVDA_2025))
+    # "(1)" is the footnote marker on the row label, not a figure of the row.
+    checks = resolver.check(answer_of(claim("Other segment items were $1 million.",
+                                            "Other segment items (1) | 33,318 | 9,219",
+                                            period_end="2025-01-26", kind="fiscal_year", ticker="NVDA")),
                             context, by_cid)
-    assert kinds(checks) == ["figure_not_in_chunk"]
+    assert flags(checks) == ["figure_not_in_chunk"]
 
 
-def test_column_labels_name_the_entity_and_basis(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[CAPITAL_CHUNK])
-    # 15.7% is the Bank, N.A. column; 14.9% is the Advanced column.
-    for text, reads_as in [
-        ("JPMorgan Chase & Co.'s Standardized CET1 capital ratio was 15.7%.", "Standardized JPMorganChase & Co."),
-        ("The Standardized CET1 capital ratio was 14.9%.", "Standardized JPMorganChase & Co."),
+def test_a_quote_lying_wholly_in_an_uncited_neighbour_is_not_located(retrieved):
+    here = chunk_from(retrieved, "q09", NVDA_2025)
+    after = chunk_from(retrieved, "q09", NVDA_2024)
+    context = Context(chunks=[here, after], n_tokens=here.n_tokens, cids=["C1", "C2"])
+    quote = "Year Ended Jan 28, 2024\n" + NVDA_2024_ROW
+    assert NVDA_2024_ROW in after.text and NVDA_2024_ROW not in here.text
+    # The claim cites C1 alone, so text that lies only in C2 locates nothing.
+    checks = resolver.check(answer_of(claim("Compute & Networking revenue was $47,405 million.", quote,
+                                            period_end="2024-01-28", kind="fiscal_year", ticker="NVDA")),
+                            context, {"C1": here, "C2": after})
+    assert flags(checks) == ["quote_not_found"]
+    assert checks.quotes_located == (0, 1) and checks.figures_unchecked == 1
+
+
+def test_a_per_share_row_under_an_except_unit_line_leaves_units_unchecked(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q07", APPLE_OPS))
+    checks = resolver.check(answer_of(claim("Apple used 15,408,095 thousand diluted shares.", DILUTED_ROW,
+                                            period_end="2024-09-28", kind="fiscal_year", ticker="AAPL")),
+                            context, by_cid)
+    # The figure and the column are established; the scale word is not, and
+    # the figure match alone never reads as a match on the units.
+    assert flags(checks) == [] and notes(checks) == ["units_unchecked"]
+    assert checks.figures_in_quote == (1, 1) and checks.columns_matched == (1, 1)
+    assert checks.units_matched == (0, 0) and checks.units_unchecked == 1
+    assert "excepts rows it does not name" in detail(checks, "units_unchecked")
+    # A money row of the same table is no better established.
+    checks = resolver.check(answer_of(claim("Total net sales were $391,035 million.", APPLE_SALES_ROW,
+                                            period_end="2024-09-28", kind="fiscal_year", ticker="AAPL")),
+                            context, by_cid)
+    assert flags(checks) == [] and checks.units_unchecked == 1
+
+
+def test_a_bare_ratio_row_is_never_credited_as_millions(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    checks = resolver.check(answer_of(claim(
+        "JPMorgan's return on tangible common equity was $20 million.", ROTCE_ROW)), context, by_cid)
+    assert flags(checks) == [] and notes(checks) == ["column_unverified", "units_unchecked"]
+    assert checks.columns_matched == (0, 0) and checks.columns_unverified == 1
+    assert checks.units_matched == (0, 0) and checks.units_unchecked == 1
+    assert "has 4 cells for 6 columns" in detail(checks, "column_unverified")
+
+
+def test_swapped_comparative_figures_are_a_column_mismatch(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    checks = resolver.check(answer_of(claim(
+        "Net interest income was $23,405 million, up from $23,966 million a year earlier.", NII_ROW)),
+        context, by_cid)
+    assert flags(checks) == ["column_mismatch"]
+    assert "$23,405 million sits in the column for 2024-09-30" in detail(checks, "column_mismatch")
+    # The second figure does sit in the claim's own column; the claim is still
+    # wrong, and the flag on the figure that anchors the period says so.
+    assert checks.columns_matched == (1, 2)
+
+
+def test_an_inherited_unit_line_leaves_units_unchecked(retrieved):
+    chunk = chunk_from(retrieved, "q07", APPLE_EPS)
+    assert chunk.units == "USD millions" and chunk.units_source == "inherited"
+    context, by_cid = one_chunk(chunk)
+    checks = resolver.check(answer_of(claim("Apple's net income was $93,736 million in fiscal 2024.",
+                                            "Net income | $93,736 | $96,995 | $99,803",
+                                            period_end="2024-09-28", kind="fiscal_year", ticker="AAPL")),
+                            context, by_cid)
+    assert flags(checks) == [] and checks.columns_matched == (1, 1)
+    assert checks.units_matched == (0, 0) and checks.units_unchecked == 1
+    assert "carried in from an earlier excerpt" in detail(checks, "units_unchecked")
+
+
+def test_a_column_naming_another_entity_or_basis_is_unverified(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q04", CAPITAL))
+    for text, missing in [
+        ("The Standardized CET1 capital ratio was 14.9%.", "advanced"),
+        ("JPMorgan Chase & Co.'s Standardized CET1 capital ratio was 15.7%.", "bank"),
     ]:
-        checks = resolver.check(answer_of(claim("C1", text, CET1_ROW, kind="point_in_time")), context, by_cid)
-        assert kinds(checks) == ["column_mismatch"], text
-        assert reads_as in checks.flags[0]["detail"]
-        assert checks.columns_matched == (0, 1)
-    # The same figures under their own labels pass.
-    for text in ["JPMorgan Chase & Co.'s Standardized CET1 capital ratio was 14.8%.",
-                 "The Advanced CET1 capital ratio of JPMorgan Chase Bank, N.A. was 16.8%."]:
-        checks = resolver.check(answer_of(claim("C1", text, CET1_ROW, kind="point_in_time")), context, by_cid)
-        assert checks.flags == [], text
-        assert checks.columns_matched == (1, 1)
+        checks = resolver.check(answer_of(claim(text, CET1_ROW, kind="point_in_time")), context, by_cid)
+        assert flags(checks) == [], text
+        assert checks.columns_matched == (0, 0) and checks.columns_unverified == 1, text
+        assert missing in detail(checks, "column_unverified"), text
+    # The same figure under the label the claim does name is matched.
+    checks = resolver.check(answer_of(claim("JPMorgan Chase & Co.'s Standardized CET1 capital ratio was 14.8%.",
+                                            CET1_ROW, kind="point_in_time")), context, by_cid)
+    assert flags(checks) == [] and checks.columns_matched == (1, 1)
 
 
-def test_column_labels_name_the_segment():
-    context, by_cid = one_chunk_context(SEGMENTS_2025)
-    for text in ["Graphics segment revenue was $50,908 million.", "Compute & Networking revenue was $57,006 million."]:
-        checks = resolver.check(answer_of(nvda_claim(text, REVENUE_ROW)), context, by_cid)
-        assert kinds(checks) == ["column_mismatch"], text
-        assert checks.columns_matched == (0, 1)
-    checks = resolver.check(answer_of(nvda_claim("Graphics revenue was $6,098 million.", REVENUE_ROW)), context, by_cid)
-    assert checks.flags == [] and checks.columns_matched == (1, 1)
-    # A claim that names no segment cannot be matched to one.
-    checks = resolver.check(answer_of(nvda_claim("Revenue was $57,006 million.", REVENUE_ROW)), context, by_cid)
-    assert kinds(checks) == ["column_unverified"] and checks.columns_unverified == 1
-    # Two figures naming two segments in one sentence are read as their
-    # own columns.
-    checks = resolver.check(answer_of(nvda_claim(
-        "Compute & Networking revenue was $50,908 million and Graphics revenue was $6,098 million.", REVENUE_ROW)),
-        context, by_cid)
-    assert checks.flags == [] and checks.columns_matched == (2, 2)
-
-
-def test_row_label_is_read(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
-    checks = resolver.check(answer_of(claim("C1", "Net income was $23,966 million for the quarter.", NII_ROW)),
-                            context, by_cid)
-    assert kinds(checks) == ["row_mismatch"]
-    assert "reads as the row 'Net income'" in checks.flags[0]["detail"]
-    assert checks.columns_matched == (0, 1)
-    # Both rows named in one sentence: each figure is read in its own row.
+def test_a_segment_column_claimed_as_another_segment_is_unverified(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q09", NVDA_2025))
+    for text in ["NVIDIA's Graphics revenue was $116,193 million in fiscal 2025.",
+                 "NVIDIA's revenue was $130,497 million in fiscal 2025."]:
+        checks = resolver.check(answer_of(claim(text, NVDA_ROW, period_end="2025-01-26",
+                                                kind="fiscal_year", ticker="NVDA")), context, by_cid)
+        assert flags(checks) == [], text
+        assert checks.columns_matched == (0, 0) and checks.columns_unverified == 1, text
+    # Two segments named in one sentence are each read in their own column.
     checks = resolver.check(answer_of(claim(
-        "C1", "Net interest income was $23,966 million and net income was $14,393 million.", NII_ROW)),
-        context, by_cid)
-    assert kinds(checks) == ["figure_not_in_quote"] and checks.columns_matched == (2, 2)
+        "Compute & Networking revenue was $116,193 million and Graphics revenue was $14,304 million.",
+        NVDA_ROW, period_end="2025-01-26", kind="fiscal_year", ticker="NVDA")), context, by_cid)
+    assert flags(checks) == [] and checks.columns_matched == (2, 2)
 
 
-def test_share_counts_use_the_except_clause_of_the_unit_line(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[APPLE_FY2024_OPERATIONS_CHUNK])
-    checks = resolver.check(answer_of(claim("C1", "Apple used 15,408,095 thousand diluted shares.", DILUTED_ROW,
-                                            period_end="2024-09-28", kind="fiscal_year", ticker="AAPL")),
+def test_a_claim_that_does_not_name_the_row_is_unverified(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    checks = resolver.check(answer_of(claim("Net income was $23,966 million for the quarter.", NII_ROW)),
                             context, by_cid)
-    assert checks.flags == [] and checks.columns_matched == (1, 1)
-    checks = resolver.check(answer_of(claim("C1", "Apple used 15.41 billion diluted shares.", DILUTED_ROW,
-                                            period_end="2024-09-28", kind="fiscal_year", ticker="AAPL")),
-                            context, by_cid)
-    assert kinds(checks) == ["unit_converted"] and "thousand to billion" in checks.flags[0]["detail"]
-    # Money rows of the same table stay in millions.
-    checks = resolver.check(answer_of(claim("C1", "Total net sales were $391,035 billion.",
-                                            "Total net sales | 391,035 | 383,285 | 394,328",
-                                            period_end="2024-09-28", kind="fiscal_year", ticker="AAPL")),
-                            context, by_cid)
-    assert kinds(checks) == ["units_mismatch"]
+    assert flags(checks) == []
+    assert checks.columns_matched == (0, 0) and checks.columns_unverified == 1
+    assert "does not name the row 'Net interest income'" in detail(checks, "column_unverified")
 
 
-def test_comparative_claims_keep_the_earlier_column(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
-    for text in [
-        "Net interest income was $23,966 million, up from $23,405 million a year earlier.",
-        "Net interest income was $23,966 million for the three months ended September 30, 2025 versus "
-        "$23,405 million for the three months ended September 30, 2024.",
-    ]:
-        checks = resolver.check(answer_of(claim("C1", text, NII_ROW)), context, by_cid)
-        assert checks.flags == [], text
-        assert checks.figures_in_quote == (2, 2) and checks.columns_matched == (2, 2)
-    # Alone, the earlier column's figure is a period mismatch; and a
-    # nine-month comparative is still a duration mismatch.
-    checks = resolver.check(answer_of(claim("C1", "Net interest income was $23,405 million.", NII_ROW)), context, by_cid)
-    assert kinds(checks) == ["column_mismatch"]
-    checks = resolver.check(answer_of(claim(
-        "C1", "Net interest income was $23,966 million, up from $69,233 million a year earlier.", NII_ROW)),
-        context, by_cid)
-    assert kinds(checks) == ["duration_mismatch"]
+def test_a_figure_filling_two_cells_of_its_row_is_unverified(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    row = "Book value per share | $124.96 | $115.15 | 9 | $124.96 | $115.15 | 9"
+    checks = resolver.check(answer_of(claim("Book value per share was $124.96.", row)), context, by_cid)
+    assert flags(checks) == [] and checks.columns_unverified == 1
+    assert "$124.96 fills 2 cells" in detail(checks, "column_unverified")
 
 
-def test_prose_counts_dates_and_large_scales_are_not_false_reds(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
-    for text in ["Per Note 27 and excerpt 13, in a 52-week year net interest income was $23,966 million.",
-                 "As of 9/30/2025 (30 September 2025) net interest income was $23,966 million."]:
-        checks = resolver.check(answer_of(claim("C1", text, NII_ROW)), context, by_cid)
-        assert checks.flags == [], text
-        assert checks.figures_in_quote == (1, 1) and checks.columns_matched == (1, 1)
-    context, by_cid = one_chunk_context(tuning_index.by_id[DEPOSITS_CHUNK])
-    checks = resolver.check(answer_of(claim("C1", "Deposits were $2.5 trillion.", "Deposits | $2,548.5 | $2,406.0",
-                                            kind="point_in_time")), context, by_cid)
-    assert kinds(checks) == ["unit_converted"] and checks.columns_matched == (1, 1)
-    # Prose carries its own scale word, so a restatement converts against it.
-    context, by_cid = one_chunk_context(tuning_index.by_id[BAC_PROSE_CHUNK])
-    checks = resolver.check(answer_of(claim(
-        "C1", "Uninsured deposits were $606,800 million.",
-        "total estimated uninsured U.S. and non-U.S. deposits were $606.8 billion and $116.6 billion",
-        period_end="2023-12-31", kind="point_in_time", ticker="BAC")), context, by_cid)
-    assert kinds(checks) == ["unit_converted"] and checks.figures_in_quote == (1, 1)
+def test_a_table_whose_column_shape_was_not_established_is_unverified(retrieved):
+    chunk = chunk_from(retrieved, "q06", NII)
+    for source in ("unverified_shape", None):
+        untrusted = dataclasses.replace(chunk, column_source=source)
+        context, by_cid = one_chunk(untrusted)
+        checks = resolver.check(answer_of(claim("Net interest income was $23,966 million.", NII_ROW)),
+                                context, by_cid)
+        assert flags(checks) == [], source
+        assert checks.figures_in_quote == (1, 1) and checks.columns_matched == (0, 0), source
+        assert checks.columns_unverified == 1, source
+        assert "column shape was not established" in detail(checks, "column_unverified")
 
 
-def test_missing_citation_is_flagged(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
-    data = claim("C1", "Net interest income was $99,999 million.", NII_ROW)
+def test_a_fiscal_year_label_column_with_no_period_is_never_a_calendar_year_match(retrieved):
+    chunk = chunk_from(retrieved, "q05", APPLE_2023)
+    assert chunk.columns[2].label == "FY2022" and chunk.columns[2].period_end is None
+    context, by_cid = one_chunk(chunk)
+    checks = resolver.check(answer_of(claim("Total net sales were $394,328 million in fiscal 2022.",
+                                            APPLE_2023_ROW, period_end="2022-09-24", kind="fiscal_year",
+                                            ticker="AAPL")), context, by_cid)
+    assert flags(checks) == [] and checks.columns_unverified == 1
+    assert detail(checks, "column_unverified").endswith("the column carries no period")
+    # The dated column of the same table matches.
+    checks = resolver.check(answer_of(claim("Total net sales were $383,285 million in fiscal 2023.",
+                                            APPLE_2023_ROW, period_end="2023-09-30", kind="fiscal_year",
+                                            ticker="AAPL")), context, by_cid)
+    assert flags(checks) == [] and checks.columns_matched == (1, 1)
+
+
+def test_the_apple_fy2023_claim_matches_and_the_fy2024_period_does_not(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q07", APPLE_OPS))
+    checks = resolver.check(answer_of(claim("Apple's total net sales were $383,285 million in fiscal 2023.",
+                                            APPLE_SALES_ROW, period_end="2023-09-30", kind="fiscal_year",
+                                            ticker="AAPL")), context, by_cid)
+    assert flags(checks) == [] and checks.columns_matched == (1, 1)
+    checks = resolver.check(answer_of(claim("Apple's total net sales were $383,285 million in fiscal 2024.",
+                                            APPLE_SALES_ROW, period_end="2024-09-28", kind="fiscal_year",
+                                            ticker="AAPL")), context, by_cid)
+    assert flags(checks) == ["column_mismatch"] and checks.columns_matched == (0, 1)
+    assert "the claim says 2024-09-28" in detail(checks, "column_mismatch")
+
+
+def test_a_nine_month_figure_stated_as_a_quarter_is_a_duration_mismatch(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    checks = resolver.check(answer_of(claim("Net interest income was $70,448 million for the quarter.",
+                                            NII_ROW)), context, by_cid)
+    assert flags(checks) == ["duration_mismatch"] and checks.columns_matched == (0, 1)
+
+
+def test_a_claim_that_cites_nothing_is_flagged_and_checks_nothing(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    data = claim("Net interest income was $23,966 million.", NII_ROW)
     data["citations"] = []
     checks = resolver.check(answer_of(data), context, by_cid)
-    assert kinds(checks) == ["no_citation"]
-    assert checks.quotes_found == (0, 1) and checks.figures_in_quote == (0, 1)
+    assert flags(checks) == ["no_citation", "quote_not_found"]
+    assert checks.quotes_located == (0, 1) and checks.figures_in_quote == (0, 0)
+    assert checks.figures_unchecked == 1
 
 
-def test_summary_and_table_figures_must_be_figures_of_their_claims(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
-    answer = Answer.model_validate({
-        "summary": [{"text": "NII was $30 billion.", "claim_ids": ["K1"]},
-                    {"text": "NII was $24.0 billion.", "claim_ids": ["K1"]},
-                    {"text": "phantom", "claim_ids": ["K9"]}],
-        "claims": [claim("C1", "Net interest income was $23,966 million.", NII_ROW)],
-        "table": [{"dimension": "NII", "cells": [{"column": "JPM", "text": "$99,999", "claim_ids": ["K1"]},
-                                                 {"column": "JPM Q3", "text": "23,966", "claim_ids": ["K1"]}]}],
-        "not_comparable": [], "gaps": []})
+def test_a_ticker_outside_the_question_scope_is_flagged(retrieved):
+    prepared = retrieved["q06"]
+    by_cid = dict(zip(prepared.context.cids, prepared.context.chunks))
+    cid = next(c for c, chunk in by_cid.items() if chunk.chunk_id == NII)
+    answer = answer_of(claim("Net interest income was $23,966 million.", NII_ROW, ticker="BAC", cid=cid))
+    checks = resolver.check(answer, prepared.context, by_cid, prepared.plan)
+    assert flags(checks) == ["ticker_out_of_scope"]
+
+
+def test_a_summary_sentence_or_cell_stating_an_unlinked_figure_is_flagged(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII))
+    answer = answer_of(
+        claim("Net interest income was $23,966 million.", NII_ROW),
+        summary=[{"text": "Net interest income was $23,966 million.", "claim_ids": ["K1"]},
+                 {"text": "Net interest income was $99,999 million.", "claim_ids": ["K1"]},
+                 {"text": "orphan", "claim_ids": []},
+                 {"text": "phantom", "claim_ids": ["K9"]}],
+        table=[{"dimension": "NII", "cells": [{"column": "JPM", "text": "$30,000", "claim_ids": ["K1"]},
+                                              {"column": "JPM Q3", "text": "23,966", "claim_ids": ["K1"]}]}])
     checks = resolver.check(answer, context, by_cid)
-    unbacked = [f["source_string"] for f in checks.flags if f["kind"] == "unbacked_figure"]
-    assert unbacked == ["NII was $30 billion.", "$99,999"]
-    assert checks.unlinked_sentences == ["phantom"]
+    assert [f["kind"] for f in checks.flags if f["where"] != "K1"] == [
+        "unlinked_figure", "unlinked_sentence", "unlinked_sentence", "unlinked_figure"]
+    assert checks.unlinked == ["orphan", "phantom"]
 
 
-def test_not_comparable_notes_and_gap_wording_are_checked(tuning_index, registry):
-    chunk = tuning_index.by_id[NII_CHUNK]
+def test_a_gap_or_a_not_comparable_note_outside_the_coverage_block_is_flagged(retrieved, registry):
     coverage = "JPM JPMorgan Chase & Co: 10-Q FY2025 Q3 (quarter ended 2025-09-30, filed 2025-11-04)"
-    context, by_cid = one_chunk_context(chunk, coverage)
-    answer = Answer.model_validate({
-        "summary": [{"text": "s", "claim_ids": ["K1"]}],
-        "claims": [claim("C1", "Net interest income was $23,966 million.", NII_ROW)],
-        "table": [],
-        "not_comparable": [{"dimension": "anything", "tickers": ["JPM", "WFC", "TSLA", "ZZZZ"],
-                            "reason": "no reason, 2019 data"}],
-        "gaps": ["No FY2019 data.", "Tesla is not covered.", "The excerpts do not state a target."]})
-    names = {t: e["name"] for t, e in registry["companies"].items()}
-    checks = resolver.check(answer, context, by_cid, None, set(registry["companies"]), names)
-    gaps = [(f["detail"], f["source_string"]) for f in checks.flags if f["kind"] == "ungrounded_gap"]
-    assert [g[1] for g in gaps] == ["No FY2019 data.", "Tesla is not covered."]
-    assert "2019" in gaps[0][0] and "Tesla" in gaps[1][0]
-    note = next(f for f in checks.flags if f["kind"] == "ungrounded_not_comparable")
-    assert "WFC, TSLA, ZZZZ, 2019" in note["detail"]
+    context, by_cid = one_chunk(chunk_from(retrieved, "q06", NII), coverage)
+    answer = answer_of(
+        claim("Net interest income was $23,966 million.", NII_ROW),
+        gaps=["The excerpts hold no 2019 figures.", "No Bank of America (BAC) excerpt is present.",
+              "The excerpts state no 2025 target."],
+        not_comparable=[{"dimension": "anything", "tickers": ["JPM", "WFC", "ZZZZ"], "reason": "no reason"}])
+    checks = resolver.check(answer, context, by_cid, None, set(registry["companies"]))
+    grounded = [(f["where"], f["detail"]) for f in checks.flags if f["kind"] == "ungrounded_gap"]
+    assert [g[0] for g in grounded] == ["gap 1", "gap 2", "not comparable 1"]
+    assert "2019" in grounded[0][1] and "BAC" in grounded[1][1]
+    assert "WFC, ZZZZ" in grounded[2][1]
 
 
-def test_neighbour_quote_is_noted_and_a_straddling_quote_is_found():
-    context = Context(chunks=[SEGMENTS_2025, SEGMENTS_2024], n_tokens=160, cids=["C1", "C2"])
-    by_cid = {"C1": SEGMENTS_2025, "C2": SEGMENTS_2024}
-    # The quote lies wholly in the uncited neighbour: found, and said so;
-    # the figure and column are then read from that neighbour.
-    checks = resolver.check(answer_of(nvda_claim("Compute & Networking revenue was $31,036 million.",
-                                                 "Three Months Ended 2024-10-27\nRevenue | $31,036 | $4,046 | $35,082",
-                                                 period_end="2024-10-27")), context, by_cid)
-    assert kinds(checks) == ["quote_in_neighbour"] and checks.flags[0]["cid"] == "C2"
-    assert checks.quotes_found == (1, 1) and checks.columns_matched == (1, 1)
-    # A quote across the boundary is an exact quote of the cited chunk.
-    straddle = SEGMENTS_2025.text[-60:] + "\n" + SEGMENTS_2024.text[:40]
-    checks = resolver.check(answer_of(nvda_claim("Total operating income was $38,267 million.", straddle)),
+def test_an_approximate_quote_is_flagged_with_the_passage_it_found(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q04", BAC_PROSE))
+    doctored = ("At December 31, 2023, the Corporation's deposits totaled $1.92 trillion, of which total "
+                "estimated uninsured U.S. and non-U.S. deposits were $616.8 billion and $116.6 billion.")
+    checks = resolver.check(answer_of(claim("Uninsured U.S. deposits were $616.8 billion.", doctored,
+                                            period_end="2023-12-31", kind="point_in_time", ticker="BAC")),
                             context, by_cid)
-    assert checks.quotes_found == (1, 1) and checks.figures_in_quote == (1, 1)
-    assert not [f for f in checks.flags if f["kind"].startswith("quote")]
+    assert flags(checks) == ["approximate_quote", "figure_not_in_chunk"]
+    passage = next(f["source_string"] for f in checks.flags if f["kind"] == "approximate_quote")
+    assert "606.8" in passage and checks.figures_in_quote == (0, 1)
 
 
-def test_fiscal_year_label_columns_need_the_filers_year_end_month(tuning_index):
-    chunk = tuning_index.by_id[APPLE_FY2023_SEGMENTS_CHUNK]
-    assert [c.label for c in chunk.columns][2] == "FY2022" and chunk.columns[2].period_end is None
-    context, by_cid = one_chunk_context(chunk)
-    row = "Total net sales | $383,285 | (3)% | $394,328 | 8% | $365,817"
-    checks = resolver.check(answer_of(claim("C1", "Total net sales were $394,328 million in fiscal 2022.", row,
-                                            period_end="2022-12-31", kind="fiscal_year", ticker="AAPL")),
-                            context, by_cid)
-    assert kinds(checks) == ["column_mismatch"] and checks.flags[0]["source_string"] == "FY2022"
-    checks = resolver.check(answer_of(claim("C1", "Total net sales were $394,328 million in fiscal 2022.", row,
-                                            period_end="2022-09-30", kind="fiscal_year", ticker="AAPL")),
-                            context, by_cid)
-    assert checks.flags == [] and checks.columns_matched == (1, 1)
-
-
-def test_month_end_slack_is_one_week():
-    chunk = SEGMENTS_2025
-    column = Column(0, "Three Months Ended Oct 26, 2025", "2025-10-26", "three_months")
-    assert resolver.period_matches(column, "2025-10-31", chunk) is True
-    assert resolver.period_matches(Column(0, "x", "2025-10-24", "three_months"), "2025-10-31", chunk) is False
-    assert resolver.period_matches(column, "2025-10-30", chunk) is False
-
-
-def test_sign_and_short_quotes(tuning_index):
-    context, by_cid = one_chunk_context(tuning_index.by_id[APPLE_FY2023_SEGMENTS_CHUNK])
-    checks = resolver.check(answer_of(claim("C1", "Total net sales grew 3% in fiscal 2023.",
-                                            "Total net sales | $383,285 | (3)% | $394,328 | 8% | $365,817",
+def test_a_source_number_printed_negative_is_flagged_against_a_positive_claim(retrieved):
+    context, by_cid = one_chunk(chunk_from(retrieved, "q05", APPLE_2023))
+    checks = resolver.check(answer_of(claim("Total net sales grew 3% in fiscal 2023.", APPLE_2023_ROW,
                                             period_end="2023-09-30", kind="fiscal_year", ticker="AAPL")),
                             context, by_cid)
-    assert "sign_mismatch" in kinds(checks)
-    checks = resolver.check(answer_of(claim("C1", "Total net sales fell 3% in fiscal 2023.",
-                                            "Total net sales | $383,285 | (3)% | $394,328 | 8% | $365,817",
-                                            period_end="2023-09-30", kind="fiscal_year", ticker="AAPL")),
-                            context, by_cid)
-    assert "sign_mismatch" not in kinds(checks)
-    context, by_cid = one_chunk_context(tuning_index.by_id[NII_CHUNK])
-    checks = resolver.check(answer_of(claim("C1", "Net interest income was $23,966 million.", "23,966")), context, by_cid)
-    assert kinds(checks) == ["quote_too_short", "figure_not_in_quote"]
-    assert checks.quotes_found == (0, 1) and checks.figures_in_quote == (0, 1)
-
-
-@pytest.mark.parametrize("text, expected", [
-    ("Per Note 27 and excerpt 13, in a 52-week year net interest income was $23,966 million.", ["$23,966 million"]),
-    ("As of 9/30/2025 (30 September 2025) deposits were $2.5 trillion, the 3rd rise.", ["$2.5 trillion"]),
-    ("Net sales fell (3)% in FY2023 and 2% in Q4 2024.", ["(3)%", "2%"]),
-])
-def test_figures_in_claim_text_masks_counts_and_dates(text, expected):
-    assert [f.text for f in resolver.figures_in(text)] == expected
+    assert "sign_differs" in flags(checks)
+    assert "(3)%" in detail(checks, "sign_differs")

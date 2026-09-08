@@ -472,13 +472,16 @@
 
   // -- answer ---------------------------------------------------------------
 
-  function flagsByClaim(payload) {
+  // Flags are disagreements and notes are the facts beside them (which
+  // column a comparative figure sits in, why a scale was not read); a claim
+  // badge has to show both, so they are grouped together by "where".
+  function rowsByClaim(payload) {
     var out = {};
     var checks = payload.checks;
-    if (!checks || !checks.flags) { return out; }
-    checks.flags.forEach(function (flag) {
-      var key = flag.claim_id || "_";
-      (out[key] = out[key] || []).push(flag);
+    if (!checks) { return out; }
+    (checks.flags || []).concat(checks.notes || []).forEach(function (row) {
+      var key = row.where || "_";
+      (out[key] = out[key] || []).push(row);
     });
     return out;
   }
@@ -497,7 +500,7 @@
       if (payload.raw_text) { root.appendChild(preBlock(payload.raw_text.slice(0, 2000))); }
       return;
     }
-    var flags = flagsByClaim(payload);
+    var flags = rowsByClaim(payload);
     var claimsById = {};
     answer.claims.forEach(function (c) { claimsById[c.id] = c; });
 
@@ -629,6 +632,8 @@
     return flags.filter(function (f) { return f.kind === kind; });
   }
 
+  // Every badge says which of the three outcomes a check reached: matched
+  // (plain), flagged (alert or warn), or unchecked with its reason.
   function claimBadges(claim, flags, payload) {
     var out = [];
     if (!payload.checks) { return out; }
@@ -636,27 +641,30 @@
     if (!claim.citations.length) {
       out.push(badge("alert", "no citation given"));
     } else if (kinds(flags, "quote_not_found").length) {
-      out.push(badge("alert", "quote not found in cited excerpt"));
+      out.push(badge("alert", "quote not located in the cited excerpt"));
     } else if (kinds(flags, "approximate_quote").length) {
-      out.push(badge("warn", "approximate quote"));
+      out.push(badge("warn", "quote located only approximately"));
     } else if (!kinds(flags, "citation_unknown").length) {
-      out.push(badge(null, "quote found in source"));
+      out.push(badge(null, "quote located"));
     }
     kinds(flags, "citation_unknown").forEach(function (f) { out.push(badge("alert", f.detail)); });
-    kinds(flags, "quote_too_long").forEach(function (f) { out.push(badge("warn", "quote too long: " + f.detail)); });
     // Figures.
     var figures = figuresIn(claim.text);
     var missing = kinds(flags, "figure_not_in_chunk");
-    var outside = kinds(flags, "figure_not_in_quote");
-    missing.forEach(function (f) { out.push(badge("alert", "figure not in cited excerpt: " + f.detail.split(" is in")[0])); });
-    outside.forEach(function (f) { out.push(badge("warn", "figure in excerpt, outside the quote: " + f.source_string)); });
-    if (figures.length && !missing.length && !outside.length && claim.citations.length) {
-      out.push(badge(null, figures.length === 1 ? "figure in quote" : figures.length + " figures in quote"));
+    var outside = kinds(flags, "figure_elsewhere_in_chunk");
+    var unchecked = kinds(flags, "figures_unchecked");
+    missing.forEach(function (f) { out.push(badge("alert", "figure not printed in the cited excerpt: " + f.detail.split(" is in")[0])); });
+    outside.forEach(function (f) { out.push(badge("warn", "figure printed outside the quote: " + f.detail.split(" is printed")[0])); });
+    unchecked.forEach(function (f) { out.push(badge("warn", "figures unchecked: " + f.detail)); });
+    if (figures.length && !missing.length && !outside.length && !unchecked.length && claim.citations.length) {
+      out.push(badge(null, figures.length === 1 ? "figure found in the quote" : figures.length + " figures found in the quote"));
     }
-    kinds(flags, "unit_converted").forEach(function (f) {
-      out.push(badge("warn", "matched after unit conversion: " + f.source_string));
-    });
-    kinds(flags, "units_mismatch").forEach(function (f) { out.push(badge("warn", "units: " + f.detail)); });
+    kinds(flags, "sign_differs").forEach(function (f) { out.push(badge("alert", "sign differs: " + f.detail)); });
+    kinds(flags, "bare_figure_from_percent_cell").forEach(function (f) { out.push(badge("warn", f.detail)); });
+    // Units.
+    kinds(flags, "unit_converted").forEach(function (f) { out.push(badge(null, "units matched after conversion: " + f.detail)); });
+    kinds(flags, "units_mismatch").forEach(function (f) { out.push(badge("alert", "units: " + f.detail)); });
+    kinds(flags, "units_unchecked").forEach(function (f) { out.push(badge("warn", "units unchecked: " + f.detail)); });
     // Columns.
     var mismatches = kinds(flags, "column_mismatch").concat(kinds(flags, "duration_mismatch"));
     var unverified = kinds(flags, "column_unverified");
@@ -664,8 +672,12 @@
       out.push(badge("alert", "column mismatch: claim says " + claim.period_end + " " + (claim.period_kind || "") +
         ", figure sits in " + (f.source_string || "an undated column")));
     });
-    unverified.forEach(function () { out.push(badge("warn", "column unverified")); });
-    if (!mismatches.length && !unverified.length) {
+    unverified.forEach(function (f) { out.push(badge("warn", "column unverified: " + f.detail)); });
+    kinds(flags, "column_other_period").forEach(function (f) { out.push(badge(null, f.detail)); });
+    // The page's own column lookup fills in only where the server ran the
+    // column check and said nothing against it; a figure the server could not
+    // place must never show a column badge.
+    if (!mismatches.length && !unverified.length && !missing.length && !outside.length && !unchecked.length) {
       matchedColumns(claim, figures).forEach(function (m) {
         out.push(badge(null, "column: " + m.column.label));
       });
@@ -778,12 +790,12 @@
     var plan = {};
     var answer = payload.answer;
     if (!answer) { return plan; }
-    var flags = flagsByClaim(payload);
+    var flags = rowsByClaim(payload);
     answer.claims.forEach(function (claim) {
       var own = flags[claim.id] || [];
-      var quoteCids = claim.citations.slice();
-      own.forEach(function (f) { if (f.kind === "approximate_quote" && f.cid && quoteCids.indexOf(f.cid) < 0) { quoteCids.push(f.cid); } });
-      quoteCids.forEach(function (cid) {
+      // A quote is searched only in the excerpts the claim cites, so those are
+      // the excerpts to highlight it in.
+      claim.citations.forEach(function (cid) {
         var entry = plan[cid] = plan[cid] || {quotes: [], columns: []};
         if (claim.quote) { entry.quotes.push(claim.quote); }
       });
@@ -791,17 +803,20 @@
         var entry = plan[m.cid] = plan[m.cid] || {quotes: [], columns: []};
         if (entry.columns.indexOf(m.position) < 0) { entry.columns.push(m.position); }
       });
+      // A flagged column is underlined too, so the reader can see the cell the
+      // figure really sits in; the flag carries the label, and the claim's own
+      // citations say which excerpts to look in for it.
       own.forEach(function (f) {
-        if ((f.kind === "column_mismatch" || f.kind === "duration_mismatch") && f.cid && f.source_string) {
-          var source = state.sources[f.cid];
+        if (f.kind !== "column_mismatch" && f.kind !== "duration_mismatch") { return; }
+        claim.citations.forEach(function (cid) {
+          var source = state.sources[cid];
           if (!source) { return; }
           source.columns.forEach(function (c) {
-            if (c.label === f.source_string) {
-              var entry = plan[f.cid] = plan[f.cid] || {quotes: [], columns: []};
-              if (entry.columns.indexOf(c.index) < 0) { entry.columns.push(c.index); }
-            }
+            if (c.label !== f.source_string) { return; }
+            var entry = plan[cid] = plan[cid] || {quotes: [], columns: []};
+            if (entry.columns.indexOf(c.index) < 0) { entry.columns.push(c.index); }
           });
-        }
+        });
       });
     });
     return plan;
@@ -993,26 +1008,26 @@
     root.appendChild(el("h3", "bh-h3", "evidence checks"));
     if (payload.checks) {
       var c = payload.checks;
-      root.appendChild(el("p", "fd-stat", "quotes found " + c.quotes_found[0] + "/" + c.quotes_found[1] +
-        " | figures in quote " + c.figures_in_quote[0] + "/" + c.figures_in_quote[1] +
+      // Each pair reads matched / checkable, with the count the check could
+      // not run on printed beside it and never folded into the denominator.
+      root.appendChild(el("p", "fd-stat", "quotes located " + c.quotes_located[0] + "/" + c.quotes_located[1] +
+        " | figures in quote " + c.figures_in_quote[0] + "/" + c.figures_in_quote[1] + ", unchecked " + c.figures_unchecked +
         " | columns matched " + c.columns_matched[0] + "/" + c.columns_matched[1] + ", unverified " + c.columns_unverified +
-        " | units declared " + c.units_declared[0] + "/" + c.units_declared[1] +
-        " | unlinked sentences " + c.unlinked_sentences.length));
-      if (c.flags.length) {
-        var flags = el("ul");
-        c.flags.forEach(function (f) {
+        " | units matched " + c.units_matched[0] + "/" + c.units_matched[1] + ", unchecked " + c.units_unchecked +
+        " | unlinked " + c.unlinked.length));
+      [["flagged", c.flags, "alert"], ["unchecked and noted", c.notes, "warn"]].forEach(function (group) {
+        root.appendChild(el("p", "bh-small", group[0] + (group[1].length ? ":" : ": none")));
+        if (!group[1].length) { return; }
+        var list = el("ul");
+        group[1].forEach(function (f) {
           var li = el("li");
-          li.appendChild(badge(f.kind.indexOf("not_found") >= 0 || f.kind.indexOf("not_in_chunk") >= 0 || f.kind.indexOf("mismatch") >= 0 ? "alert" : "warn",
-            f.kind.replace(/_/g, " ")));
-          li.appendChild(document.createTextNode(" " + (f.claim_id ? f.claim_id + ": " : "") + f.detail +
-            (f.source_string ? " [source: " + f.source_string + "]" : "") + " "));
-          if (f.cid) { li.appendChild(chip(f.cid, function () { goToSource(f.cid); })); }
-          flags.appendChild(li);
+          li.appendChild(badge(group[2], f.kind.replace(/_/g, " ")));
+          li.appendChild(document.createTextNode(" " + (f.where ? f.where + ": " : "") + f.detail +
+            (f.source_string ? " [source: " + f.source_string + "]" : "")));
+          list.appendChild(li);
         });
-        root.appendChild(flags);
-      } else {
-        root.appendChild(el("p", "bh-small", "flags: none"));
-      }
+        root.appendChild(list);
+      });
     } else {
       root.appendChild(el("p", "bh-muted bh-small", payload.dry_run ? "dry run: no answer to check yet" : "no answer to check"));
     }
