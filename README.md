@@ -165,17 +165,6 @@ list lives outside the repo, so a public clone leaves the variable unset, and th
 it did not run instead of failing. The other three checks (no smart punctuation, ASCII only, and no
 wording that claims an answer is established) always run.
 
-## How the one-request rule is kept
-
-There is one call site: `ask.py` calls `model.generate` once, and every other step around it is
-plain Python. The API client is built with `max_retries=0` and a 300 second timeout, so the SDK
-never quietly makes a second request, and a reply that does not parse is reported with its raw text
-rather than repaired by another call. A guard object is created per ask and handed to the backend;
-a second `generate` inside one ask raises `RequestBudgetExceeded`. Every payload carries
-`llm_attempts` and `llm_completed` (0 and 0 on a refusal that never reaches the model, 1 and 1 on
-an answer) along with the provider's request id, the page prints them under `details`, and
-`tests/test_ask.py` asserts all three cases.
-
 ## What the four hours bought, and what came after
 
 The four-hour version: the parser that keeps tables, dates and units; the index; the deterministic
@@ -228,8 +217,3 @@ establish presence and provenance. Whether an answer is right is the rubric's bu
 is one person's reading, and 24 labelled questions is enough to catch the failure classes I named
 and nowhere near enough to quote a rate with error bars.
 
-## Surprises, and where this breaks in production
-
-> **PLACEHOLDER.** I write this section by hand from my own build notes before this repo goes out.
-> It covers what the corpus did that I did not expect, and the places this design would fail on a
-> real filing feed.
