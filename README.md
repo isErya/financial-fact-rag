@@ -165,22 +165,6 @@ list lives outside the repo, so a public clone leaves the variable unset, and th
 it did not run instead of failing. The other three checks (no smart punctuation, ASCII only, and no
 wording that claims an answer is established) always run.
 
-## What the four hours bought, and what came after
-
-The four-hour version: the parser that keeps tables, dates and units; the index; the deterministic
-scope over companies, filings and periods; one API request; the quote-in-source checks; the page
-with clickable evidence; and a first evaluation on the tuning set.
-
-What came after, each traceable to a failure I watched happen and logged in `docs/PROMPT-LOG.md`:
-the column and units checks (after a provenance question quoted the prior-year column), the
-annual-baseline retrieval rule (after a risk question on a 10-Q returned a 75-character pointer to
-the 10-K), the bank disclosure brief preset, the rewrite of the evidence checks onto a contract
-where an unchecked item is never counted as a pass, the held-out evaluation, and the polish.
-
-I did not run a stopwatch and I am not going to pretend the split is exact. The honest version is
-that the first sitting produced the pipeline end to end and everything since has been iteration on
-what the evaluation showed.
-
 ## Evaluation
 
 The method, the two question sets and their schema are in `eval/notes.md`. Layer 1 scores retrieval
