@@ -30,9 +30,6 @@ question -> scope (companies, filings, periods; no model) -> retrieve -> ONE mod
 | 5 | A front end | `service/web.py` and `service/static/` (the page at http://localhost:8804) |
 | 6 | An example request ready to execute | `examples/request.json` and `examples/ask.sh`, the curl below, the four preset chips on the page, and `python service/ask.py "<question>"` |
 | 7 | Notes on how quality was evaluated | `eval/notes.md`, `eval/run.py`, `eval/tuning.jsonl`, `eval/heldout.jsonl` |
-| 8 | Assumptions and decisions | the "Assumptions" and "Tradeoffs" sections below |
-| 9 | Value creation and future state | the two short sections below, `docs/VALUE.md`, `docs/FUTURE-STATE.md` |
-| 10 | One LLM API request per answer | `service/ask.py` and `service/llm_client.py` (one call site, `max_retries=0`, attempt and completion counters), asserted in `tests/test_ask.py`; see "How the one-request rule is kept" |
 
 ## Run it
 
@@ -195,56 +192,6 @@ I did not run a stopwatch and I am not going to pretend the split is exact. The 
 that the first sitting produced the pipeline end to end and everything since has been iteration on
 what the evaluation showed.
 
-## Assumptions
-
-Each of these is a decision I made about this corpus. Every one of them is a place where a
-different corpus would need different code.
-
-- **The corpus is a fixed snapshot.** 246 filings from 54 companies, filed 2022 through 2026, with
-  one exception: GE's only filing is a 2015 10-K for GE Capital (period end 2014-12-31). GE is
-  excluded from group expansions and marked stale whenever it is named, so a question about "the
-  industrials" never quietly answers from a 2015 filing.
-- **A 10-Q's risk section is often a pointer, so an annual baseline is always in scope.** The parse
-  report records 65 pointer stubs among the 157 10-Qs, and 24 10-Qs (JNJ 12, XOM 12) that carry no
-  Part II Item 1A at all. For a section-led question the newest 10-K section is retrieved beside
-  the newest 10-Q, and a stub pins its 10-K section into the same bucket. Without that rule, "what
-  are Bank of America's main risk factors" answers from 75 characters.
-- **Fiscal labels are computed from the period end and each company's fiscal year end.** The
-  quarter tag in the corpus file names is a calendar quarter and is never read for anything. The
-  formula handles the calendars that trip people up: NVIDIA's quarter ended 2025-10-26, filed
-  2025-11-19, is labelled FY2026 Q3. Where a company names its own year differently from the
-  formula, the difference is a hand-set offset in `service/companies.yaml`: Home Depot and Target
-  call the year ended in early 2025 their fiscal 2024 and carry an offset of -1, while Walmart
-  calls the same stretch fiscal 2025 and carries none. Every filing is printed with its period end
-  beside its label, so a reader always sees which months a label covers.
-- **No amendments, no duplicate periods.** This corpus holds no 10-K/A or 10-Q/A and no two filings
-  of the same form and period for one company. The rule a real ingest needs (an amendment
-  supersedes the original, and the newest filing of a period wins) is described here and is not
-  built.
-- **Only the primary document is indexed.** Every file ends at the signatures block, so there are
-  no exhibits, no certifications and no subsidiary lists in the corpus, and none of that is
-  indexed.
-- **The inline-XBRL preamble holds no values.** Each file starts with tag names and context ids
-  before the cover page, and the parser drops all of it at the cover marker. `index.py report`
-  checks that no comma-formatted number in a preamble is missing from the body it precedes; the
-  parse report records 0 files failing that check.
-- **Figures are quoted from the filing and never computed.** The system does no arithmetic. There
-  are no growth rates, no sums and no derived ratios unless the filing itself prints them, because
-  a computed number has no row and no column to point at.
-- **The model reads only what code chose.** Retrieval is restricted to the filings the scope
-  selected, the context is capped by a token budget (20,000 tokens for one to three companies,
-  30,000 for four to six, at most six companies per question), and what was dropped is reported
-  rather than hidden.
-- **The evidence checks establish presence and provenance. They do not establish that an answer is
-  right.** A check can say that a quoted passage appears in the excerpt it cites, that a figure sits
-  in that passage, which column of which table it came from, and whether the units agree. None of
-  that speaks to whether the right row was chosen, whether the answer addresses the question, or
-  whether something important was left out. Only a graded reading by a person speaks to those, and
-  that grading is reported separately, in `eval/notes.md`. This distinction is the point of the
-  build, so the page and these documents never blur it: every badge is named for what it
-  establishes, and an item the checks could not run on is shown as unchecked and never counted as
-  a pass.
-
 ## Evaluation
 
 The method, the two question sets and their schema are in `eval/notes.md`. Layer 1 scores retrieval
@@ -280,48 +227,6 @@ What these numbers do not prove is in `eval/notes.md` and bears repeating here. 
 establish presence and provenance. Whether an answer is right is the rubric's business, the rubric
 is one person's reading, and 24 labelled questions is enough to catch the failure classes I named
 and nowhere near enough to quote a rate with error bars.
-
-## What this is worth to a deal team
-
-The full version, including how I would measure it in a pilot, is in
-[docs/VALUE.md](docs/VALUE.md).
-
-Three people at a mid-market PE firm read these filings by hand today: the associate screening
-comparables before a memo, the portfolio operations lead re-reading each quarter for the companies
-the fund owns, and the credit or CFO office asking how safe the operating banks are. All three
-need the same output, which is a short brief where every figure carries its period, its units, and
-a source they can open. What changes here is that the reviewer's job moves from finding the numbers
-to checking them, and the checking is faster because the source opens beside the claim with its row
-label and column header visible.
-
-I have built the checking half of this before: my day job is preparing 10-K and 10-Q material for
-bank examinations at a federal financial regulator, where a figure without its period, its units
-and its source is not usable. That is the reason the scope band, the column provenance and the unit
-line exist here at all.
-
-The numbers that matter are the client's, so `docs/VALUE.md` states them as a measurement plan
-(time to an accepted brief before and during a pilot, questions per associate per week, the share
-of figures a reviewer changed after checking the source, and cost per question from the usage
-tile) rather than as a claim I can make from my own laptop.
-
-## Where this goes next
-
-The full list is in [docs/FUTURE-STATE.md](docs/FUTURE-STATE.md). The first four, in the order I
-would build them: nightly ingestion from EDGAR for the portfolio and the watchlist; reported
-figures taken from XBRL company facts with their periods and units attached, so the checks compare
-text to structured data; a new-filing brief that re-runs last quarter's question against the
-filing that just landed; and the same pipeline over deal-room documents inside the client's own
-storage. Evaluation moves into the delivery pipeline at the same time, so a prompt or retrieval
-change ships only when the evidence-check rates and the graded rubric hold. None of it changes the
-rule the demo runs on.
-
-## Tradeoffs
-
-> **PLACEHOLDER.** I write this section by hand from my own build notes before this repo goes out.
-> It covers the choices I made and what each one cost: BM25 as the shipped default with dense
-> behind a flag, deterministic scope instead of a routing model, one request instead of a
-> retrieve-check-retry loop, the schema the model answers into, and the checks I deliberately do
-> not run.
 
 ## Surprises, and where this breaks in production
 
