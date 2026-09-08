@@ -1,0 +1,19 @@
+# The build context is the repo root, so keep the VCS history, the local
+# virtualenv, the local model cache and every built index out of it. The
+# image downloads its own copy of the embedding model and builds its own
+# index into the volume. tests/ is deliberately NOT ignored: the
+# Dockerfile's test stage needs it.
+.git
+.gitignore
+.venv/
+.fastembed/
+index/
+index-*/
+docs/
+eval/results/
+eval/heldout.jsonl
+**/__pycache__/
+**/*.pyc
+.pytest_cache/
+.playwright-mcp/
+.env

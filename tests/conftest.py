@@ -21,7 +21,30 @@ from models import Filing
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TUNING = os.path.join(ROOT, "eval", "tuning.jsonl")
-MODEL_CACHE = os.path.join(config.FASTEMBED_CACHE, "models--" + config.EMBED_MODEL.replace("/", "--"))
+
+
+def model_cache_dir() -> str:
+    """Directory fastembed fills when it downloads config.EMBED_MODEL.
+
+    fastembed names the cache after the Hugging Face repo it pulls from, and
+    that repo is the model's registered source (qdrant/all-MiniLM-L6-v2-onnx
+    for the MiniLM id), so a path derived from the model id itself points at
+    a directory a fresh download never creates. The dense tests check this
+    path to decide whether to run, so the mapping has to be the real one.
+    """
+    repo = config.EMBED_MODEL
+    try:
+        from fastembed import TextEmbedding
+        for entry in TextEmbedding.list_supported_models():
+            if entry.get("model") == config.EMBED_MODEL:
+                repo = (entry.get("sources") or {}).get("hf") or repo
+                break
+    except Exception:
+        pass
+    return os.path.join(config.FASTEMBED_CACHE, "models--" + repo.replace("/", "--"))
+
+
+MODEL_CACHE = model_cache_dir()
 
 
 def tuning_files() -> list[str]:

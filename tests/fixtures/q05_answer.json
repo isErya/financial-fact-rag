@@ -1,0 +1,29 @@
+{
+ "_about": "Hand-written Answer for q05 (Apple FY2023 net sales) read from the FY2024 10-K, whose net sales table shows 383,285 in the middle column under a bare-year header (FY2023, no parsed date). K1 names period_end 2023-09-30 and matches the column by fiscal year; K2 names 2024-09-28 and does not. Citations of the form chunk:<chunk_id> are bound to C-ids by the test.",
+ "summary": [
+  {"text": "Apple's total net sales were $383,285 million in fiscal 2023.", "claim_ids": ["K1"]}
+ ],
+ "claims": [
+  {
+   "id": "K1",
+   "text": "Apple's total net sales were $383,285 million in fiscal 2023.",
+   "tickers": ["AAPL"],
+   "period_end": "2023-09-30",
+   "period_kind": "fiscal_year",
+   "citations": ["chunk:cffc6bfbcc7ea05f"],
+   "quote": "Total net sales | $391,035 | 2% | $383,285 | (3)% | $394,328"
+  },
+  {
+   "id": "K2",
+   "text": "Apple's total net sales were $383,285 million in fiscal 2024.",
+   "tickers": ["AAPL"],
+   "period_end": "2024-09-28",
+   "period_kind": "fiscal_year",
+   "citations": ["chunk:cffc6bfbcc7ea05f"],
+   "quote": "Total net sales | $391,035 | 2% | $383,285 | (3)% | $394,328"
+  }
+ ],
+ "table": [],
+ "not_comparable": [],
+ "gaps": []
+}

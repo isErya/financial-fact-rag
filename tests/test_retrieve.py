@@ -123,11 +123,6 @@ def test_refusals_carry_no_context(tuning_index, registry):
     assert payload["status"] == "period_not_covered"
 
 
-def test_ask_without_dry_run_stops_before_the_model(tuning_index, registry):
-    with pytest.raises(NotImplementedError):
-        ask("What are Apple's risk factors?", tuning_index, registry)
-
-
 def test_no_pin_mode_drops_the_pinned_lead(tuning_index, registry):
     pinned = dry_run("What are Bank of America's main risk factors?", tuning_index, registry)
     unpinned = dry_run("What are Bank of America's main risk factors?", tuning_index, registry, pin=False)

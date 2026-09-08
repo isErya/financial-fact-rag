@@ -168,6 +168,10 @@ class LLMResult:
     attempts: int
     completed: int
     error: str | None
+    # True when the fake backend served a stored result instead of
+    # composing one, so a replayed answer is never mistaken for a fresh
+    # request in a report.
+    replayed: bool = False
 
 
 @dataclass

@@ -1,0 +1,57 @@
+{
+ "_about": "Hand-written Answer for q06 (JPM Q3 2025 net interest income). Citations of the form chunk:<chunk_id> are bound to the live context's C-ids by the test, since C-ids are assigned at retrieval time. K1 quotes the real row and cites the right chunk; K2 states the nine-month figure as if quarterly; K3 restates 23,966 million as $24.0 billion; K4 cites an unknown id; K5 states a figure that is nowhere.",
+ "summary": [
+  {"text": "JPMorgan reported net interest income of $23,966 million for the third quarter of 2025.", "claim_ids": ["K1"]},
+  {"text": "Nine-month net interest income was $70,448 million.", "claim_ids": ["K2"]}
+ ],
+ "claims": [
+  {
+   "id": "K1",
+   "text": "JPMorgan's net interest income was $23,966 million for the three months ended September 30, 2025.",
+   "tickers": ["JPM"],
+   "period_end": "2025-09-30",
+   "period_kind": "quarter",
+   "citations": ["chunk:55e0c02f62d5d7dc"],
+   "quote": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2"
+  },
+  {
+   "id": "K2",
+   "text": "JPMorgan's net interest income was $70,448 million for the third quarter of 2025.",
+   "tickers": ["JPM"],
+   "period_end": "2025-09-30",
+   "period_kind": "quarter",
+   "citations": ["chunk:55e0c02f62d5d7dc"],
+   "quote": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2"
+  },
+  {
+   "id": "K3",
+   "text": "JPMorgan's net interest income was $24.0 billion in the third quarter of 2025.",
+   "tickers": ["JPM"],
+   "period_end": "2025-09-30",
+   "period_kind": "quarter",
+   "citations": ["chunk:55e0c02f62d5d7dc"],
+   "quote": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2"
+  },
+  {
+   "id": "K4",
+   "text": "JPMorgan's net interest income was $23,966 million for the third quarter of 2025.",
+   "tickers": ["JPM"],
+   "period_end": "2025-09-30",
+   "period_kind": "quarter",
+   "citations": ["C99"],
+   "quote": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2"
+  },
+  {
+   "id": "K5",
+   "text": "JPMorgan's net interest income was $24.5 billion in the third quarter of 2025.",
+   "tickers": ["JPM"],
+   "period_end": "2025-09-30",
+   "period_kind": "quarter",
+   "citations": ["chunk:55e0c02f62d5d7dc"],
+   "quote": "Net interest income | 23,966 | 23,405 | 2 | 70,448 | 69,233 | 2"
+  }
+ ],
+ "table": [],
+ "not_comparable": [],
+ "gaps": []
+}

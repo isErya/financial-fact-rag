@@ -118,7 +118,7 @@ def _rate(pair: tuple[int, int]) -> str:
 
 
 def summary_line(summary: dict) -> str:
-    return ("section hit rate %s | file coverage %s | passage hit rate %s | abstain correctness %s | "
+    return ("section hit rate %s | file coverage %s | passage hit rate %s | abstain hit rate %s | "
             "status match %s | within budget %s | mean tokens %d" % (
                 _rate(summary["section_hit"]), _rate(summary["file_coverage"]),
                 _rate(summary["passage_hit"]), _rate(summary["abstain"]), _rate(summary["status_ok"]),

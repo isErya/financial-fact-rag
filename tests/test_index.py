@@ -17,7 +17,6 @@ import time
 import numpy as np
 import pytest
 
-import config
 from index import build, load
 
 FILES = [
@@ -27,8 +26,8 @@ FILES = [
 ]
 QUERY = "net interest income three months ended September 30 2025"
 ROW_RE = re.compile(r"^Net interest income[^|\n]*\| \$?23,966(?: \||$)", re.M)
-MODEL_CACHE = os.path.join(config.FASTEMBED_CACHE,
-                           "models--" + config.EMBED_MODEL.replace("/", "--"))
+import config
+from conftest import MODEL_CACHE
 
 
 def holds_the_row(index, hits) -> bool:
@@ -109,3 +108,12 @@ def test_dense_hybrid_search(tmp_path_factory):
     assert holds_the_row(index, hits), hits
     assert all(dense_rank is not None for _c, _b, dense_rank, _r in hits)
     assert "dense" in record["phase_seconds"]
+
+
+def test_model_cache_path_follows_fastembed_source():
+    """The dense tests skip when this directory is absent, so it must be the
+    one fastembed fills (named after the source repo, not the model id)."""
+    from fastembed import TextEmbedding
+    sources = {m["model"]: m.get("sources") or {} for m in TextEmbedding.list_supported_models()}
+    repo = sources[config.EMBED_MODEL].get("hf", config.EMBED_MODEL)
+    assert os.path.basename(MODEL_CACHE) == "models--" + repo.replace("/", "--")

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>filing desk</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/static/tokens.css">
+<link rel="stylesheet" href="/static/bauhaus.css">
+<style>
+/* Page-local rules on top of the Bauhaus system. Everything model- or
+   filing-derived on this page is inserted with textContent by app.js. */
+/* Before any question is asked the page is shorter than most viewports;
+   the footer sits at the bottom edge so the cream below it is not read as
+   a missing band. */
+body.bh { min-height: 100vh; display: flex; flex-direction: column; }
+body.bh > .bh-footer { margin-top: auto; }
+.fd-lede { max-width: 720px; margin: 14px 0 22px; font-size: 17px; }
+.fd-ask .bh-textarea { background: var(--bh-card-on-paper); color: var(--bh-ink); min-height: 96px; resize: vertical; }
+.fd-ask .bh-callout, .bh-band--ink .bh-card { color: var(--bh-ink); }
+.fd-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; margin-top: 14px; }
+.fd-chips { display: flex; flex-wrap: wrap; gap: 8px; flex: 1; }
+.fd-chips .bh-btn { font-size: 11px; padding: 10px 14px; text-transform: none; letter-spacing: 0.02em; text-align: left; }
+.fd-stack > * + * { margin-top: 16px; }
+.fd-banner { margin: 0 0 18px; }
+.fd-status { font: 600 var(--bh-size-label) / 1 var(--bh-label); letter-spacing: var(--bh-track-label); text-transform: uppercase; margin-top: 14px; min-height: 14px; }
+.fd-band-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; }
+.fd-band-head .bh-h2 { margin-bottom: 18px; }
+.fd-scope-line { margin: 0 0 18px; }
+.fd-companies { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.fd-company { background: var(--bh-card-on-paper); padding: 18px 20px; }
+.fd-company-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.fd-company-name { font: 800 18px / 1.1 var(--bh-display); letter-spacing: -0.02em; text-transform: lowercase; }
+.fd-remove { margin-left: auto; font-size: 11px; padding: 8px 12px; }
+.fd-filings { list-style: none; padding: 0; margin: 12px 0 0; font-size: var(--bh-size-small); }
+.fd-filings li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0; border-top: 1px solid var(--bh-hairline); }
+.fd-sections { margin-top: 18px; font-size: var(--bh-size-small); }
+.fd-notes { margin: 12px 0 0; padding-left: 18px; font-size: var(--bh-size-small); color: var(--bh-muted); }
+.fd-pre { white-space: pre-wrap; font-family: var(--bh-mono); font-size: 13px; line-height: 1.55; margin: 8px 0 0; }
+.fd-sentence { margin: 0 0 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; font-size: 17px; }
+.fd-sentence.fd-dim { color: var(--bh-muted); }
+.fd-chip { all: unset; cursor: pointer; display: inline-block; font: 600 11px / 1 var(--bh-label); letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 9px; background: rgba(21, 42, 73, 0.1); color: var(--bh-ink); }
+.fd-chip:hover { background: var(--bh-ink); color: var(--bh-paper); }
+.fd-chip:focus-visible { outline: 2px solid var(--bh-accent); outline-offset: 2px; }
+.bh-band--ink .fd-chip { background: rgba(240, 232, 216, 0.16); color: var(--bh-paper); }
+.bh-band--ink .fd-chip:hover { background: var(--bh-paper); color: var(--bh-ink); }
+.bh .bh-badge { background: rgba(21, 42, 73, 0.08); }
+.bh .bh-badge--solid { background: var(--bh-ink); }
+.bh .bh-badge--warn { background: rgba(21, 42, 73, 0.2); }
+/* Red badge text sits on a red tint and always carries its wording. */
+.bh .bh-badge--alert { background: rgba(226, 66, 41, 0.12); color: var(--bh-accent-text); }
+.bh-band--ink .bh-badge { background: rgba(240, 232, 216, 0.16); color: var(--bh-paper); }
+.bh-band--ink .bh-badge--solid { background: var(--bh-paper); color: var(--bh-ink); }
+/* Source cards are cream inside the navy band, so their badges take the
+   on-cream colors again; the on-navy tint would leave cream text on cream. */
+.bh-band--ink .bh-card .bh-badge { background: rgba(21, 42, 73, 0.1); color: var(--bh-ink); }
+.bh-band--ink .bh-card .bh-badge--solid { background: var(--bh-ink); color: var(--bh-paper); }
+.bh-band--ink .bh-card .bh-badge--warn { background: rgba(21, 42, 73, 0.2); color: var(--bh-ink); }
+.bh-band--ink .bh-card .bh-badge--alert { background: rgba(226, 66, 41, 0.12); color: var(--bh-accent-text); }
+.fd-table-wrap { overflow-x: auto; margin: 8px 0 18px; }
+.fd-table-wrap td .fd-chip { margin-left: 8px; }
+.fd-cell { cursor: pointer; }
+.fd-claims { list-style: none; padding: 0; margin: 0; }
+.fd-claim { padding: 14px 0; border-top: 1px solid var(--bh-hairline); }
+.fd-claim-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 6px; }
+.fd-claim-text { margin: 0 0 8px; }
+.fd-claim-quote { margin: 0 0 8px; font-size: var(--bh-size-small); color: var(--bh-muted); }
+.fd-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.fd-details { margin-top: 20px; }
+.fd-details h3 { margin: 22px 0 8px; }
+.fd-stat { font-family: var(--bh-mono); font-size: 13px; line-height: 1.6; }
+.fd-meter-line { display: flex; align-items: center; gap: 12px; margin: 8px 0 14px; font-size: var(--bh-size-small); }
+.fd-meter-line .bh-meter { flex: 1; }
+.fd-request pre { max-height: 360px; overflow: auto; white-space: pre-wrap; }
+.fd-group { margin-top: 28px; }
+.fd-group .bh-h3 { margin-bottom: 12px; }
+.fd-cards { display: grid; gap: 14px; }
+.fd-card-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; font-size: var(--bh-size-small); }
+.fd-card-head .bh-link { margin-left: auto; }
+.fd-card-meta { font-size: var(--bh-size-small); color: var(--bh-muted); margin-bottom: 8px; }
+.fd-source-text { white-space: pre-wrap; word-break: break-word; margin: 0; max-height: 420px; overflow: auto; }
+/* Highlights inside the navy text block: a cream fill for the quote, a
+   cream underline for the matched column. Never red, which is an accent. */
+.fd-source-text mark { color: inherit; background: transparent; }
+.fd-source-text mark.fd-quote { background: rgba(240, 232, 216, 0.3); }
+.fd-source-text mark.fd-col { box-shadow: inset 0 -2px 0 var(--bh-paper); }
+.fd-legend { font-size: var(--bh-size-label); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--bh-label); font-weight: 600; margin-top: 6px; color: var(--bh-muted); }
+.fd-flash { animation: fd-flash 1.4s var(--bh-ease) 1; }
+@keyframes fd-flash { 0% { box-shadow: 0 0 0 6px var(--bh-accent); } 100% { box-shadow: 0 0 0 0 transparent; } }
+.fd-foot { display: flex; flex-wrap: wrap; gap: 18px; }
+@media (max-width: 720px) { .fd-sentence { font-size: 16px; } }
+</style>
+</head>
+<body class="bh">
+
+<section class="bh-band bh-band--ink fd-ask" id="ask-band">
+  <div class="bh-container">
+    <div class="bh-wordmark">filing desk<span class="bh-dot">.</span></div>
+    <p class="fd-lede">Ask a question about 54 companies' 10-K and 10-Q filings. One model request per answer; every figure links to its source.</p>
+    <div id="index-banner" class="bh-callout bh-callout--alert fd-banner" hidden>
+      <span class="bh-eyebrow">index missing</span>
+      <span id="index-banner-text"></span>
+    </div>
+    <div id="key-banner" class="bh-callout bh-callout--warn fd-banner" hidden>
+      <span class="bh-eyebrow">no api key</span>
+      No API key configured; the interpreted scope and sources still work, the answer step is disabled.
+    </div>
+    <div id="replay-banner" class="bh-callout fd-banner" hidden>
+      <span class="bh-eyebrow">replayed</span>
+      <span id="replay-banner-text"></span>
+    </div>
+    <label class="bh-eyebrow" for="question">question</label>
+    <textarea id="question" class="bh-textarea" rows="3" placeholder="Name at least one company; the corpus holds 54. Ctrl+Enter asks."></textarea>
+    <div class="fd-row">
+      <button id="ask" class="bh-btn" type="button">ask</button>
+      <div id="chips" class="fd-chips"></div>
+    </div>
+    <div id="status" class="fd-status" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="bh-band" id="scope-band" hidden>
+  <div class="bh-container">
+    <span class="bh-eyebrow">what will be read</span>
+    <div class="fd-band-head">
+      <h2 class="bh-h2">interpreted scope<span class="bh-dot">.</span></h2>
+      <div id="progress" class="fd-status" aria-live="polite"></div>
+    </div>
+    <div id="scope" class="fd-stack"></div>
+  </div>
+</section>
+
+<section class="bh-band" id="answer-band" hidden>
+  <div class="bh-container">
+    <span class="bh-eyebrow">answer</span>
+    <h2 class="bh-h2">answer<span class="bh-dot">.</span></h2>
+    <div id="answer" class="fd-stack"></div>
+    <div class="fd-details">
+      <button id="details-toggle" class="bh-btn bh-btn--ghost" type="button" aria-expanded="false" aria-controls="details">details</button>
+      <div id="details" hidden></div>
+    </div>
+  </div>
+</section>
+
+<section class="bh-band bh-band--ink" id="sources-band" hidden>
+  <div class="bh-container">
+    <span class="bh-eyebrow">sources</span>
+    <h2 class="bh-h2">sources<span class="bh-dot">.</span></h2>
+    <p class="bh-muted">Every excerpt the model reads, in the order it reads them. Highlighted text is a quoted passage; an underlined cell is the column a figure was matched to.</p>
+    <div id="sources"></div>
+  </div>
+</section>
+
+<footer class="bh-footer">
+  <div class="fd-foot">
+    <span id="foot-index">index: loading</span>
+    <span id="foot-model"></span>
+    <a class="bh-link" href="/health">/health</a>
+    <a class="bh-link" href="/coverage">/coverage</a>
+  </div>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

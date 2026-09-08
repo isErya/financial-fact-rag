@@ -1,0 +1,94 @@
+# The whole stack: one image, two services, one volume.
+#
+#   data/edgar_corpus.zip --> indexer (python index.py build) --> index_data volume
+#   index_data (read-only) --> web (uvicorn) :8804 --> the page and /ask
+#
+# Startup order that matters: web waits for the indexer to exit 0, so a
+# request can never land on a half-written index. On a re-up the indexer
+# compares the corpus fingerprint with the one in the volume, prints
+# "index up to date" and exits in a second; the parse and BM25 build run
+# only when the corpus, the chunker version or the DENSE flag changed.
+#
+# One shared environment block feeds both services, so the index the
+# indexer writes and the index the web process reads are the same
+# directory, and a DENSE or EMBED_MODEL override reaches both at once.
+# Paths are absolute because the runtime image's working directory is
+# /app/service and the config defaults are relative to a repo checkout.
+
+x-shared-env: &shared-env
+  CORPUS_ZIP: /app/data/edgar_corpus.zip
+  COMPANIES_FILE: /app/service/companies.yaml
+  FIXTURES_DIR: /app/eval/fixtures
+  INDEX_DIR: /index
+  # DENSE=1 embeds every chunk at build time (tens of minutes on a laptop
+  # CPU for the full corpus); the default index is lexical only.
+  DENSE: ${DENSE:-0}
+  # The embedding model baked into the image at build time. Changing this
+  # at run time needs a rebuild, since the runtime never downloads.
+  EMBED_MODEL: ${EMBED_MODEL:-sentence-transformers/all-MiniLM-L6-v2}
+  FASTEMBED_CACHE_PATH: /app/models
+  # "fake" answers from stored fixtures or a stand-in reply and needs no
+  # key; "anthropic" is the one API backend and reads ANTHROPIC_API_KEY.
+  LLM_MODEL_BACKEND: ${LLM_MODEL_BACKEND:-fake}
+  LLM_MODEL: ${LLM_MODEL:-claude-opus-5}
+  ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+  WEB_PORT: ${WEB_PORT:-8804}
+
+services:
+  # pull_policy: build on both services, because `docker compose up`
+  # without --build reuses an existing image and never notices that the
+  # source changed. That failure is silent: the stack comes up healthy and
+  # serves whatever code was compiled in last time. With this set, a plain
+  # `up` rebuilds when the source changed and cache-hits when it did not.
+  indexer:
+    build:
+      context: .
+      target: runtime
+    pull_policy: build
+    command: python index.py build
+    environment: *shared-env
+    volumes:
+      - index_data:/index
+    restart: "no"
+
+  web:
+    build:
+      context: .
+      target: runtime
+    pull_policy: build
+    command: uvicorn web:app --host 0.0.0.0 --port 8000
+    environment: *shared-env
+    # .env holds the key on a laptop; the file is optional so a checkout
+    # without one still comes up on the fake backend.
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "${WEB_PORT:-8804}:8000"
+    volumes:
+      - index_data:/index:ro
+    depends_on:
+      indexer:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      # The image ships no curl; the standard library is the probe.
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 40s
+
+  # Run the unit suite in a container built from the same base as web
+  # (the Dockerfile's test stage), so the tests need no host Python:
+  #   docker compose run --rm tests
+  # Under a profile so a plain `docker compose up` never runs it.
+  tests:
+    profiles: ["test"]
+    build:
+      context: .
+      target: test
+    pull_policy: build
+
+volumes:
+  index_data:

@@ -41,16 +41,39 @@ CHUNKER_VERSION = "2"
 
 WEB_PORT = int(os.environ.get("WEB_PORT", "8804"))
 
-# Model client settings. "fake" answers from canned text so the whole pipeline
-# runs with no credentials.
+# Model client settings. "fake" answers from stored fixtures or a canned
+# minimal answer so the whole pipeline runs with no credentials; "anthropic"
+# is the one API backend. The request shape (effort, output cap, timeout,
+# retries) is constant so a change to it is a reviewed diff.
 LLM_MODEL_BACKEND = os.environ.get("LLM_MODEL_BACKEND", "fake")
-LLM_MODEL = os.environ.get("LLM_MODEL", "")
+LLM_MODEL = os.environ.get("LLM_MODEL", "claude-opus-5")
+LLM_EFFORT = "medium"
+LLM_MAX_TOKENS = 16000
+LLM_TIMEOUT_SECONDS = 300
+# Zero SDK retries: an ask makes exactly one request, so a failure is
+# reported as a failure instead of being retried at a second cost.
+LLM_MAX_RETRIES = 0
+# Stored model replies the fake backend serves, keyed by question.
+FIXTURES_DIR = os.environ.get("FIXTURES_DIR", "eval/fixtures")
 
 # Context budgets in tokens, chosen per question shape in milestone 3.
 BUDGET_TOKENS_SMALL = 20000
 BUDGET_TOKENS_LARGE = 30000
 MAX_COMPANIES = 6
 
-# Per-million-token prices keyed by model name, filled in with the date they
-# were checked once the backend is chosen. Empty means cost is not reported.
-PRICES: dict[str, dict[str, float]] = {}
+# USD per million tokens from the claude-api skill's model notes, read on
+# the date in "checked": Claude Opus 5 is listed at $5/$25 per MTok. The
+# same notes give no per-token price for claude-sonnet-5, so it is left
+# out. Cache writes bill at 1.25x the input rate and cache reads at 0.1x
+# (same notes, "Prompt Caching"). A model absent here reports cost_usd
+# None rather than a guess.
+PRICES: dict[str, dict] = {
+    "claude-opus-5": {"input": 5.00, "output": 25.00, "checked": "2026-09-07"},
+}
+CACHE_WRITE_FACTOR = 1.25
+CACHE_READ_FACTOR = 0.10
+
+# The environment variable the API backend reads its key from. The web
+# layer reports llm_ready from its presence alone; nothing here pings the
+# provider.
+LLM_API_KEY_ENV = "ANTHROPIC_API_KEY"
